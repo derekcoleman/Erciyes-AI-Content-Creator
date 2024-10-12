@@ -1,15 +1,23 @@
 "use client";
-import { Box, Button, Card, TextField } from "@mui/material";
+import EmailInput from "@/components/signin-signup/EmailInput";
+import PasswordInput from "@/components/signin-signup/PasswordInput";
+import { Box, Button, Card, Typography } from "@mui/material";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 function Page() {
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+    alert("Email: " + email + " Password: " + password);
+    //Signin başarılı ise yönlendirme
+    // router.push("/");
   };
 
   const isFormValid = email !== "" && password !== "";
@@ -24,39 +32,44 @@ function Page() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "white",
       }}
     >
       <Card
         component="form"
         onSubmit={handleSubmit}
         sx={{
-          height: "55vh",
-          width: "30%",
+          height: "40%",
+          minHeight: "350px",
+          width: "20%",
+          minWidth: "350px",
           display: "flex",
           justifyContent: "space-evenly",
           alignItems: "center",
           flexDirection: "column",
+          backgroundColor: "#f9f7f2",
         }}
       >
-        <h2>Login</h2>
-        <TextField
-          required
-          label="Email"
-          inputProps={{
-            type: "email",
+        <Typography
+          component="h1"
+          variant="h4"
+          sx={{
+            width: "100%",
+            color: "#1976d2",
+            textAlign: "center",
           }}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          required
-          type="password"
-          label="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+        >
+          Sign in
+        </Typography>
+        <EmailInput email={email} setEmail={setEmail} />
+        <PasswordInput
+          password={password}
+          setPassword={setPassword}
+          showPassword={showPassword}
+          handleClickShowPassword={handleClickShowPassword}
         />
         <Button variant="contained" type="submit" disabled={!isFormValid}>
-          Submit
+          Sign in
         </Button>
       </Card>
     </Box>
