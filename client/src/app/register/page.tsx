@@ -1,26 +1,46 @@
 "use client";
+import React, { useState } from "react";
 import EmailInput from "@/components/signin-signup/EmailInput";
 import PasswordInput from "@/components/signin-signup/PasswordInput";
 import { Box, Button, Card, Typography } from "@mui/material";
-import { useState } from "react";
-// import { useRouter } from "next/navigation";
+import { Field } from "@/lib/types";
+import { passwordMatcher } from "@/lib/validators";
 
 function Page() {
-  // const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [rePassword, setRePassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showRePassword, setShowRePassword] = useState<boolean>(false);
+  const [formError, setFormError] = useState<{
+    message: string;
+    isError: boolean;
+  }>({ message: "", isError: false });
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    alert("Email: " + email + " Password: " + password);
-    //Signin başarılı ise yönlendirme
-    // router.push("/");
+  const handleClickShowPassword = (field: Field) => {
+    if (field === Field.Password) {
+      setShowPassword((show) => !show);
+    } else if (field === Field.RePassword) {
+      setShowRePassword((show) => !show);
+    }
   };
 
-  const isFormValid = email !== "" && password !== "";
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    setFormError({ isError: false, message: "" });
+
+    const { error, message } = passwordMatcher(password, rePassword);
+
+    if (error) {
+      setFormError({ isError: true, message });
+      return;
+    }
+
+    alert("Email: " + email + " Password: " + password);
+  };
+
+  const isFormValid = email !== "" && password !== "" && rePassword !== "";
 
   return (
     <Box
@@ -59,18 +79,29 @@ function Page() {
             textAlign: "center",
           }}
         >
-          Sign in
+          Sign up
         </Typography>
         <EmailInput email={email} setEmail={setEmail} />
         <PasswordInput
           password={password}
           setPassword={setPassword}
           showPassword={showPassword}
-          handleClickShowPassword={handleClickShowPassword}
-          isLoginInput={true}
+          handleClickShowPassword={() =>
+            handleClickShowPassword(Field.Password)
+          }
+          error={formError}
+        />
+        <PasswordInput
+          password={rePassword}
+          setPassword={setRePassword}
+          showPassword={showRePassword}
+          handleClickShowPassword={() =>
+            handleClickShowPassword(Field.RePassword)
+          }
+          error={formError}
         />
         <Button variant="contained" type="submit" disabled={!isFormValid}>
-          Sign in
+          Sign up
         </Button>
       </Card>
     </Box>

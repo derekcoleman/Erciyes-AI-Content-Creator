@@ -1,4 +1,3 @@
-import React from "react";
 import {
   FormControl,
   InputLabel,
@@ -14,6 +13,8 @@ interface PasswordInputProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   showPassword: boolean;
   handleClickShowPassword: () => void;
+  error?: { isError: boolean; message: string };
+  isLoginInput?: boolean;
 }
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
@@ -21,9 +22,15 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   setPassword,
   showPassword,
   handleClickShowPassword,
+  error = { isError: false, message: "" },
+  isLoginInput = false,
 }) => {
   return (
-    <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+    <FormControl
+      sx={{ m: 1, width: "25ch" }}
+      variant="outlined"
+      error={error.isError}
+    >
       <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
       <OutlinedInput
         value={password}
@@ -37,11 +44,26 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
               onClick={handleClickShowPassword}
               edge="end"
             >
-              {showPassword ? <VisibilityOff /> : <Visibility />}
+              {showPassword ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </InputAdornment>
         }
         label="Password"
+        required
+        inputProps={
+          isLoginInput
+            ? {}
+            : error.isError
+            ? {
+                pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{9999,}$",
+                title: `${error.message}`,
+              }
+            : {
+                pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$",
+                title:
+                  "Şifre en az 8 karakter, bir büyük harf, bir küçük harf ve bir sayı içermelidir.",
+              }
+        }
         sx={{ backgroundColor: "white" }}
       />
     </FormControl>
