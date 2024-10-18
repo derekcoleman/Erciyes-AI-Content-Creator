@@ -14,6 +14,7 @@ interface PasswordInputProps {
   showPassword: boolean;
   handleClickShowPassword: () => void;
   error?: { isError: boolean; message: string };
+  isLoginInput?: boolean;
 }
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
@@ -22,6 +23,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   showPassword,
   handleClickShowPassword,
   error = { isError: false, message: "" },
+  isLoginInput = false,
 }) => {
   return (
     <FormControl
@@ -49,7 +51,9 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         label="Password"
         required
         inputProps={
-          error.isError
+          isLoginInput
+            ? {}
+            : error.isError
             ? {
                 pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{9999,}$",
                 title: `${error.message}`,

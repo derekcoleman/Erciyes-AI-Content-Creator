@@ -67,6 +67,7 @@ function Page() {
           setPassword={setPassword}
           showPassword={showPassword}
           handleClickShowPassword={handleClickShowPassword}
+          isLoginInput={true}
         />
         <Button variant="contained" type="submit" disabled={!isFormValid}>
           Sign in
