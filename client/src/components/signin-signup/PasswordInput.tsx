@@ -1,4 +1,3 @@
-import React from "react";
 import {
   FormControl,
   InputLabel,
@@ -14,6 +13,7 @@ interface PasswordInputProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   showPassword: boolean;
   handleClickShowPassword: () => void;
+  error?: boolean;
 }
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
@@ -21,15 +21,17 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   setPassword,
   showPassword,
   handleClickShowPassword,
+  error = false,
 }) => {
   return (
-    <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+    <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined" error={error}>
       <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
       <OutlinedInput
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         id="outlined-adornment-password"
         type={showPassword ? "text" : "password"}
+        minRows={6}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
@@ -37,7 +39,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
               onClick={handleClickShowPassword}
               edge="end"
             >
-              {showPassword ? <VisibilityOff /> : <Visibility />}
+              {showPassword ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </InputAdornment>
         }
