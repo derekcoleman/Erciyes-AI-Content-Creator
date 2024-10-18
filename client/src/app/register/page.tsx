@@ -4,7 +4,7 @@ import EmailInput from "@/components/signin-signup/EmailInput";
 import PasswordInput from "@/components/signin-signup/PasswordInput";
 import { Box, Button, Card, Typography } from "@mui/material";
 import { Field } from "@/lib/types";
-import { validatePasswords } from "@/lib/validators";
+import { passwordMatcher } from "@/lib/validators";
 
 function Page() {
   const [email, setEmail] = useState<string>("");
@@ -12,10 +12,6 @@ function Page() {
   const [rePassword, setRePassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showRePassword, setShowRePassword] = useState<boolean>(false);
-  const [passwordError, setPasswordError] = useState<{
-    message: string;
-    isError: boolean;
-  }>({ message: "", isError: false });
   const [rePasswordError, setRePasswordError] = useState<{
     message: string;
     isError: boolean;
@@ -31,17 +27,12 @@ function Page() {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    setPasswordError({ isError: false, message: "" });
     setRePasswordError({ isError: false, message: "" });
 
-    const { isValid, message, field } = validatePasswords(password, rePassword);
+    const { error, message } = passwordMatcher(password, rePassword);
 
-    if (!isValid) {
-      if (field === "password") {
-        setPasswordError({ isError: true, message });
-      } else if (field === "rePassword") {
-        setRePasswordError({ isError: true, message });
-      }
+    if (error) {
+      setRePasswordError({ isError: error, message });
       return;
     }
 
@@ -97,7 +88,7 @@ function Page() {
           handleClickShowPassword={() =>
             handleClickShowPassword(Field.Password)
           }
-          error={passwordError}
+          error={rePasswordError}
         />
         <PasswordInput
           password={rePassword}

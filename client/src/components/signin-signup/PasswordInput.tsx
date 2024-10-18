@@ -48,6 +48,12 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
           </InputAdornment>
         }
         label="Password"
+        required
+        inputProps={{
+          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$", // Şifre deseni
+          title:
+            "Şifre en az 8 karakter, bir büyük harf, bir küçük harf ve bir sayı içermelidir.",
+        }}
         sx={{ backgroundColor: "white" }}
       />
       {error.isError && <FormHelperText>{error.message}</FormHelperText>}
