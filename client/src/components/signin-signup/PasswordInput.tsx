@@ -4,6 +4,7 @@ import {
   OutlinedInput,
   InputAdornment,
   IconButton,
+  FormHelperText,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -13,7 +14,7 @@ interface PasswordInputProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   showPassword: boolean;
   handleClickShowPassword: () => void;
-  error?: boolean;
+  error?: { isError: boolean; message: string };
 }
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
@@ -21,17 +22,20 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   setPassword,
   showPassword,
   handleClickShowPassword,
-  error = false,
+  error = { isError: false, message: "" },
 }) => {
   return (
-    <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined" error={error}>
+    <FormControl
+      sx={{ m: 1, width: "25ch" }}
+      variant="outlined"
+      error={error.isError}
+    >
       <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
       <OutlinedInput
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         id="outlined-adornment-password"
         type={showPassword ? "text" : "password"}
-        minRows={6}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
@@ -46,6 +50,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         label="Password"
         sx={{ backgroundColor: "white" }}
       />
+      {error.isError && <FormHelperText>{error.message}</FormHelperText>}
     </FormControl>
   );
 };
