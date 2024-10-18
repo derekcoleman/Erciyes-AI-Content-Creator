@@ -4,7 +4,6 @@ import {
   OutlinedInput,
   InputAdornment,
   IconButton,
-  FormHelperText,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -49,14 +48,20 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         }
         label="Password"
         required
-        inputProps={{
-          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$", // Şifre deseni
-          title:
-            "Şifre en az 8 karakter, bir büyük harf, bir küçük harf ve bir sayı içermelidir.",
-        }}
+        inputProps={
+          error.isError
+            ? {
+                pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{9999,}$",
+                title: `${error.message}`,
+              }
+            : {
+                pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$",
+                title:
+                  "Şifre en az 8 karakter, bir büyük harf, bir küçük harf ve bir sayı içermelidir.",
+              }
+        }
         sx={{ backgroundColor: "white" }}
       />
-      {error.isError && <FormHelperText>{error.message}</FormHelperText>}
     </FormControl>
   );
 };

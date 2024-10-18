@@ -12,7 +12,7 @@ function Page() {
   const [rePassword, setRePassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showRePassword, setShowRePassword] = useState<boolean>(false);
-  const [rePasswordError, setRePasswordError] = useState<{
+  const [formError, setFormError] = useState<{
     message: string;
     isError: boolean;
   }>({ message: "", isError: false });
@@ -27,19 +27,20 @@ function Page() {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    setRePasswordError({ isError: false, message: "" });
+
+    setFormError({ isError: false, message: "" });
 
     const { error, message } = passwordMatcher(password, rePassword);
 
     if (error) {
-      setRePasswordError({ isError: error, message });
+      setFormError({ isError: true, message });
       return;
     }
 
     alert("Email: " + email + " Password: " + password);
   };
 
-  const isFormValid = email !== "" && password !== "";
+  const isFormValid = email !== "" && password !== "" && rePassword !== "";
 
   return (
     <Box
@@ -88,7 +89,7 @@ function Page() {
           handleClickShowPassword={() =>
             handleClickShowPassword(Field.Password)
           }
-          error={rePasswordError}
+          error={formError}
         />
         <PasswordInput
           password={rePassword}
@@ -97,7 +98,7 @@ function Page() {
           handleClickShowPassword={() =>
             handleClickShowPassword(Field.RePassword)
           }
-          error={rePasswordError}
+          error={formError}
         />
         <Button variant="contained" type="submit" disabled={!isFormValid}>
           Sign up
