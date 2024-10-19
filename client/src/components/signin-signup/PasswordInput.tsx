@@ -28,8 +28,8 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
 }) => {
   return (
     <FormControl sx={{ width: "65%" }} variant="outlined" error={error.isError}>
-      <Typography mb={2} sx={{ fontWeight: "600" }}>
-        Email Address
+      <Typography mb={1} sx={{ fontWeight: "600" }}>
+        Password
       </Typography>
       <OutlinedInput
         value={password}
@@ -62,7 +62,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
                   "Şifre en az 8 karakter, bir büyük harf, bir küçük harf ve bir sayı içermelidir.",
               }
         }
-        sx={{ backgroundColor: "white", height: "50px" }}
+        sx={{ backgroundColor: "white", height: "40px" }}
       />
     </FormControl>
   );

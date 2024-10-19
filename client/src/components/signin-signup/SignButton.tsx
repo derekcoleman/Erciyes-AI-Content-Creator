@@ -16,7 +16,16 @@ const SignButton: React.FC<SignButtonProps> = ({
 }) => {
   return (
     <Button
-      sx={{ width: "65%", height: "50px" }}
+      sx={
+        variant === "outlined"
+          ? {
+              width: "65%",
+              height: "40px",
+              border: "solid #CFD6E4 1px",
+              color: "black",
+            }
+          : { width: "65%", height: "40px" }
+      }
       variant={variant}
       disabled={!isFormValid}
       startIcon={icon}

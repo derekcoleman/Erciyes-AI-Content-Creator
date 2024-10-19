@@ -10,7 +10,7 @@ interface EmailInputProps {
 const EmailInput: React.FC<EmailInputProps> = ({ email, setEmail }) => {
   return (
     <FormControl sx={{ width: "65%" }} variant="outlined">
-      <Typography mb={2} sx={{ fontWeight: "600" }}>
+      <Typography mb={1} sx={{ fontWeight: "600" }}>
         Email Address
       </Typography>
       <OutlinedInput
@@ -18,7 +18,7 @@ const EmailInput: React.FC<EmailInputProps> = ({ email, setEmail }) => {
         onChange={(e) => setEmail(e.target.value)}
         id="outlined-adornment-email"
         type="email"
-        sx={{ backgroundColor: "white", height: "50px" }}
+        sx={{ backgroundColor: "white", height: "40px" }}
       />
     </FormControl>
   );

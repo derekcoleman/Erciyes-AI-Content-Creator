@@ -40,6 +40,7 @@ const TextButton: React.FC<TextButtonProps> = ({
               width: "60%",
               margin: "0 auto",
               color: "#1976d2",
+              borderRadius: "12px",
             }}
           />
         </Box>
