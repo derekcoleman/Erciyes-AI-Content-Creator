@@ -1,5 +1,6 @@
 import React from "react";
-import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
+import { FormControl, OutlinedInput, Typography } from "@mui/material";
+import { Label } from "@mui/icons-material";
 
 interface EmailInputProps {
   email: string;
@@ -8,15 +9,16 @@ interface EmailInputProps {
 
 const EmailInput: React.FC<EmailInputProps> = ({ email, setEmail }) => {
   return (
-    <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
-      <InputLabel htmlFor="outlined-adornment-email">Email</InputLabel>
+    <FormControl sx={{ width: "65%" }} variant="outlined">
+      <Typography mb={2} sx={{ fontWeight: "600" }}>
+        Email Address
+      </Typography>
       <OutlinedInput
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         id="outlined-adornment-email"
         type="email"
-        label="Email"
-        sx={{ backgroundColor: "white" }}
+        sx={{ backgroundColor: "white", height: "50px" }}
       />
     </FormControl>
   );

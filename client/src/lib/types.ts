@@ -2,4 +2,9 @@ enum Field {
   Password,
   RePassword,
 }
-export { Field };
+enum Variant {
+  contained,
+  text,
+  outlined,
+}
+export { Field, Variant };

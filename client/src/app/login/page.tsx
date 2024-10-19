@@ -1,8 +1,20 @@
 "use client";
 import EmailInput from "@/components/signin-signup/EmailInput";
 import PasswordInput from "@/components/signin-signup/PasswordInput";
-import { Box, Button, Card, Typography } from "@mui/material";
+import SignButton from "@/components/signin-signup/SignButton";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import GoogleIcon from "@mui/icons-material/Google";
+import AppleIcon from "@mui/icons-material/Apple";
+import {
+  Box,
+  Card,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
+import TextButton from "@/components/signin-signup/TextButton";
 // import { useRouter } from "next/navigation";
 
 function Page() {
@@ -10,6 +22,11 @@ function Page() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isFormActive, setIsFormActive] = useState<boolean>(true);
+
+  const handleToggleForm = (active: boolean) => {
+    setIsFormActive(active);
+  };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -30,7 +47,7 @@ function Page() {
         padding: 0,
         margin: 0,
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "start",
         alignItems: "center",
         backgroundColor: "white",
       }}
@@ -39,15 +56,16 @@ function Page() {
         component="form"
         onSubmit={handleSubmit}
         sx={{
-          height: "40%",
+          height: "100%",
           minHeight: "350px",
-          width: "20%",
+          width: "50%",
           minWidth: "350px",
           display: "flex",
           justifyContent: "space-evenly",
           alignItems: "center",
           flexDirection: "column",
           backgroundColor: "#f9f7f2",
+          gap: 1,
         }}
       >
         <Typography
@@ -57,10 +75,29 @@ function Page() {
             width: "100%",
             color: "#1976d2",
             textAlign: "center",
+            fontWeight: "900",
           }}
         >
-          Sign in
+          AI Content Creator
         </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            width: "35%",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TextButton
+            title={"Log In"}
+            isFormActive={isFormActive}
+            onClick={() => handleToggleForm(true)}
+          />
+          <TextButton
+            title={"Sign In"}
+            isFormActive={!isFormActive}
+            onClick={() => handleToggleForm(false)}
+          />
+        </Box>
         <EmailInput email={email} setEmail={setEmail} />
         <PasswordInput
           password={password}
@@ -69,9 +106,37 @@ function Page() {
           handleClickShowPassword={handleClickShowPassword}
           isLoginInput={true}
         />
-        <Button variant="contained" type="submit" disabled={!isFormValid}>
-          Sign in
-        </Button>
+        <Box
+          sx={{
+            display: "flex",
+            width: "65%",
+            justifyContent: "space-between",
+          }}
+        >
+          <FormControlLabel
+            control={<Checkbox sx={{ color: "gray" }} />}
+            label="Remember Me"
+            sx={{ color: "gray" }}
+          />
+          <Typography
+            sx={{
+              alignContent: "center",
+              fontWeight: "500",
+              cursor: "pointer",
+            }}
+          >
+            Forgot Password?
+          </Typography>
+        </Box>
+        <SignButton
+          title="Log in"
+          variant={"contained"}
+          isFormValid={isFormValid}
+        />
+        <Divider sx={{ width: "65%", fontWeight: "bold" }}>OR</Divider>
+        <SignButton title="Google" variant={"outlined"} icon={<GoogleIcon />} />
+        <SignButton title="Apple" variant={"outlined"} icon={<AppleIcon />} />
+        <SignButton title="Github" variant={"outlined"} icon={<GitHubIcon />} />
       </Card>
     </Box>
   );

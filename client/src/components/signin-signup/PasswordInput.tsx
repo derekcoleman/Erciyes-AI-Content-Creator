@@ -4,6 +4,7 @@ import {
   OutlinedInput,
   InputAdornment,
   IconButton,
+  Typography,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -26,12 +27,10 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   isLoginInput = false,
 }) => {
   return (
-    <FormControl
-      sx={{ m: 1, width: "25ch" }}
-      variant="outlined"
-      error={error.isError}
-    >
-      <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+    <FormControl sx={{ width: "65%" }} variant="outlined" error={error.isError}>
+      <Typography mb={2} sx={{ fontWeight: "600" }}>
+        Email Address
+      </Typography>
       <OutlinedInput
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -48,7 +47,6 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
             </IconButton>
           </InputAdornment>
         }
-        label="Password"
         required
         inputProps={
           isLoginInput
@@ -64,7 +62,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
                   "Şifre en az 8 karakter, bir büyük harf, bir küçük harf ve bir sayı içermelidir.",
               }
         }
-        sx={{ backgroundColor: "white" }}
+        sx={{ backgroundColor: "white", height: "50px" }}
       />
     </FormControl>
   );
