@@ -23,8 +23,15 @@ const SignButton: React.FC<SignButtonProps> = ({
               height: "40px",
               border: "solid #CFD6E4 1px",
               color: "black",
+              textTransform: "none",
+              fontWeight: "700",
             }
-          : { width: "65%", height: "40px" }
+          : {
+              width: "65%",
+              height: "40px",
+              textTransform: "none",
+              fontWeight: "700",
+            }
       }
       variant={variant}
       disabled={!isFormValid}

@@ -12,10 +12,11 @@ import {
   Checkbox,
   Divider,
   FormControlLabel,
+  Tab,
+  Tabs,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import TextButton from "@/components/signin-signup/TextButton";
 // import { useRouter } from "next/navigation";
 
 function Page() {
@@ -23,10 +24,10 @@ function Page() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [isFormActive, setIsFormActive] = useState<boolean>(true);
+  const [value, setValue] = useState<number>(0);
 
-  const handleToggleForm = (active: boolean) => {
-    setIsFormActive(active);
+  const handleChangeTabs = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -48,9 +49,8 @@ function Page() {
         padding: 0,
         margin: 0,
         display: "flex",
-        justifyContent: "start",
+        justifyContent: "flex-start",
         alignItems: "center",
-        backgroundColor: "white",
       }}
     >
       <Card
@@ -112,16 +112,24 @@ function Page() {
               marginBottom: "2%",
             }}
           >
-            <TextButton
-              title={"Log In"}
-              isFormActive={isFormActive}
-              onClick={() => handleToggleForm(true)}
-            />
-            <TextButton
-              title={"Sign In"}
-              isFormActive={!isFormActive}
-              onClick={() => handleToggleForm(false)}
-            />
+            <Tabs value={value} onChange={handleChangeTabs} centered>
+              <Tab
+                sx={{
+                  fontWeight: "900",
+                  fontSize: "18px",
+                  color: "gray",
+                }}
+                label="Log In"
+              ></Tab>
+              <Tab
+                sx={{
+                  fontWeight: "900",
+                  fontSize: "18px",
+                  color: "gray",
+                }}
+                label="Sign In"
+              ></Tab>
+            </Tabs>
           </Box>
           <EmailInput email={email} setEmail={setEmail} />
           <PasswordInput
@@ -177,6 +185,18 @@ function Page() {
           />
         </Box>
       </Card>
+      <Box
+        sx={{
+          padding: 0,
+          margin: 0,
+          height: "100vh",
+          width: "50vw",
+          backgroundImage: "url(/Gradient.png)",
+          backgroundSize: "100% 100%",
+          backgroundPosition: "right",
+          backgroundRepeat: " no-repeat",
+        }}
+      />
     </Box>
   );
 }
