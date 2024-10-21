@@ -1,6 +1,5 @@
 import {
   FormControl,
-  InputLabel,
   OutlinedInput,
   InputAdornment,
   IconButton,
@@ -26,6 +25,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   error = { isError: false, message: "" },
   isLoginInput = false,
 }) => {
+  console.log("eeeee", error.isError);
   return (
     <FormControl sx={{ width: "65%" }} variant="outlined" error={error.isError}>
       <Typography mb={1} sx={{ fontWeight: "600" }}>
@@ -48,22 +48,13 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
           </InputAdornment>
         }
         required
-        inputProps={
-          isLoginInput
-            ? {}
-            : error.isError
-            ? {
-                pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{9999,}$",
-                title: `${error.message}`,
-              }
-            : {
-                pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$",
-                title:
-                  "Şifre en az 8 karakter, bir büyük harf, bir küçük harf ve bir sayı içermelidir.",
-              }
-        }
         sx={{ backgroundColor: "white", height: "40px" }}
       />
+      {error.isError && (
+        <Typography mb={1} sx={{ fontWeight: "400", color: "red" }}>
+          {error.message}
+        </Typography>
+      )}
     </FormControl>
   );
 };

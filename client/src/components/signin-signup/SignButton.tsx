@@ -6,6 +6,8 @@ interface SignButtonProps {
   variant: string;
   isFormValid?: boolean;
   icon?: ReactNode;
+  onClick?: () => void;
+  type?: string;
 }
 
 const SignButton: React.FC<SignButtonProps> = ({
@@ -13,9 +15,13 @@ const SignButton: React.FC<SignButtonProps> = ({
   isFormValid = true,
   variant,
   icon,
+  onClick,
+  type = "button",
 }) => {
   return (
     <Button
+      type={type}
+      onClick={onClick}
       sx={
         variant === "outlined"
           ? {

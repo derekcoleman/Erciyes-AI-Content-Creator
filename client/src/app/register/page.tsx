@@ -4,15 +4,16 @@ import EmailInput from "@/components/signin-signup/EmailInput";
 import PasswordInput from "@/components/signin-signup/PasswordInput";
 import { Box, Button, Card, Typography } from "@mui/material";
 import { Field } from "@/lib/types";
-import { passwordMatcher } from "@/lib/validators";
+import { emailMatcher, passwordMatcher } from "@/lib/validators";
 
 function Page() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [rePassword, setRePassword] = useState<string>("");
+  const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showRePassword, setShowRePassword] = useState<boolean>(false);
-  const [formError, setFormError] = useState<{
+  const [passwordError, setPasswordError] = useState<{
     message: string;
     isError: boolean;
   }>({ message: "", isError: false });
@@ -27,13 +28,18 @@ function Page() {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    setPasswordError({ isError: false, message: "" });
+    setIsEmailValid(true);
 
-    setFormError({ isError: false, message: "" });
-
+    const validationRes = emailMatcher(email);
     const { error, message } = passwordMatcher(password, rePassword);
 
+    if (!validationRes) {
+      setIsEmailValid(false);
+      return;
+    }
     if (error) {
-      setFormError({ isError: true, message });
+      setPasswordError({ isError: error, message });
       return;
     }
 
@@ -81,7 +87,11 @@ function Page() {
         >
           Sign up
         </Typography>
-        <EmailInput email={email} setEmail={setEmail} />
+        <EmailInput
+          email={email}
+          setEmail={setEmail}
+          isEmailValid={isEmailValid}
+        />
         <PasswordInput
           password={password}
           setPassword={setPassword}
@@ -89,7 +99,7 @@ function Page() {
           handleClickShowPassword={() =>
             handleClickShowPassword(Field.Password)
           }
-          error={formError}
+          error={passwordError}
         />
         <PasswordInput
           password={rePassword}
@@ -98,7 +108,7 @@ function Page() {
           handleClickShowPassword={() =>
             handleClickShowPassword(Field.RePassword)
           }
-          error={formError}
+          error={passwordError}
         />
         <Button variant="contained" type="submit" disabled={!isFormValid}>
           Sign up
