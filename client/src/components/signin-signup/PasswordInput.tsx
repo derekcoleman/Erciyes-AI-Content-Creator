@@ -1,9 +1,9 @@
 import {
   FormControl,
-  InputLabel,
   OutlinedInput,
   InputAdornment,
   IconButton,
+  Typography,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -25,13 +25,12 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   error = { isError: false, message: "" },
   isLoginInput = false,
 }) => {
+  console.log("eeeee", error.isError);
   return (
-    <FormControl
-      sx={{ m: 1, width: "25ch" }}
-      variant="outlined"
-      error={error.isError}
-    >
-      <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+    <FormControl sx={{ width: "65%" }} variant="outlined" error={error.isError}>
+      <Typography mb={1} sx={{ fontWeight: "600" }}>
+        Password
+      </Typography>
       <OutlinedInput
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -48,24 +47,14 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
             </IconButton>
           </InputAdornment>
         }
-        label="Password"
         required
-        inputProps={
-          isLoginInput
-            ? {}
-            : error.isError
-            ? {
-                pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{9999,}$",
-                title: `${error.message}`,
-              }
-            : {
-                pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$",
-                title:
-                  "Şifre en az 8 karakter, bir büyük harf, bir küçük harf ve bir sayı içermelidir.",
-              }
-        }
-        sx={{ backgroundColor: "white" }}
+        sx={{ backgroundColor: "white", height: "40px" }}
       />
+      {error.isError && (
+        <Typography mb={1} sx={{ fontWeight: "400", color: "red" }}>
+          {error.message}
+        </Typography>
+      )}
     </FormControl>
   );
 };

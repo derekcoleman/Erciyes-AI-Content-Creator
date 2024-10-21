@@ -1,23 +1,35 @@
 import React from "react";
-import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
+import { FormControl, OutlinedInput, Typography } from "@mui/material";
+import { emailMatcher } from "@/lib/validators";
 
 interface EmailInputProps {
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
+  isEmailValid: boolean;
 }
 
-const EmailInput: React.FC<EmailInputProps> = ({ email, setEmail }) => {
+const EmailInput: React.FC<EmailInputProps> = ({
+  email,
+  setEmail,
+  isEmailValid,
+}) => {
   return (
-    <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
-      <InputLabel htmlFor="outlined-adornment-email">Email</InputLabel>
+    <FormControl sx={{ width: "65%" }} variant="outlined">
+      <Typography mb={1} sx={{ fontWeight: "600" }}>
+        Email Address
+      </Typography>
       <OutlinedInput
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         id="outlined-adornment-email"
-        type="email"
-        label="Email"
-        sx={{ backgroundColor: "white" }}
+        type="text"
+        sx={{ backgroundColor: "white", height: "40px" }}
       />
+      {!isEmailValid && (
+        <Typography mb={1} sx={{ fontWeight: "400", color: "red" }}>
+          Lütfen gerçek bir e-posta giriniz.
+        </Typography>
+      )}
     </FormControl>
   );
 };
