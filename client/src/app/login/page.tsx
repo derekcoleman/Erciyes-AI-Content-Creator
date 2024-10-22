@@ -20,11 +20,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Field } from "@/lib/types";
 import { emailMatcher, passwordMatcher } from "@/lib/validators";
+import { loginUser } from "@/lib/utils";
+import { useAtom } from "jotai";
+import { userInfoAtom } from "@/store";
 
 function Page() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [user, setUser] = useAtom(userInfoAtom);
   const [rePassword, setRePassword] = useState<string>("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -47,7 +51,7 @@ function Page() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setIsEmailValid(true);
@@ -62,6 +66,13 @@ function Page() {
     if (value === 0) {
       if (email === "content@creator.com" && password === "Admin123") {
         router.push("/Gradient.png");
+        // try {
+        //   const userInfo = await loginUser(email, password);
+        //   setUser(userInfo);
+        //   alert("Login successful!");
+        // } catch (error) {
+        //   alert("Login failed: " + error.message);
+        // }
       } else {
         alert("WRONG");
       }

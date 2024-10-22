@@ -7,4 +7,9 @@ enum Variant {
   text,
   outlined,
 }
+export interface UserInfo {
+  email: string;
+  name: string;
+}
+
 export { Field, Variant };
