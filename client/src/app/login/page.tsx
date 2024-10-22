@@ -166,7 +166,7 @@ function Page() {
                   fontSize: "18px",
                   color: "gray",
                 }}
-                label="Sign In"
+                label="Sign Up"
               ></Tab>
             </Tabs>
           </Box>
@@ -228,7 +228,7 @@ function Page() {
           </Box>
 
           <SignButton
-            title={value === 0 ? "Log in" : "Sign in"}
+            title={value === 0 ? "Log in" : "Sign Up"}
             variant={"contained"}
             isFormValid={isFormValid}
             type="submit"
