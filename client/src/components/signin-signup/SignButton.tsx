@@ -1,9 +1,9 @@
-import { Button } from "@mui/material";
+import { Button, ButtonProps } from "@mui/material";
 import { ReactNode } from "react";
 
 interface SignButtonProps {
   title: string;
-  variant: string;
+  variant: ButtonProps["variant"];
   isFormValid?: boolean;
   icon?: ReactNode;
   onClick?: () => void;
