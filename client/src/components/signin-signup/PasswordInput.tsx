@@ -25,7 +25,6 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   error = { isError: false, message: "" },
   isLoginInput = false,
 }) => {
-  console.log("eeeee", error.isError);
   return (
     <FormControl sx={{ width: "65%" }} variant="outlined" error={error.isError}>
       <Typography mb={1} sx={{ fontWeight: "600" }}>
