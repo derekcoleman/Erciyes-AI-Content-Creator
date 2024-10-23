@@ -29,7 +29,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
 }) => {
   return (
     <FormControl sx={{ width: "65%" }} variant="outlined" error={error.isError}>
-      <Typography mb={1} sx={{ fontWeight: "600" }}>
+      <Typography mt={1} mb={1} sx={{ fontWeight: "600" }}>
         {title}
       </Typography>
       <OutlinedInput

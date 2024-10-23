@@ -1,21 +1,11 @@
 "use client";
-import EmailInput from "@/components/signin-signup/EmailInput";
-import PasswordInput from "@/components/signin-signup/PasswordInput";
+
 import SignButton from "@/components/signin-signup/SignButton";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
 import AppleIcon from "@mui/icons-material/Apple";
 import LogoDevIcon from "@mui/icons-material/LogoDev";
-import {
-  Box,
-  Card,
-  Checkbox,
-  Divider,
-  FormControlLabel,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Box, Card, Divider, Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Field } from "@/lib/types";
@@ -23,7 +13,8 @@ import { emailMatcher, passwordMatcher } from "@/lib/validators";
 import { loginUser, registerUser } from "@/lib/utils";
 import { useAtom } from "jotai";
 import { userInfoAtom } from "@/store";
-import TextInput from "@/components/signin-signup/TextInput";
+import LoginForm from "@/components/signin-signup/forms/LoginForm";
+import RegisterForm from "@/components/signin-signup/forms/RegisterForm";
 
 function Page() {
   const router = useRouter();
@@ -193,66 +184,35 @@ function Page() {
               ></Tab>
             </Tabs>
           </Box>
-          <EmailInput
-            email={email}
-            setEmail={setEmail}
-            isEmailValid={isEmailValid}
-          />
-          {value === 1 && (
-            <TextInput text={name} setText={setName} title="Name" />
-          )}
-          <PasswordInput
-            password={password}
-            setPassword={setPassword}
-            showPassword={showPassword}
-            isLoginInput={value === 0}
-            handleClickShowPassword={() =>
-              handleClickShowPassword(Field.Password)
-            }
-            error={formError}
-          />
-          {value === 1 && (
-            <PasswordInput
-              password={confirmPassword}
-              setPassword={setConfirmPassword}
-              showPassword={showRePassword}
-              title="Confirm Password"
+          {value === 0 ? (
+            <LoginForm
+              email={email}
+              setEmail={setEmail}
+              password={password}
+              setPassword={setPassword}
+              showPassword={showPassword}
               handleClickShowPassword={() =>
-                handleClickShowPassword(Field.RePassword)
+                handleClickShowPassword(Field.Password)
               }
-              error={formError}
+              isEmailValid={isEmailValid}
+            />
+          ) : (
+            <RegisterForm
+              email={email}
+              setEmail={setEmail}
+              name={name}
+              setName={setName}
+              password={password}
+              setPassword={setPassword}
+              confirmPassword={confirmPassword}
+              setConfirmPassword={setConfirmPassword}
+              showPassword={showPassword}
+              showRePassword={showRePassword}
+              handleClickShowPassword={handleClickShowPassword}
+              isEmailValid={isEmailValid}
+              formError={formError}
             />
           )}
-
-          <Box
-            sx={{
-              display: "flex",
-              width: "65%",
-              justifyContent: "space-between",
-            }}
-          >
-            <FormControlLabel
-              control={<Checkbox sx={{ color: "gray" }} />}
-              label={
-                value === 0
-                  ? "Remember Me"
-                  : `Please keep me updated by email with latest news, research findings, reward programs, event 
-                updates and more information from AI Content Creator.`
-              }
-              sx={{ color: "gray" }}
-            />
-            {value === 0 && (
-              <Typography
-                sx={{
-                  alignContent: "center",
-                  fontWeight: "500",
-                  cursor: "pointer",
-                }}
-              >
-                Forgot Password?
-              </Typography>
-            )}
-          </Box>
 
           <SignButton
             title={value === 0 ? "Log in" : "Sign Up"}

@@ -18,6 +18,7 @@ const EmailInput: React.FC<EmailInputProps> = ({
         Email Address
       </Typography>
       <OutlinedInput
+        required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         id="outlined-adornment-email"

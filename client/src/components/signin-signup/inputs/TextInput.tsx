@@ -10,10 +10,11 @@ interface TextInputProps {
 const TextInput: React.FC<TextInputProps> = ({ text, setText, title }) => {
   return (
     <FormControl sx={{ width: "65%" }} variant="outlined">
-      <Typography mb={1} sx={{ fontWeight: "600" }}>
+      <Typography mt={1} mb={1} sx={{ fontWeight: "600" }}>
         {title}
       </Typography>
       <OutlinedInput
+        required
         value={text}
         onChange={(e) => setText(e.target.value)}
         id="outlined-adornment-text"
