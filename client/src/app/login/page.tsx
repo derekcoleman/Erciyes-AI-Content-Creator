@@ -20,16 +20,18 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Field } from "@/lib/types";
 import { emailMatcher, passwordMatcher } from "@/lib/validators";
-import { loginUser } from "@/lib/utils";
+import { loginUser, registerUser } from "@/lib/utils";
 import { useAtom } from "jotai";
 import { userInfoAtom } from "@/store";
+import TextInput from "@/components/signin-signup/TextInput";
 
 function Page() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [user, setUser] = useAtom(userInfoAtom);
-  const [rePassword, setRePassword] = useState<string>("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showRePassword, setShowRePassword] = useState<boolean>(false);
@@ -67,7 +69,7 @@ function Page() {
       if (email === "content@creator.com" && password === "Admin123") {
         router.push("/Gradient.png");
         // try {
-        //   const userInfo = await loginUser(email, password);
+        // const userInfo = await loginUser({ email, password });
         //   setUser(userInfo);
         //   alert("Login successful!");
         // } catch (error) {
@@ -77,11 +79,22 @@ function Page() {
         alert("WRONG");
       }
     } else if (value === 1) {
-      const { error, message } = passwordMatcher(password, rePassword);
-      console.log(message);
+      const { error, message } = passwordMatcher(password, confirmPassword);
       if (error) {
         setFormError({ isError: true, message });
       } else {
+        // try {
+        //   const userInfo = await registerUser({
+        //     email,
+        //     name,
+        //     password,
+        //     confirmPassword,
+        //   });
+        //   setUser(userInfo);
+        //   alert("register successful!");
+        // } catch (error) {
+        //   alert("Login failed: " + error.message);
+        // }
         alert("Email: " + email + " Password: " + password);
       }
     }
@@ -90,7 +103,7 @@ function Page() {
   const isFormValid =
     value === 0
       ? email !== "" && password !== ""
-      : email !== "" && password !== "" && rePassword !== "";
+      : email !== "" && password !== "" && confirmPassword !== "";
 
   return (
     <Box
@@ -185,6 +198,9 @@ function Page() {
             setEmail={setEmail}
             isEmailValid={isEmailValid}
           />
+          {value === 1 && (
+            <TextInput text={name} setText={setName} title="Name" />
+          )}
           <PasswordInput
             password={password}
             setPassword={setPassword}
@@ -197,9 +213,10 @@ function Page() {
           />
           {value === 1 && (
             <PasswordInput
-              password={rePassword}
-              setPassword={setRePassword}
+              password={confirmPassword}
+              setPassword={setConfirmPassword}
               showPassword={showRePassword}
+              title="Confirm Password"
               handleClickShowPassword={() =>
                 handleClickShowPassword(Field.RePassword)
               }
