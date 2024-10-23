@@ -1,6 +1,5 @@
 import React from "react";
 import { FormControl, OutlinedInput, Typography } from "@mui/material";
-import { emailMatcher } from "@/lib/validators";
 
 interface EmailInputProps {
   email: string;
@@ -19,6 +18,7 @@ const EmailInput: React.FC<EmailInputProps> = ({
         Email Address
       </Typography>
       <OutlinedInput
+        required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         id="outlined-adornment-email"

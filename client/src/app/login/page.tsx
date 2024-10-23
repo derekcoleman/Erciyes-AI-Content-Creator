@@ -1,35 +1,28 @@
 "use client";
-import EmailInput from "@/components/signin-signup/EmailInput";
-import PasswordInput from "@/components/signin-signup/PasswordInput";
+
 import SignButton from "@/components/signin-signup/SignButton";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
 import AppleIcon from "@mui/icons-material/Apple";
 import LogoDevIcon from "@mui/icons-material/LogoDev";
-import {
-  Box,
-  Card,
-  Checkbox,
-  Divider,
-  FormControlLabel,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Box, Card, Divider, Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Field } from "@/lib/types";
 import { emailMatcher, passwordMatcher } from "@/lib/validators";
-import { loginUser } from "@/lib/utils";
+import { loginUser, registerUser } from "@/lib/utils";
 import { useAtom } from "jotai";
 import { userInfoAtom } from "@/store";
+import LoginForm from "@/components/signin-signup/forms/LoginForm";
+import RegisterForm from "@/components/signin-signup/forms/RegisterForm";
 
 function Page() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [user, setUser] = useAtom(userInfoAtom);
-  const [rePassword, setRePassword] = useState<string>("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showRePassword, setShowRePassword] = useState<boolean>(false);
@@ -67,7 +60,7 @@ function Page() {
       if (email === "content@creator.com" && password === "Admin123") {
         router.push("/Gradient.png");
         // try {
-        //   const userInfo = await loginUser(email, password);
+        // const userInfo = await loginUser({ email, password });
         //   setUser(userInfo);
         //   alert("Login successful!");
         // } catch (error) {
@@ -77,11 +70,22 @@ function Page() {
         alert("WRONG");
       }
     } else if (value === 1) {
-      const { error, message } = passwordMatcher(password, rePassword);
-      console.log(message);
+      const { error, message } = passwordMatcher(password, confirmPassword);
       if (error) {
         setFormError({ isError: true, message });
       } else {
+        // try {
+        //   const userInfo = await registerUser({
+        //     email,
+        //     name,
+        //     password,
+        //     confirmPassword,
+        //   });
+        //   setUser(userInfo);
+        //   alert("register successful!");
+        // } catch (error) {
+        //   alert("Login failed: " + error.message);
+        // }
         alert("Email: " + email + " Password: " + password);
       }
     }
@@ -90,7 +94,7 @@ function Page() {
   const isFormValid =
     value === 0
       ? email !== "" && password !== ""
-      : email !== "" && password !== "" && rePassword !== "";
+      : email !== "" && password !== "" && confirmPassword !== "";
 
   return (
     <Box
@@ -118,7 +122,6 @@ function Page() {
             "linear-gradient(134.49deg, rgba(9, 58, 237, 0.08) -0.83%, rgba(1, 215, 235, 0.08) 54.23%) ",
           backdropFilter: "blur(80px)",
           gap: 1,
-          paddingTop: "5%",
         }}
       >
         <Box
@@ -138,7 +141,7 @@ function Page() {
               justifyContent: "center",
               alignItems: "center",
               gap: 2,
-              marginBottom: "5%",
+              marginBlock: "5%",
             }}
           >
             <LogoDevIcon sx={{ color: "#1976d2" }} fontSize="large" />
@@ -181,62 +184,35 @@ function Page() {
               ></Tab>
             </Tabs>
           </Box>
-          <EmailInput
-            email={email}
-            setEmail={setEmail}
-            isEmailValid={isEmailValid}
-          />
-          <PasswordInput
-            password={password}
-            setPassword={setPassword}
-            showPassword={showPassword}
-            isLoginInput={value === 0}
-            handleClickShowPassword={() =>
-              handleClickShowPassword(Field.Password)
-            }
-            error={formError}
-          />
-          {value === 1 && (
-            <PasswordInput
-              password={rePassword}
-              setPassword={setRePassword}
-              showPassword={showRePassword}
+          {value === 0 ? (
+            <LoginForm
+              email={email}
+              setEmail={setEmail}
+              password={password}
+              setPassword={setPassword}
+              showPassword={showPassword}
               handleClickShowPassword={() =>
-                handleClickShowPassword(Field.RePassword)
+                handleClickShowPassword(Field.Password)
               }
-              error={formError}
+              isEmailValid={isEmailValid}
+            />
+          ) : (
+            <RegisterForm
+              email={email}
+              setEmail={setEmail}
+              name={name}
+              setName={setName}
+              password={password}
+              setPassword={setPassword}
+              confirmPassword={confirmPassword}
+              setConfirmPassword={setConfirmPassword}
+              showPassword={showPassword}
+              showRePassword={showRePassword}
+              handleClickShowPassword={handleClickShowPassword}
+              isEmailValid={isEmailValid}
+              formError={formError}
             />
           )}
-
-          <Box
-            sx={{
-              display: "flex",
-              width: "65%",
-              justifyContent: "space-between",
-            }}
-          >
-            <FormControlLabel
-              control={<Checkbox sx={{ color: "gray" }} />}
-              label={
-                value === 0
-                  ? "Remember Me"
-                  : `Please keep me updated by email with latest news, research findings, reward programs, event 
-                updates and more information from AI Content Creator.`
-              }
-              sx={{ color: "gray" }}
-            />
-            {value === 0 && (
-              <Typography
-                sx={{
-                  alignContent: "center",
-                  fontWeight: "500",
-                  cursor: "pointer",
-                }}
-              >
-                Forgot Password?
-              </Typography>
-            )}
-          </Box>
 
           <SignButton
             title={value === 0 ? "Log in" : "Sign Up"}
