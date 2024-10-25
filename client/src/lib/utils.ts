@@ -1,7 +1,12 @@
 import { API_ENDPOINTS } from "./conts";
-import { LoginFormData, RegisterFormData, UserInfo } from "./types";
+import {
+  LoginFormData,
+  LoginInfo,
+  RegisterFormData,
+  RegisterInfo,
+} from "./types";
 
-const loginUser = async (formData: LoginFormData): Promise<UserInfo> => {
+const loginUser = async (formData: LoginFormData): Promise<LoginInfo> => {
   const response = await fetch(API_ENDPOINTS.LOGIN, {
     method: "POST",
     headers: {
@@ -14,11 +19,13 @@ const loginUser = async (formData: LoginFormData): Promise<UserInfo> => {
     throw new Error("Login failed");
   }
 
-  const data: UserInfo = await response.json();
+  const data: LoginInfo = await response.json();
   return data;
 };
 
-const registerUser = async (formData: RegisterFormData): Promise<UserInfo> => {
+const registerUser = async (
+  formData: RegisterFormData
+): Promise<RegisterInfo> => {
   const response = await fetch(API_ENDPOINTS.REGISTER, {
     method: "POST",
     headers: {
@@ -31,7 +38,7 @@ const registerUser = async (formData: RegisterFormData): Promise<UserInfo> => {
     throw new Error("Register failed");
   }
 
-  const data: UserInfo = await response.json();
+  const data: RegisterInfo = await response.json();
   return data;
 };
 
