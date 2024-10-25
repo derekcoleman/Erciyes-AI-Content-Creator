@@ -9,20 +9,26 @@ enum Variant {
 }
 
 export interface LoginFormData {
-  email: string;
+  username: string;
   password: string;
 }
 
 export interface RegisterFormData {
   email: string;
-  name: string;
+  username: string;
   password: string;
-  confirmPassword: string;
 }
 
-export interface UserInfo {
-  email: string;
-  name: string;
+export interface LoginInfo {
+  code: number;
+  message: string;
+  status: boolean;
+  token: string;
+}
+export interface RegisterInfo {
+  code: number;
+  message: string;
+  status: boolean;
 }
 
 export { Field, Variant };
