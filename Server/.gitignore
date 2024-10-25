@@ -1,4 +1,4 @@
 # .gitignore
-node_modules/
-images/
-.env
+/node_modules
+/images
+/.env
