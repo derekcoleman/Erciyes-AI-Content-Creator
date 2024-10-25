@@ -1,24 +1,4 @@
+# .gitignore
 node_modules/
-npm-debug.log
-*.log
-*.tsbuildinfo
-!.eslintrc.js
-!.prettierrc.js
-
-.vscode/
-.idea/
-.DS_Store
-
-Thumbs.db
-desktop.ini
-
-out/
-logs/
-*.pid
-*.seed
-
-db/migrations/current
-
-coverage/
-
+images/
 .env
