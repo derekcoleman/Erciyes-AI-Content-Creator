@@ -55,11 +55,15 @@ function Page() {
     if (value === 0) {
       try {
         const loginInfo: LoginInfo = await loginUser({ username, password });
-        setUser(loginInfo);
-        setToken("userInfo.token");
-        document.cookie = `token=${loginInfo.token}; path=/; max-age=3600`;
-        alert("Login successful!");
-        router.push("/");
+        if (loginInfo.status) {
+          setUser(loginInfo);
+          setToken("userInfo.token");
+          document.cookie = `token=${loginInfo.token}`;
+          alert("Login successful!");
+          router.push("/");
+        } else {
+          alert("Login failed: " + loginInfo.message);
+        }
       } catch (error) {
         alert("Login failed: " + error.message);
       }
@@ -79,9 +83,13 @@ function Page() {
             username,
             password,
           });
-          alert("register successful!");
+          if (registerInfo.code) {
+            alert("register successful!");
+          } else {
+            alert("register failed: " + registerInfo.message);
+          }
         } catch (error) {
-          alert("Login failed: " + error.message);
+          alert("register failed: " + error.message);
         }
       }
     }
