@@ -23,7 +23,6 @@ const jobs = async (req,res) => {
         } catch (error) {
             resolve(failure.server_error);
         }
-        
     })
 }
 const settings = async (req,res) => {
