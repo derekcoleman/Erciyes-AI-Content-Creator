@@ -8,21 +8,22 @@ import LogoDevIcon from "@mui/icons-material/LogoDev";
 import { Box, Card, Divider, Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Field } from "@/lib/types";
+import { Field, LoginInfo, RegisterInfo } from "@/lib/types";
 import { emailMatcher, passwordMatcher } from "@/lib/validators";
 import { loginUser, registerUser } from "@/lib/utils";
 import { useAtom } from "jotai";
-import { userInfoAtom } from "@/store";
+import { userInfoAtom, tokenAtom } from "@/store";
 import LoginForm from "@/components/signin-signup/forms/LoginForm";
 import RegisterForm from "@/components/signin-signup/forms/RegisterForm";
 
 function Page() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
-  const [name, setName] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [user, setUser] = useAtom(userInfoAtom);
+  const [token, setToken] = useAtom(tokenAtom);
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showRePassword, setShowRePassword] = useState<boolean>(false);
@@ -51,50 +52,48 @@ function Page() {
     const validationRes = emailMatcher(email);
     setFormError({ isError: false, message: "" });
 
+    if (value === 0) {
+      try {
+        const loginInfo: LoginInfo = await loginUser({ username, password });
+        setUser(loginInfo);
+        setToken("userInfo.token");
+        document.cookie = `token=${loginInfo.token}; path=/; max-age=3600`;
+        alert("Login successful!");
+        router.push("/");
+      } catch (error) {
+        alert("Login failed: " + error.message);
+      }
+    }
+
     if (!validationRes) {
       setIsEmailValid(false);
       return;
-    }
-
-    if (value === 0) {
-      if (email === "content@creator.com" && password === "Admin123") {
-        router.push("/Gradient.png");
-        // try {
-        // const userInfo = await loginUser({ email, password });
-        //   setUser(userInfo);
-        //   alert("Login successful!");
-        // } catch (error) {
-        //   alert("Login failed: " + error.message);
-        // }
-      } else {
-        alert("WRONG");
-      }
     } else if (value === 1) {
       const { error, message } = passwordMatcher(password, confirmPassword);
       if (error) {
         setFormError({ isError: true, message });
       } else {
-        // try {
-        //   const userInfo = await registerUser({
-        //     email,
-        //     name,
-        //     password,
-        //     confirmPassword,
-        //   });
-        //   setUser(userInfo);
-        //   alert("register successful!");
-        // } catch (error) {
-        //   alert("Login failed: " + error.message);
-        // }
-        alert("Email: " + email + " Password: " + password);
+        try {
+          const registerInfo: RegisterInfo = await registerUser({
+            email,
+            username,
+            password,
+          });
+          alert("register successful!");
+        } catch (error) {
+          alert("Login failed: " + error.message);
+        }
       }
     }
   };
 
   const isFormValid =
     value === 0
-      ? email !== "" && password !== ""
-      : email !== "" && password !== "" && confirmPassword !== "";
+      ? username !== "" && password !== ""
+      : email !== "" &&
+        username !== "" &&
+        password !== "" &&
+        confirmPassword !== "";
 
   return (
     <Box
@@ -186,8 +185,8 @@ function Page() {
           </Box>
           {value === 0 ? (
             <LoginForm
-              email={email}
-              setEmail={setEmail}
+              username={username}
+              setUsername={setUsername}
               password={password}
               setPassword={setPassword}
               showPassword={showPassword}
@@ -200,8 +199,8 @@ function Page() {
             <RegisterForm
               email={email}
               setEmail={setEmail}
-              name={name}
-              setName={setName}
+              username={username}
+              setUsername={setUsername}
               password={password}
               setPassword={setPassword}
               confirmPassword={confirmPassword}

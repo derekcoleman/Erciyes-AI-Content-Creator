@@ -1,10 +1,10 @@
 import { Box, FormControlLabel, Checkbox, Typography } from "@mui/material";
-import EmailInput from "../inputs/EmailInput";
 import PasswordInput from "../inputs/PasswordInput";
+import TextInput from "../inputs/TextInput";
 
 interface LoginFormProps {
-  email: string;
-  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
   password: string;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   showPassword: boolean;
@@ -13,13 +13,12 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
-  email,
-  setEmail,
+  username,
+  setUsername,
   password,
   setPassword,
   showPassword,
   handleClickShowPassword,
-  isEmailValid,
 }) => {
   return (
     <Box
@@ -30,11 +29,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         alignItems: "center",
       }}
     >
-      <EmailInput
-        email={email}
-        setEmail={setEmail}
-        isEmailValid={isEmailValid}
-      />
+      <TextInput text={username} setText={setUsername} title="Username" />
       <PasswordInput
         password={password}
         setPassword={setPassword}

@@ -7,8 +7,8 @@ import PasswordInput from "../inputs/PasswordInput";
 interface RegisterFormProps {
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
-  name: string;
-  setName: React.Dispatch<React.SetStateAction<string>>;
+  username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
   password: string;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   confirmPassword: string;
@@ -23,8 +23,8 @@ interface RegisterFormProps {
 const RegisterForm: React.FC<RegisterFormProps> = ({
   email,
   setEmail,
-  name,
-  setName,
+  username,
+  setUsername,
   password,
   setPassword,
   confirmPassword,
@@ -49,7 +49,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         setEmail={setEmail}
         isEmailValid={isEmailValid}
       />
-      <TextInput text={name} setText={setName} title="Name" />
+      <TextInput text={username} setText={setUsername} title="Username" />
       <PasswordInput
         password={password}
         setPassword={setPassword}
