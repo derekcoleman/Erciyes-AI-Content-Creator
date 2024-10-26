@@ -127,7 +127,15 @@ export default function MiniDrawer() {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        background:
+          "linear-gradient(134.49deg, rgba(9, 58, 237, 0.08) -0.83%, rgba(1, 215, 235, 0.08) 54.23%) ",
+        backdropFilter: "blur(80px)",
+      }}
+    >
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
@@ -150,10 +158,19 @@ export default function MiniDrawer() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
+      <Drawer
+        variant="permanent"
+        open={open}
+        PaperProps={{
+          sx: {
+            backgroundColor: "white",
+            color: "black",
+          },
+        }}
+      >
         <DrawerHeader>
-        <IconButton sx={{mr:"auto"}}>
-            <HomeIcon fontSize="large"/> Home
+          <IconButton sx={{ mr: "auto" }}>
+            <HomeIcon fontSize="large" /> Home
           </IconButton>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
@@ -162,7 +179,6 @@ export default function MiniDrawer() {
               <ChevronLeftIcon />
             )}
           </IconButton>
-          
         </DrawerHeader>
         <Divider />
         <List>
@@ -193,20 +209,25 @@ export default function MiniDrawer() {
           ))}
         </List>
         <Divider />
-        <Box sx={{ marginTop: "auto", padding: 2 , width:"100%"}}>
-          <IconButton >
+        <Box sx={{ marginTop: "auto", padding: 2, width: "100%" }}>
+          <IconButton>
             {open ? (
-               <Button variant="outlined" endIcon={<LogoutIcon />} sx={{color:"red",width:"200px", borderColor:"red"}}>
+              <Button
+                variant="outlined"
+                endIcon={<LogoutIcon />}
+                sx={{ color: "red", width: "200px", borderColor: "red" }}
+              >
                 Logout
-                </Button>)
-               : 
-              (<LogoutIcon />)}
+              </Button>
+            ) : (
+              <LogoutIcon />
+            )}
           </IconButton>
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <HomeSkeleton/>
+        <HomeSkeleton />
       </Box>
     </Box>
   );
