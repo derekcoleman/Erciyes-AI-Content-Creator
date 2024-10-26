@@ -23,6 +23,7 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useState } from "react";
 import { Button } from "@mui/material";
+import HomeSkeleton from "@/components/skeleton/HomeSkeleton";
 
 const iconList = [
   { title: "Jobs", icon: <StarIcon /> },
@@ -205,7 +206,7 @@ export default function MiniDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {/* my posts */}
+        <HomeSkeleton/>
       </Box>
     </Box>
   );
