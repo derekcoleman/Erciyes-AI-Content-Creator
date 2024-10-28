@@ -29,6 +29,10 @@ const JobForm = () => {
     console.log({ platform, selectedDays, hour: getHourFromDate(hour.$d) });
   };
 
+  const isFormValid = () => {
+    return platform && selectedDays.length > 0 && hour !== null;
+  };
+
   return (
     <Card
       component="form"
@@ -95,6 +99,7 @@ const JobForm = () => {
           variant="contained"
           color="primary"
           sx={{ width: "10%", height: "56px", marginTop: "14px" }}
+          disabled={!isFormValid()}
         >
           Kaydet
         </Button>
