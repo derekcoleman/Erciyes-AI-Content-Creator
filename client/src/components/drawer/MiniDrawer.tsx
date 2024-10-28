@@ -23,13 +23,12 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useState } from "react";
 import { Button } from "@mui/material";
-
+import { useRouter } from "next/navigation";
 const iconList = [
-  { title: "Jobs", icon: <StarIcon /> },
-  { title: "Settings", icon: <DisplaySettingsIcon /> },
-  { title: "Profile", icon: <AccountBoxIcon /> },
+  { title: "Jobs", icon: <StarIcon />, path: "/jobs" },
+  { title: "Settings", icon: <DisplaySettingsIcon />, path: "/settings" },
+  { title: "Profile", icon: <AccountBoxIcon />, path: "/profile" },
 ];
-
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -116,12 +115,18 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer({ children }) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const router = useRouter(); // Initialize the router
 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
 
   const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  const handleNavigation = (path) => {
+    router.push(path); // Use Next.js router to navigate
     setOpen(false);
   };
 
@@ -143,12 +148,7 @@ export default function MiniDrawer({ children }) {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={[
-              {
-                marginRight: 5,
-              },
-              open && { display: "none" },
-            ]}
+            sx={[{ marginRight: 5 }, open && { display: "none" }]}
           >
             <MenuIcon />
           </IconButton>
@@ -168,7 +168,7 @@ export default function MiniDrawer({ children }) {
         }}
       >
         <DrawerHeader>
-          <IconButton sx={{ mr: "auto" }}>
+          <IconButton sx={{ mr: "auto" }} onClick={() => handleNavigation("/")}>
             <HomeIcon fontSize="large" /> Home
           </IconButton>
           <IconButton onClick={handleDrawerClose}>
@@ -181,28 +181,11 @@ export default function MiniDrawer({ children }) {
         </DrawerHeader>
         <Divider />
         <List>
-          {iconList.map((data, index) => (
+          {iconList.map((data) => (
             <ListItem key={data.title} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={[
-                  { minHeight: 48, px: 2.5 },
-                  open
-                    ? { justifyContent: "initial" }
-                    : { justifyContent: "center" },
-                ]}
-              >
-                <ListItemIcon
-                  sx={[
-                    { minWidth: 0, justifyContent: "center" },
-                    open ? { mr: 3 } : { mr: "auto" },
-                  ]}
-                >
-                  {data.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={data.title}
-                  sx={[open ? { opacity: 1 } : { opacity: 0 }]}
-                />
+              <ListItemButton onClick={() => handleNavigation(data.path)}>
+                <ListItemIcon>{data.icon}</ListItemIcon>
+                <ListItemText primary={data.title} />
               </ListItemButton>
             </ListItem>
           ))}
