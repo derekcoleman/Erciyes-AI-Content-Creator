@@ -8,15 +8,16 @@ import {
   ListItemText,
   MenuItem,
   Select,
-  TextField,
   Typography,
 } from "@mui/material";
 import { daysOfWeek, platforms } from "@/lib/conts";
+import CustomTimePicker from "../input/CustomTimePicker";
+import { getHourFromDate } from "@/lib/utils";
 
 const JobForm = () => {
   const [platform, setPlatform] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
-  const [hour, setHour] = useState("");
+  const [hour, setHour] = useState(null);
 
   const handleDayChange = (event) => {
     const { value } = event.target;
@@ -25,7 +26,11 @@ const JobForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log({ platform, selectedDays, hour });
+    console.log({ platform, selectedDays, hour: getHourFromDate(hour.$d) });
+  };
+
+  const isFormValid = () => {
+    return platform && selectedDays.length > 0 && hour !== null;
   };
 
   return (
@@ -61,7 +66,6 @@ const JobForm = () => {
             ))}
           </Select>
         </FormControl>
-
         <FormControl fullWidth margin="normal" sx={{ width: "30%" }}>
           <Select
             sx={{ backgroundColor: "white" }}
@@ -89,20 +93,13 @@ const JobForm = () => {
             ))}
           </Select>
         </FormControl>
-
-        <TextField
-          sx={{ backgroundColor: "white", width: "10%" }}
-          fullWidth
-          margin="normal"
-          value={hour}
-          onChange={(e) => setHour(e.target.value)}
-          placeholder="Saatinizi girin"
-        />
+        <CustomTimePicker value={hour} onChange={setHour} />
         <Button
           type="submit"
           variant="contained"
           color="primary"
           sx={{ width: "10%", height: "56px", marginTop: "14px" }}
+          disabled={!isFormValid()}
         >
           Kaydet
         </Button>

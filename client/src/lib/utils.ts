@@ -42,4 +42,11 @@ const registerUser = async (
   return data;
 };
 
-export { registerUser, loginUser };
+const getHourFromDate = (date: Date) => {
+  if (!(date instanceof Date)) {
+    return null;
+  }
+  return date.getHours();
+};
+
+export { registerUser, loginUser, getHourFromDate };
