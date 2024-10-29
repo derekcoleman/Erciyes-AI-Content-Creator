@@ -49,4 +49,8 @@ const getHourFromDate = (date: Date) => {
   return date.getHours();
 };
 
-export { registerUser, loginUser, getHourFromDate };
+const textLimiter = (text: string): string => {
+  return text.length > 150 ? text.substring(0, 150) + "..." : text;
+};
+
+export { registerUser, loginUser, getHourFromDate, textLimiter };

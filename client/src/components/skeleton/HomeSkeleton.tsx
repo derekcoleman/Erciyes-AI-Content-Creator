@@ -3,33 +3,78 @@ import React from "react";
 
 function HomeSkeleton() {
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
-        <Skeleton variant="rectangular" height={300} />
+    <Grid container spacing={2} justifyContent="center">
+      <Grid item xs={12} md={5} mb={2}>
+        <Skeleton
+          variant="rectangular"
+          height={"230px"}
+          sx={{ maxWidth: "736.5px" }}
+        />
       </Grid>
-      <Grid item xs={6} sm={4} md={3}>
-        <Skeleton variant="rectangular" height={200} />
-      </Grid>
-      <Grid item xs={6} sm={4} md={3}>
-        <Skeleton variant="rectangular" height={200} />
-      </Grid>
-      <Grid item xs={6} sm={4} md={3}>
-        <Skeleton variant="rectangular" height={200} />
-      </Grid>
-      <Grid item xs={6} sm={4} md={3}>
-        <Skeleton variant="rectangular" height={200} />
-      </Grid>
-      <Grid item xs={6} sm={4} md={3}>
-        <Skeleton variant="rectangular" height={200} />
-      </Grid>
-      <Grid item xs={6} sm={4} md={3}>
-        <Skeleton variant="rectangular" height={200} />
-      </Grid>
-      <Grid item xs={6} sm={4} md={3}>
-        <Skeleton variant="rectangular" height={200} />
-      </Grid>
-      <Grid item xs={6} sm={4} md={3}>
-        <Skeleton variant="rectangular" height={200} />
+      <Grid container spacing={2}>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
       </Grid>
     </Grid>
   );
