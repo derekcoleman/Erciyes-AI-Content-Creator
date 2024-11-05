@@ -75,6 +75,27 @@ function HomeSkeleton() {
             sx={{ maxWidth: "591.33px" }}
           />
         </Grid>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={4}>
+          <Skeleton
+            variant="rectangular"
+            height={"230px"}
+            sx={{ maxWidth: "591.33px" }}
+          />
+        </Grid>
       </Grid>
     </Grid>
   );
