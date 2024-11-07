@@ -15,7 +15,7 @@ function cleanAndValidate(input) {
 }
 const create_newUser = async (req, res) => {
     return new Promise(async resolve => {
-        try {
+        try {console.log(req.body)
             const userName = req.body.username;
             userName.toLocaleLowerCase('tr-TR')
             const email = req.body.email;
@@ -46,6 +46,7 @@ const create_newUser = async (req, res) => {
                 const registered = await dbhelper(sqlForRegister, newUser);
                 if (registered?.protocol41) {
                     resolve(successfuly.register_added);
+
                 }
                 resolve(failure.Your_new_password_cannot_be_the_same_as_your_old_password);
             }
