@@ -7,7 +7,8 @@ const registerRouter = require('./routes/registerRouter');
 const settingsRouter = require('./routes/settingsRouter');
 const aiRouter = require('./routes/aiRouter');
 const {makejob} = require('./controllers/makejob');
-
+const {instagram} = require('./controllers/instagramscraper.js')
+instagram(null,null,"2mimar2fikir");
 dotenv.config();
 app.use(cors());
 app.use(express.json());
