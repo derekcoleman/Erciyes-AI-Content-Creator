@@ -5,6 +5,7 @@ const {generateRefreshToken} = require('../hash/jsonwebtoken');
 const login = async (req, res) => {
     return new Promise(async (resolve) => {
         try {
+            console.log("levooo")
             const sqlForUserName = 'SELECT * FROM users WHERE username = ?';
             const sqlForDevive = `INSERT INTO info SET ?`;
             const device = req?.headers?.device == undefined | null ? "" : req?.headers?.device;
