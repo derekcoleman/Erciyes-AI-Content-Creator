@@ -1,9 +1,12 @@
-const API_BASE_URL = "localhost:8080/api";
+const API_BASE_URL = "http://192.168.197.116:8080/api";
 
 export const API_ENDPOINTS = {
   LOGIN: `${API_BASE_URL}/login`,
   REGISTER: `${API_BASE_URL}/register`,
+  SETTNGS: `${API_BASE_URL}/settings/topic`,
+  JOBS: `${API_BASE_URL}/settings`,
   FETCH_USER_INFO: `${API_BASE_URL}/user/info`,
+  AI: `${API_BASE_URL}/ai`
 };
 
 export const daysOfWeek = [

@@ -29,12 +29,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
         alignItems: "center",
       }}
     >
-      <TextInput text={username} setText={setUsername} title="Username" />
+      <TextInput text={username} setText={setUsername} title="Kullanıcı Adı" />
       <PasswordInput
         password={password}
         setPassword={setPassword}
         showPassword={showPassword}
-        isLoginInput={true}
         handleClickShowPassword={handleClickShowPassword}
       />
       <Box
@@ -42,7 +41,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       >
         <FormControlLabel
           control={<Checkbox sx={{ color: "gray" }} />}
-          label="Remember Me"
+          label="Beni Hatırla"
           sx={{ color: "gray" }}
         />
         <Typography
@@ -52,7 +51,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             cursor: "pointer",
           }}
         >
-          Forgot Password?
+          Şifremi Unuttum?
         </Typography>
       </Box>
     </Box>

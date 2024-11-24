@@ -1,5 +1,5 @@
 "use client";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import StarIcon from "@mui/icons-material/Star";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
 import HomeIcon from "@mui/icons-material/Home";
@@ -26,9 +26,19 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { ReactNode } from "react";
 const iconList = [
-  { title: "Jobs", icon: <StarIcon />, path: "/jobs" },
-  { title: "Settings", icon: <DisplaySettingsIcon />, path: "/settings" },
-  { title: "Profile", icon: <AccountBoxIcon />, path: "/profile" },
+  { label: "Görevler", title: "Jobs", icon: <StarIcon />, path: "/jobs" },
+  {
+    label: "Ayarlar",
+    title: "Settings",
+    icon: <DisplaySettingsIcon />,
+    path: "/settings",
+  },
+  {
+    label: "Profil",
+    title: "Profile",
+    icon: <AccountBoxIcon />,
+    path: "/profile",
+  },
 ];
 
 const drawerWidth = 240;
@@ -87,10 +97,10 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
 }));
-
 interface MiniDrawerProps {
   children: ReactNode;
 }
@@ -114,7 +124,12 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+      }}
+    >
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
@@ -152,7 +167,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
       >
         <DrawerHeader>
           <IconButton sx={{ mr: "auto" }} onClick={() => handleNavigation("/")}>
-            <HomeIcon fontSize="large" /> Home
+            <HomeIcon fontSize="large" /> Ana Sayfa
           </IconButton>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "ltr" ? (
@@ -165,32 +180,33 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
         <Divider />
         <List>
           {iconList.map((data) => (
-            <ListItem key={data.title} disablePadding sx={{ display: "block" }}>
+            <ListItem key={data.title} disablePadding>
               <ListItemButton onClick={() => handleNavigation(data.path)}>
                 <ListItemIcon>{data.icon}</ListItemIcon>
-                <ListItemText primary={data.title} />
+                <ListItemText primary={data.label} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
         <Divider />
         <Box sx={{ marginTop: "auto", padding: 2, width: "100%" }}>
-          <IconButton>
-            {open ? (
-              <Button
-                variant="outlined"
-                endIcon={<LogoutIcon />}
-                sx={{ color: "red", width: "200px", borderColor: "red" }}
-              >
-                Logout
-              </Button>
-            ) : (
-              <LogoutIcon />
-            )}
-          </IconButton>
+          <Button
+            variant="outlined"
+            endIcon={<LogoutIcon />}
+            sx={{ color: "red", width: "200px", borderColor: "red" }}
+          >
+            Çıkış Yap
+          </Button>
         </Box>
       </Drawer>
-      <Main open={open}>
+      <Main
+        sx={{
+          background:
+            "linear-gradient(134.49deg, rgba(9, 58, 237, 0.08) -0.83%, rgba(1, 215, 235, 0.08) 54.23%) ",
+          backdropFilter: "blur(80px)",
+        }}
+        open={open}
+      >
         <DrawerHeader />
         {children}
       </Main>

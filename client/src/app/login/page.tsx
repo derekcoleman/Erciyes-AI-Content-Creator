@@ -1,6 +1,6 @@
 "use client";
 
-import SignButton from "@/components/signin-signup/SignButton";
+import SignButton from "@/components/buttons/SignButton";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
 import AppleIcon from "@mui/icons-material/Apple";
@@ -13,8 +13,8 @@ import { emailMatcher, passwordMatcher } from "@/lib/validators";
 import { loginUser, registerUser } from "@/lib/utils";
 import { useAtom } from "jotai";
 import { userInfoAtom, tokenAtom } from "@/store";
-import LoginForm from "@/components/signin-signup/forms/LoginForm";
-import RegisterForm from "@/components/signin-signup/forms/RegisterForm";
+import LoginForm from "@/components/forms/LoginForm";
+import RegisterForm from "@/components/forms/RegisterForm";
 
 function Page() {
   const router = useRouter();
@@ -58,6 +58,7 @@ function Page() {
         if (loginInfo.status) {
           setUser(loginInfo);
           setToken("userInfo.token");
+          console.log(loginInfo);
           document.cookie = `token=${loginInfo.token}`;
           alert("Login successful!");
           router.push("/");
@@ -79,8 +80,8 @@ function Page() {
       } else {
         try {
           const registerInfo: RegisterInfo = await registerUser({
-            email,
             username,
+            email,
             password,
           });
           if (registerInfo.code) {
@@ -179,7 +180,7 @@ function Page() {
                   fontSize: "18px",
                   color: "gray",
                 }}
-                label="Log In"
+                label="Giriş Yap"
               ></Tab>
               <Tab
                 sx={{
@@ -187,7 +188,7 @@ function Page() {
                   fontSize: "18px",
                   color: "gray",
                 }}
-                label="Sign Up"
+                label="Kayıt Ol"
               ></Tab>
             </Tabs>
           </Box>
@@ -222,7 +223,7 @@ function Page() {
           )}
 
           <SignButton
-            title={value === 0 ? "Log in" : "Sign Up"}
+            title={value === 0 ? "Giriş Yap" : "Kayıt Ol"}
             variant={"contained"}
             isFormValid={isFormValid}
             type="submit"

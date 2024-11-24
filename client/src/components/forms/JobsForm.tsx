@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -11,22 +11,51 @@ import {
   Typography,
 } from "@mui/material";
 import { daysOfWeek, platforms } from "@/lib/conts";
-import CustomTimePicker from "../input/CustomTimePicker";
-import { getHourFromDate } from "@/lib/utils";
+import CustomTimePicker from "../inputs/CustomTimePicker";
+import { addJobs, getHourFromDate, jobDataParser } from "@/lib/utils";
+import { Job, JobsFormData } from "@/lib/types";
 
 const JobForm = () => {
   const [platform, setPlatform] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
   const [hour, setHour] = useState(null);
 
-  const handleDayChange = (event) => {
+  const handleDayChange = (event: React.FormEvent) => {
     const { value } = event.target;
     setSelectedDays(value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log({ platform, selectedDays, hour: getHourFromDate(hour.$d) });
+
+    if (isFormValid()) {
+      try {
+        const formData: JobsFormData = {
+          platform,
+          selectedDays,
+          hour: getHourFromDate(hour.$d),
+        };
+
+        const jobs = jobDataParser(formData);
+
+        for (const job of jobs) {
+          try {
+            const jobResponse = await addJobs(job);
+            if (jobResponse.status) {
+              console.log("Job added successfully", jobResponse);
+            } else {
+              console.error("Failed to add job", jobResponse.message);
+            }
+          } catch (error) {
+            console.error("Error adding job:", error.message);
+          }
+        }
+      } catch (error) {
+        alert("Error processing form: " + error.message);
+      }
+    } else {
+      alert("Please fill in all required fields.");
+    }
   };
 
   const isFormValid = () => {
@@ -40,7 +69,7 @@ const JobForm = () => {
       sx={{ paddingBottom: 6, paddingTop: 2, margin: 2 }}
     >
       <Typography variant="h6" gutterBottom sx={{ textAlign: "center" }}>
-        New Job
+        Yeni Görev
       </Typography>
       <Box sx={{ display: "flex", gap: 2, justifyContent: "center " }}>
         <FormControl fullWidth margin="normal" sx={{ width: "20%" }}>

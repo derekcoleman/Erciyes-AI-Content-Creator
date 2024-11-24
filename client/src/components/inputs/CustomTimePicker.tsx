@@ -8,7 +8,7 @@ export default function CustomTimePicker({ value, onChange }) {
     <Box sx={{ marginTop: "16px" }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <TimePicker
-          label="Select Time"
+          label="Zaman Seçin"
           value={value}
           onChange={onChange}
           views={["hours"]}
