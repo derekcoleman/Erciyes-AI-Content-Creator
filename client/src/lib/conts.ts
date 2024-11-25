@@ -55,4 +55,62 @@ export const DUMMYPOSTS: Post[] = [
     post: { user_id: 1, title: "6th Title", body: DUMMY_BODY },
   },
 ];
+export const DUMMYJOBS = [
+  {
+    title: "Test Title 1",
+    platform: "Instagram",
+    days: ["Pazartesi", "Salı", "Cuma"],
+    hour: "14.00",
+  },
+  {
+    title: "Test Title 2",
+    platform: "LinkedIn",
+    days: [
+      "Pazartesi",
+      "Salı",
+      "Çarşamba",
+      "Perşembe",
+      "Cuma",
+      "Cumartesi",
+      "Pazar",
+    ],
+    hour: "17.00",
+  },
+  {
+    title: "Test Title 3",
+    platform: "Facebook",
+    days: ["Pazar", "Salı"],
+    hour: "09.00",
+  },
+  {
+    title: "Test Title 4",
+    platform: "Twitter",
+    days: ["Çarşamba", "Perşembe"],
+    hour: "18.00",
+  },
+  {
+    title: "Test Title 5",
+    platform: "Snapchat",
+    days: ["Cuma", "Cumartesi"],
+    hour: "10.00",
+  },
+  {
+    title: "Test Title 6",
+    platform: "TikTok",
+    days: ["Salı", "Perşembe"],
+    hour: "13.00",
+  },
+  {
+    title: "Test Title 7",
+    platform: "YouTube",
+    days: ["Çarşamba", "Pazar"],
+    hour: "16.00",
+  },
+  {
+    title: "Test Title 8",
+    platform: "Pinterest",
+    days: ["Pazartesi", "Perşembe"],
+    hour: "11.00",
+  },
+];
 export const platforms = ["Instagram", "LinkedIn", "Facebook", "Twitter"];
