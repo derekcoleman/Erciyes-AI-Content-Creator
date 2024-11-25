@@ -64,4 +64,13 @@ export interface Post {
   status: boolean;
   post: { user_id: number; title: string; body: string };
 }
+
+export interface Settings {
+  code: number;
+  message: string;
+  status: boolean;
+  language: string;
+  topic: string;
+}
+
 export { Field, Variant };
