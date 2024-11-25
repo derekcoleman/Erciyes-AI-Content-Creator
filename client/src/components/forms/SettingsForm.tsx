@@ -1,4 +1,3 @@
-"use client";
 import { useState } from "react";
 import {
   Box,
@@ -15,9 +14,19 @@ import { SettingsInfo } from "@/lib/types";
 
 const languages = ["English", "Turkish", "Spanish", "French", "German"];
 
-const SettingsForm = () => {
-  const [topic, setTopic] = useState("");
-  const [language, setLanguage] = useState("");
+interface SettingsFormProps {
+  topicData: string;
+  statusData: boolean;
+  languageData: string;
+}
+
+const SettingsForm: React.FC<SettingsFormProps> = ({
+  topicData = "",
+  statusData = false,
+  languageData = "",
+}) => {
+  const [topic, setTopic] = useState(topicData);
+  const [language, setLanguage] = useState(languageData);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -66,10 +75,13 @@ const SettingsForm = () => {
             placeholder="Genel Başlık"
             variant="outlined"
             sx={{ backgroundColor: "white" }}
+            disabled={statusData}
+            value={topic}
           />
         </FormControl>
         <FormControl fullWidth margin="normal" sx={{ width: "30%" }}>
           <Select
+            disabled={statusData}
             sx={{ backgroundColor: "white" }}
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
@@ -97,7 +109,7 @@ const SettingsForm = () => {
           variant="contained"
           color="primary"
           sx={{ width: "10%", height: "56px", marginTop: "14px" }}
-          disabled={!isFormValid()}
+          disabled={!isFormValid() || statusData}
         >
           Kaydet
         </Button>

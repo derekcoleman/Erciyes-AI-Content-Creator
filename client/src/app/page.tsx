@@ -15,8 +15,6 @@ export default function HomePage() {
     try {
       const fetchedPost = await getPosts();
       setPostDatas((prev) => [...prev, fetchedPost]);
-      console.log("sadasdas");
-      console.log(fetchPosts);
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {

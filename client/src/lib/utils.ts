@@ -8,6 +8,7 @@ import {
   Post,
   RegisterFormData,
   RegisterInfo,
+  Settings,
   SettingsFormData,
   SettingsInfo,
 } from "./types";
@@ -150,7 +151,6 @@ const getPosts = async (): Promise<Post> => {
     throw new Error("No token found, please login.");
   }
 
-  console.log("saadsasassaassaas");
   try {
     const response = await fetch(API_ENDPOINTS.AI, {
       method: "GET",
@@ -177,6 +177,39 @@ const getPosts = async (): Promise<Post> => {
   }
 };
 
+const getSettings = async (): Promise<Settings> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  try {
+    const response = await fetch("endpoint", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to fetch post");
+    }
+
+    const data: Settings = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(
+        error.message || "Unknown error occurred while fetching post."
+      );
+    }
+    throw new Error("Unknown error occurred while fetching post.");
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -186,4 +219,5 @@ export {
   jobDataParser,
   addJobs,
   getPosts,
+  getSettings,
 };
