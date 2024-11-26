@@ -6,6 +6,7 @@ import CustomCard from "@/components/card/CustomCard";
 import React, { useState } from "react";
 import { getPosts } from "@/lib/utils";
 import { Post } from "@/lib/types";
+import { DUMMYPOSTS } from "@/lib/conts";
 
 export default function HomePage() {
   const [postDatas, setPostDatas] = useState<Post[]>([]);
