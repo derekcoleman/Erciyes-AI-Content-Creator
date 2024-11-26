@@ -13,7 +13,7 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 app.get('/', (req,res) =>{
-    res.json({message:"hello"})
+    res.json({DESIGNED_BY:"BBBSTORE"})
 })
 
 app.use('/api/register',registerRouter);

@@ -14,7 +14,7 @@ const STOP_WORDS_EN = [
     'whom', 'with', 'would', 'why', 'you', 'your', 'yours', 'yourself',
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '$', '1',
-    '2', '3', '4', '5', '6', '7', '8', '9', '0', '_'];
+    '2', '3', '4', '5', '6', '7', '8', '9', '0', '_', ''];
 
 const STOP_WORDS_TR = [
     "ve", "bir", "bu", "şu", "o", "ama", "ile", "için", "de", "da", "ki",
@@ -29,23 +29,37 @@ const STOP_WORDS_TR = [
     "tüm", "herhangi", "birçok", "pek çok", "en", "gibi", "ya da", "ya da",
     "ile ilgili", "üzere", "yalnızca", 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '$', '1',
-    '2', '3', '4', '5', '6', '7', '8', '9', '0', '_'
+    '2', '3', '4', '5', '6', '7', '8', '9', '0', '_', ''
 ];
 
 
 const analysis = (posts, language) => {
 
-    const stopWords = language === 'tr' ? STOP_WORDS_TR : STOP_WORDS_EN;
+    console.log("Girdi");
+    console.log("Posts:", posts);
+    let stopWords = [];
+    let cleanText = "";
+
+    if (language === 'tr') {
+        stopWords = STOP_WORDS_TR;
+        cleanText = (text) => {
+            return text
+                .toLocaleLowerCase('tr-TR')
+                .replace(/[^a-zA-Z\u00C0-\u01FF\s]/g, '')
+                .split(/\s+/);
+        };
+    } else {
+        stopWords = STOP_WORDS_EN;
+        cleanText = (text) => {
+            return text
+                .toLowerCase()
+                .replace(/[^a-zA-Z\u00C0-\u01FF\s]/g, '')
+                .split(/\s+/);
+        };
+    }
+
 
     const combinedPosts = posts.map((post) => `${post.title}`);
-
-
-    const cleanText = (text) => {
-        return text
-            .toLowerCase()
-            .replace(/[^\w\s]/g, '')
-            .split(/\s+/);
-    };
 
 
     const wordCounts = {};
@@ -70,21 +84,66 @@ const analysis = (posts, language) => {
         });
     });
 
-
+    // Post bazlı analizler
     posts.forEach((post) => {
-        post.engagement = post.likeCounts + post.commentCounts;
+        post.engagementLike = post.viewCounts > 0
+            ? post.likeCounts / post.viewCounts
+            : 0;
+        post.engagementComment = post.viewCounts > 0
+            ? post.commentCounts / post.viewCounts
+            : 0;
+        post.totalEngagement = post.likeCounts + post.commentCounts;
     });
-    const mostPopularPost = posts.reduce((max, post) =>
-        post.engagement > max.engagement ? post : max
+
+    // En çok beğeni alan post
+    const mostLikedPost = posts.reduce((max, post) =>
+        post.likeCounts > max.likeCounts ? post : max
     );
 
-    const mostUsedWord = Object.keys(wordCounts)
-        .sort((a, b) => wordCounts[b] - wordCounts[a])
-        .slice(0, 5);
+    // En çok yorum alan post
+    const mostCommentedPost = posts.reduce((max, post) =>
+        post.commentCounts > max.commentCounts ? post : max
+    );
+
+    // En çok görüntülenen post
+    const mostViewedPost = posts.reduce((max, post) =>
+        post.viewCounts > max.viewCounts ? post : max
+    );
+
+    // Görüntülenmeye kıyasla en çok beğeni alan post
+    const highestLikeEngagementPost = posts.reduce((max, post) =>
+        post.engagementLike > max.engagementLike ? post : max
+    );
+
+    // Görüntülenmeye kıyasla en çok yorum alan post
+    const highestCommentEngagementPost = posts.reduce((max, post) =>
+        post.engagementComment > max.engagementComment ? post : max
+    );
+
+    // En çok etkileşim alan post
+    const mostEngagedPost = posts.reduce((max, post) =>
+        post.totalEngagement > max.totalEngagement ? post : max
+    );
+
+    //# of likes and comments / # of followers x 100
+
+    //Sort wordCounts
+    const sortedWordCounts = Object.entries(wordCounts)
+        .sort((a, b) => b[1] - a[1])
+        .reduce((acc, [key, value]) => {
+            acc[key] = value;
+            return acc;
+        }, {});
 
 
-    console.log("Kelime Sıklığı:", wordCounts);
-    console.log("En sık kullanılan kelime:", mostUsedWord);
-    console.log("En Popüler Post:", mostPopularPost);
+    console.log("Kelime Sıklığı:", sortedWordCounts);
+    console.log("En çok kullanılan kelimeler:", Object.keys(sortedWordCounts).slice(0, 5));
+    console.log("En çok beğeni alan post:", mostLikedPost);
+    console.log("En çok yorum alan post:", mostCommentedPost);
+    console.log("En çok görüntülenen post:", mostViewedPost);
+    console.log("Görüntülenmeye göre en çok beğeni alan post:", highestLikeEngagementPost);
+    console.log("Görüntülenmeye göre en çok yorum alan post:", highestCommentEngagementPost);
+    console.log("En çok etkileşim alan post:", mostEngagedPost);
+
 };
-module.exports ={analysis};
+module.exports = { analysis };
