@@ -15,7 +15,7 @@ const EmailInput: React.FC<EmailInputProps> = ({
   return (
     <FormControl sx={{ width: "65%" }} variant="outlined">
       <Typography mb={1} sx={{ fontWeight: "600" }}>
-        Email Address
+        Email Adresi
       </Typography>
       <OutlinedInput
         required

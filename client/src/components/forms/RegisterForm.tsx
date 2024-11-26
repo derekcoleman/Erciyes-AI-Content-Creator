@@ -49,7 +49,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         setEmail={setEmail}
         isEmailValid={isEmailValid}
       />
-      <TextInput text={username} setText={setUsername} title="Username" />
+      <TextInput text={username} setText={setUsername} title="Kullanıcı Adı" />
       <PasswordInput
         password={password}
         setPassword={setPassword}
@@ -60,7 +60,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         password={confirmPassword}
         setPassword={setConfirmPassword}
         showPassword={showRePassword}
-        title="Confirm Password"
+        title="Şifreyi Doğrula"
         handleClickShowPassword={() =>
           handleClickShowPassword(Field.RePassword)
         }
