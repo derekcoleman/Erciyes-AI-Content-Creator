@@ -1,6 +1,6 @@
 const { failure } = require("../responses/responses")
 const fetch = require('node-fetch');
-const analysis = require('../analysis/analysis');
+const {analysis} = require('../analysis/analysis');
 
 const instagram = async(req,res,username)=>{
     return new Promise(async(resolve, reject) => {
@@ -44,10 +44,12 @@ const instagram = async(req,res,username)=>{
                 for(i=0;i<postDatas.length; i++){
                     allDatas.push({title:postDatas[i].node.edge_media_to_caption.edges[0].node.text,
                         likeCount:postDatas[i].node.edge_liked_by.count,
-                        commentCount:postDatas[i].node.edge_media_to_comment.count})
+                        commentCount:postDatas[i].node.edge_media_to_comment.count,
+                        viewCount:postDatas[i].node.video_view_count
+                    })
                 }
                 
-             console.log(allDatas[0])
+             //console.log(allDatas[0])
              analysis(allDatas,"tr");
 
         } catch (error) {

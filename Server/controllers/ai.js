@@ -2,6 +2,7 @@ const openai = require("openai");
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require("@google/generative-ai");
 const {failure,successfuly} = require('../responses/responses');
 const { dbhelper } = require("../models/database");
+const {instagram} = require('./instagramscraper');
 
 const client = new openai({
     apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
@@ -28,20 +29,27 @@ const client = new openai({
 		role:"model"
 	} } , { apiVersion:'v1beta' });
 
-    async function gemini(prompt, language, lastTitles) {
+    async function gemini(prompt, language, lastTitles, instagramData) {
         // console.log("---------------------------------------------LASTTITLES", lastTitles);
         let text;
         console.log(lastTitles);
-        if(lastTitles != ''){
-            text = `
-                Give me content about "${prompt}". Please response me in this JSON schema: title:'', body:'' and in ${language} language. 
-                These are the content titles you generated before:
-                ${lastTitles}`
-                }else {
-                    console.log("-----------------------------------------------------------------------------------------------------------");
-                    text = `
-                Give me content about "${prompt}". Please response me in this JSON schema: title:'', body:'' and in ${language} language.`
-                }
+
+if (lastTitles != '') {
+    text = `
+        Give me content about "${prompt}". Please response me in this JSON schema: title:'', body:'' and in ${language} language.
+        These are the content titles you generated before:
+        ${lastTitles}
+        These are the contents most liked, most commented, most viewed, highest like engagement, highest comment engagement objects:
+        ${instagramData}
+        `
+} else {
+    console.log("-----------------------------------------------------------------------------------------------------------");
+    text = `
+        Give me content about "${prompt}". Please response me in this JSON schema: title:'', body:'' and in ${language} language.
+        These are the contents most liked, most commented, most viewed, highest like engagement, highest comment engagement objects:
+        ${instagramData}`
+        
+}
 
                 
         const generationConfig = {
@@ -104,8 +112,8 @@ const client = new openai({
                     titles[index] = postitles[index].title;
                 }
             }
-            
-             const result = await gemini(prompt[0].topic, prompt[0].language, titles);
+            const instagramData = instagram();
+             const result = await gemini(prompt[0].topic, prompt[0].language, titles, instagramData);
              console.log(result.response.candidates[0].content.parts[0].text)
              const data = result.response.candidates[0].content.parts[0].text;
              const dataJson = JSON.parse(data);
