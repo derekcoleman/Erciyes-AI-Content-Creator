@@ -4,6 +4,7 @@ import MiniDrawer from "../../components/drawer/MiniDrawer";
 import { useState, useEffect } from "react";
 import { Settings } from "@/lib/types";
 import { getSettings } from "@/lib/utils";
+import NewSettingsForm from "@/components/forms/NewSettingsForm";
 
 export default function SettingsPage() {
   const [settingsData, setSettingsData] = useState<Settings>({
@@ -36,6 +37,10 @@ export default function SettingsPage() {
         topicData={settingsData.topic}
         languageData={settingsData.language}
         statusData={settingsData.status || loading}
+      />
+      <NewSettingsForm
+        themeData={localStorage.getItem("theme")}
+        notificationsData="Enabled"
       />
     </MiniDrawer>
   );

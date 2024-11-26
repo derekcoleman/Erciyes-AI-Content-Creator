@@ -74,7 +74,6 @@ const JobForm = () => {
       <Box sx={{ display: "flex", gap: 2, justifyContent: "center " }}>
         <FormControl fullWidth margin="normal" sx={{ width: "20%" }}>
           <Select
-            sx={{ backgroundColor: "white" }}
             value={platform}
             onChange={(e) => setPlatform(e.target.value)}
             displayEmpty
@@ -97,7 +96,6 @@ const JobForm = () => {
         </FormControl>
         <FormControl fullWidth margin="normal" sx={{ width: "30%" }}>
           <Select
-            sx={{ backgroundColor: "white" }}
             multiple
             value={selectedDays}
             onChange={handleDayChange}

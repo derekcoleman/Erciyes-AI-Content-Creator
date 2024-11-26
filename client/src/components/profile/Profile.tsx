@@ -87,7 +87,7 @@ const ProfilePage = () => {
           value={editableData.username}
           name="username"
           onChange={handleChange}
-          sx={{ marginBottom: 2, backgroundColor: "white" }}
+          sx={{ marginBottom: 2 }}
         />
         <TextField
           label="API Anahtarı"
@@ -96,7 +96,7 @@ const ProfilePage = () => {
           value={editableData.API}
           name="API"
           onChange={handleChange}
-          sx={{ marginBottom: 2, backgroundColor: "white" }}
+          sx={{ marginBottom: 2 }}
         />
         <TextField
           label="Biyografi"
@@ -107,7 +107,6 @@ const ProfilePage = () => {
           onChange={handleChange}
           multiline
           rows={4}
-          sx={{ backgroundColor: "white" }}
         />
 
         <Button

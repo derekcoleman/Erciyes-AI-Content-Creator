@@ -74,7 +74,6 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
             id="outlined-basic"
             placeholder="Genel Başlık"
             variant="outlined"
-            sx={{ backgroundColor: "white" }}
             disabled={statusData}
             value={topic}
           />
@@ -82,7 +81,6 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
         <FormControl fullWidth margin="normal" sx={{ width: "30%" }}>
           <Select
             disabled={statusData}
-            sx={{ backgroundColor: "white" }}
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
             displayEmpty
