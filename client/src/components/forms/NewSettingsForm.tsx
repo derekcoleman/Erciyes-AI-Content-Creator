@@ -26,6 +26,7 @@ const NewSettingsForm: React.FC<NewSettingsFormProps> = ({
   notificationsData = "Enabled",
 }) => {
   const [theme, setTheme] = useAtom(themeAtom);
+  const [newTheme, setNewTheme] = useState(theme);
   const [notifications, setNotifications] = useState(notificationsData);
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -53,8 +54,8 @@ const NewSettingsForm: React.FC<NewSettingsFormProps> = ({
   };
 
   const toggleTheme = () => {
-    const newTheme = theme === "Dark" ? "Dark" : "Light";
-    localStorage.setItem("theme", newTheme);
+    const updateTheme = newTheme === "Dark" ? "Dark" : "Light";
+    setTheme(updateTheme);
   };
 
   return (
@@ -74,8 +75,8 @@ const NewSettingsForm: React.FC<NewSettingsFormProps> = ({
       <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
         <FormControl fullWidth margin="normal" sx={{ width: "30%" }}>
           <Select
-            value={theme}
-            onChange={(e) => setTheme(e.target.value)}
+            value={newTheme}
+            onChange={(e) => setNewTheme(e.target.value)}
             displayEmpty
             renderValue={(selected) => {
               if (!selected) {
