@@ -25,6 +25,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { ReactNode } from "react";
+import { useAtom } from "jotai";
+import { tokenAtom, userInfoAtom } from "@/store";
 const iconList = [
   { label: "Görevler", title: "Jobs", icon: <StarIcon />, path: "/jobs" },
   {
@@ -52,7 +54,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  marginLeft: `-${drawerWidth}px`,
+  marginLeft: -${drawerWidth}px,
   variants: [
     {
       props: ({ open }) => open,
@@ -82,8 +84,8 @@ const AppBar = styled(MuiAppBar, {
     {
       props: ({ open }) => open,
       style: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
+        width: calc(100% - ${drawerWidth}px),
+        marginLeft: ${drawerWidth}px,
         transition: theme.transitions.create(["margin", "width"], {
           easing: theme.transitions.easing.easeOut,
           duration: theme.transitions.duration.enteringScreen,
@@ -109,6 +111,8 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const [user, setUser] = useAtom(userInfoAtom);
+  const [token, setToken] = useAtom(tokenAtom);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -121,6 +125,13 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
   const handleNavigation = (path: string) => {
     router.push(path);
     setOpen(false);
+  };
+
+  const handleLogout = () => {
+    document.cookie = token=;
+    setUser(null);
+    setToken(null);
+    router.push("/login");
   };
 
   return (
@@ -194,6 +205,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
             variant="outlined"
             endIcon={<LogoutIcon />}
             sx={{ color: "red", width: "200px", borderColor: "red" }}
+            onClick={handleLogout}
           >
             Çıkış Yap
           </Button>
