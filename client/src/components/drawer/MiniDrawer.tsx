@@ -204,11 +204,14 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
           background:
             "linear-gradient(134.49deg, rgba(9, 58, 237, 0.08) -0.83%, rgba(1, 215, 235, 0.08) 54.23%) ",
           backdropFilter: "blur(80px)",
+          padding: 0,
         }}
         open={open}
       >
         <DrawerHeader />
-        {children}
+        <Box sx={{ paddingLeft: "2%", paddingRight: "1%", paddingBlock: "1%" }}>
+          {children}
+        </Box>
       </Main>
     </Box>
   );

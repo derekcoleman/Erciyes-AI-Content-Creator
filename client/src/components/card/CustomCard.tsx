@@ -65,7 +65,7 @@ const CustomCard: React.FC<CustomCardProps> = ({
     <>
       <Card
         sx={{
-          maxWidth: 900,
+          maxWidth: "38vw",
           display: "flex",
           justifyContent: "center",
           height,
