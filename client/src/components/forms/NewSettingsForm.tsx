@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { addSettings } from "@/lib/utils";
 import { SettingsInfo } from "@/lib/types";
+import { useAtom } from "jotai";
+import { themeAtom } from "@/store";
 
 const themes = ["Light", "Dark"];
 const notificationOptions = ["Enabled", "Disabled"];
@@ -23,7 +25,7 @@ const NewSettingsForm: React.FC<NewSettingsFormProps> = ({
   themeData = "Light",
   notificationsData = "Enabled",
 }) => {
-  const [theme, setTheme] = useState(themeData);
+  const [theme, setTheme] = useAtom(themeAtom);
   const [notifications, setNotifications] = useState(notificationsData);
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -53,7 +55,6 @@ const NewSettingsForm: React.FC<NewSettingsFormProps> = ({
   const toggleTheme = () => {
     const newTheme = theme === "Dark" ? "Dark" : "Light";
     localStorage.setItem("theme", newTheme);
-    window.location.reload();
   };
 
   return (
