@@ -210,6 +210,11 @@ const getSettings = async (): Promise<Settings> => {
   }
 };
 
+const getTheme = (): string => {
+  const theme = localStorage.getItem("theme");
+  return theme ?? "Light";
+};
+
 export {
   registerUser,
   loginUser,
@@ -220,4 +225,5 @@ export {
   addJobs,
   getPosts,
   getSettings,
+  getTheme,
 };
