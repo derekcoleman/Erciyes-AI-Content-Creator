@@ -42,9 +42,7 @@ const iconList = [
     path: "/profile",
   },
 ];
-
 const drawerWidth = 240;
-
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
 }>(({ theme }) => ({
@@ -54,7 +52,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  marginLeft: -${drawerWidth}px,
+  marginLeft: `-${drawerWidth}px`,
   variants: [
     {
       props: ({ open }) => open,
@@ -68,11 +66,9 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     },
   ],
 }));
-
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
-
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })<AppBarProps>(({ theme }) => ({
@@ -84,8 +80,8 @@ const AppBar = styled(MuiAppBar, {
     {
       props: ({ open }) => open,
       style: {
-        width: calc(100% - ${drawerWidth}px),
-        marginLeft: ${drawerWidth}px,
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: `${drawerWidth}px`,
         transition: theme.transitions.create(["margin", "width"], {
           easing: theme.transitions.easing.easeOut,
           duration: theme.transitions.duration.enteringScreen,
@@ -94,53 +90,40 @@ const AppBar = styled(MuiAppBar, {
     },
   ],
 }));
-
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
+  padding: theme.spacing(0, 1), // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
 }));
 interface MiniDrawerProps {
   children: ReactNode;
 }
-
 export default function MiniDrawer({ children }: MiniDrawerProps) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const [user, setUser] = useAtom(userInfoAtom);
   const [token, setToken] = useAtom(tokenAtom);
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
   const handleNavigation = (path: string) => {
     router.push(path);
     setOpen(false);
   };
-
   const handleLogout = () => {
-    document.cookie = token=;
+    document.cookie = `token=`;
     setUser(null);
     setToken(null);
     router.push("/login");
   };
-
   return (
-    <Box
-      sx={{
-        display: "flex",
-        minHeight: "100vh",
-      }}
-    >
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
@@ -149,12 +132,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={[
-              {
-                mr: 2,
-              },
-              open && { display: "none" },
-            ]}
+            sx={[{ mr: 2 }, open && { display: "none" }]}
           >
             <MenuIcon />
           </IconButton>
@@ -167,10 +145,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            boxSizing: "border-box",
-          },
+          "& .MuiDrawer-paper": { width: drawerWidth, boxSizing: "border-box" },
         }}
         variant="persistent"
         anchor="left"
