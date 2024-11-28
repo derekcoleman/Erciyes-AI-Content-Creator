@@ -10,6 +10,9 @@ const lightTheme = createTheme({
       default: "#fff",
       paper: "#f7f9fe",
     },
+    customColors: {
+      innerCard: "red",
+    },
   },
 });
 

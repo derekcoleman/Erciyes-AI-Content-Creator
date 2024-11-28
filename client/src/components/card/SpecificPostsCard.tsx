@@ -5,10 +5,12 @@ import {
   CardContent,
   CardHeader,
   SelectChangeEvent,
+  useTheme,
 } from "@mui/material";
 import { useState } from "react";
 import CardFilter from "../filter/CardFilter";
 import { BarChart } from "@mui/x-charts";
+import CustomCard from "./CustomCard";
 
 const DUMMYDATAS = [
   "Interaction",
@@ -86,6 +88,17 @@ const SpecificPostsCard = () => {
             width: "90%",
           }}
         >
+          <CustomCard
+            isInnerCard={true}
+            platform="instagram"
+            postImage="/Gradient.png"
+            title={"postDatas[0].post.title"}
+            content={"postDatas[0].post.body"}
+            hashtags={["tag3", "tag4"]}
+            likes={20}
+            comments={8}
+            date="2024-10-28T15:00:00Z"
+          />
           <BarChart
             yAxis={[{ scaleType: "band", data: DUMMYDATAS }]}
             series={[...filterSeries(filter, ALL_SERIES), avg]}
