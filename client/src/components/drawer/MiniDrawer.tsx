@@ -24,6 +24,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 import { ReactNode } from "react";
 import { useAtom } from "jotai";
 import { tokenAtom, userInfoAtom } from "@/store";
@@ -40,6 +41,12 @@ const iconList = [
     title: "Profile",
     icon: <AccountBoxIcon />,
     path: "/profile",
+  },
+  {
+    label: "İstatistikler",
+    title: "Statistics",
+    icon: <AssessmentIcon />,
+    path: "/statistics",
   },
 ];
 const drawerWidth = 240;
