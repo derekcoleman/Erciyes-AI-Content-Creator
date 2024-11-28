@@ -1,7 +1,7 @@
 "use client";
 import MiniDrawer from "../../components/drawer/MiniDrawer";
 import JobForm from "@/components/forms/JobsForm";
-import Job from "@/components/jobs/Job";
+import Job from "@/components/card/Job";
 import { DUMMYJOBS } from "@/lib/conts";
 import { Grid } from "@mui/material";
 import Divider from "@mui/material/Divider";
