@@ -10,6 +10,9 @@ const darkTheme = createTheme({
       default: "#121212",
       paper: "#333",
     },
+    customColors: {
+      innerCard: "blue",
+    },
   },
 });
 

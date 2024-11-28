@@ -6,6 +6,7 @@ import {
   Typography,
   Box,
   IconButton,
+  useTheme,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
@@ -25,6 +26,7 @@ interface CustomCardProps {
   comments: number;
   date: string;
   height?: number;
+  isInnerCard?: boolean;
 }
 
 const CustomCard: React.FC<CustomCardProps> = ({
@@ -37,7 +39,10 @@ const CustomCard: React.FC<CustomCardProps> = ({
   comments,
   date,
   height = 230,
+  isInnerCard,
 }) => {
+  const theme = useTheme();
+
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -65,6 +70,9 @@ const CustomCard: React.FC<CustomCardProps> = ({
     <>
       <Card
         sx={{
+          backgroundColor: `${
+            isInnerCard ? theme.palette.customColors.innerCard : ""
+          }`,
           maxWidth: "38vw",
           display: "flex",
           justifyContent: "center",
