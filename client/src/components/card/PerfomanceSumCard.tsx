@@ -20,56 +20,55 @@ const PerformanceSumCard = () => {
   return (
     <Card sx={{ margin: 2, width: "96.5%" }}>
       <CardHeader
+        sx={{ margin: 2 }}
         title={"PERFORMANCE SUMMARY"}
         subheader={`View your all performance metrics.`}
       />
       <CardContent>
-        <Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-around",
-            }}
-          >
-            {DUMMYDATAS.map((data) => (
-              <Box
-                key={data.title}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-around",
+          }}
+        >
+          {DUMMYDATAS.map((data) => (
+            <Box
+              key={data.title}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                marginBottom: 2,
+              }}
+            >
+              <Typography
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  flexDirection: "column",
-                  marginBottom: 2,
+                  margin: 0.5,
+                  fontSize: "24px",
                 }}
+              >
+                {data.title}
+              </Typography>
+              <Divider sx={{ width: "100%" }} />
+              <Tooltip
+                title={data.count}
+                enterDelay={500}
+                leaveDelay={200}
+                arrow
               >
                 <Typography
                   sx={{
-                    margin: 0.5,
-                    fontSize: "24px",
+                    margin: 1,
+                    fontSize: "20px",
+                    cursor: "pointer",
                   }}
                 >
-                  {data.title}
+                  {abbreviateNumber(data.count)}
                 </Typography>
-                <Divider sx={{ width: "100%" }} />
-                <Tooltip
-                  title={data.count}
-                  enterDelay={500}
-                  leaveDelay={200}
-                  arrow
-                >
-                  <Typography
-                    sx={{
-                      margin: 1,
-                      fontSize: "20px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {abbreviateNumber(data.count)}
-                  </Typography>
-                </Tooltip>
-              </Box>
-            ))}
-          </Box>
+              </Tooltip>
+            </Box>
+          ))}
         </Box>
       </CardContent>
     </Card>
