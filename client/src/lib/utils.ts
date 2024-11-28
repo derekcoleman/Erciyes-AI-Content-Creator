@@ -210,9 +210,10 @@ const getSettings = async (): Promise<Settings> => {
   }
 };
 
-const getTheme = (): string => {
-  const theme = localStorage.getItem("theme");
-  return theme ?? "Light";
+const getTheme = (): "Light" | "Dark" => {
+  const theme =
+    typeof window !== "undefined" ? localStorage.getItem("theme") : "Light";
+  return theme === "Dark" ? "Dark" : "Light";
 };
 
 const abbreviateNumber = (num: number): string => {
