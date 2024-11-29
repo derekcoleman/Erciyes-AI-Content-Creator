@@ -17,12 +17,10 @@ const themes = ["Light", "Dark"];
 const notificationOptions = ["Enabled", "Disabled"];
 
 interface NewSettingsFormProps {
-  themeData: string;
   notificationsData: string;
 }
 
 const NewSettingsForm: React.FC<NewSettingsFormProps> = ({
-  themeData = "Light",
   notificationsData = "Enabled",
 }) => {
   const [theme, setTheme] = useAtom(themeAtom);
