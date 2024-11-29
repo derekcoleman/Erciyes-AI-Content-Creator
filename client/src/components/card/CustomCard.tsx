@@ -73,6 +73,11 @@ const CustomCard: React.FC<CustomCardProps> = ({
           backgroundColor: `${
             isInnerCard ? theme.palette.customColors.innerCard : ""
           }`,
+          border: `${
+            isInnerCard
+              ? "1px solid" + theme.palette.customColors.inncerCardBorder
+              : ""
+          }`,
           maxWidth: "38vw",
           display: "flex",
           justifyContent: "center",

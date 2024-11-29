@@ -11,7 +11,8 @@ const darkTheme = createTheme({
       paper: "#333",
     },
     customColors: {
-      innerCard: "blue",
+      innerCard: "rgba(0, 0, 80, 0.6)",
+      inncerCardBorder: "#72CCFF",
     },
   },
 });

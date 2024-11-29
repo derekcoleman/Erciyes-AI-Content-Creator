@@ -93,7 +93,9 @@ const SpecificPostsCard = () => {
             platform="instagram"
             postImage="/Gradient.png"
             title={"postDatas[0].post.title"}
-            content={"postDatas[0].post.body"}
+            content={
+              "postDatas [0].post.bod ypost Datas[0].post. bo dypostDa tas[ 0].post.bodypostD atas[0].post.bod ypostDatas[0].p ost. bodypostDatas[0].post.bod ypostDatas[ 0].post.bodypostDatas[0].post.bodypost Datas[0].post.bodypostDat as[0].post.b odypostDatas[0 ].post.bodypost Datas[0].post.bodypos tDatas[0 ].post.bodypostDatas[0].post.bodypostDatas[0].p ost.body"
+            }
             hashtags={["tag3", "tag4"]}
             likes={20}
             comments={8}
