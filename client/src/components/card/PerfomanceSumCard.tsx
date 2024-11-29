@@ -9,14 +9,13 @@ import {
   Typography,
 } from "@mui/material";
 
-const DUMMYDATAS = [
-  { count: 123, title: "My Posts" },
-  { count: 34215, title: "Likes" },
-  { count: 3234, title: "Comments" },
-  { count: 15234, title: "Followers" },
-];
+interface PerformanceSumCardProps {
+  performacesumDatas: { count: number; title: string }[];
+}
 
-const PerformanceSumCard = () => {
+const PerformanceSumCard: React.FC<PerformanceSumCardProps> = ({
+  performacesumDatas,
+}) => {
   return (
     <Card sx={{ margin: 2, width: "96.5%" }}>
       <CardHeader
@@ -32,7 +31,7 @@ const PerformanceSumCard = () => {
             justifyContent: "space-around",
           }}
         >
-          {DUMMYDATAS.map((data) => (
+          {performacesumDatas.map((data) => (
             <Box
               key={data.title}
               sx={{
