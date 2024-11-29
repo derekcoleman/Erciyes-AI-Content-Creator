@@ -11,7 +11,8 @@ const lightTheme = createTheme({
       paper: "#f7f9fe",
     },
     customColors: {
-      innerCard: "red",
+      innerCard: "#edf4ff",
+      inncerCardBorder: "#72CCFF",
     },
   },
 });
