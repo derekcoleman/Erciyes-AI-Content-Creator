@@ -72,5 +72,29 @@ export interface Settings {
   language: string;
   topic: string;
 }
+export interface CustomCardProps {
+  platform: string;
+  postImage: string;
+  title: string;
+  content: string;
+  hashtags: string[];
+  likes: number;
+  comments: number;
+  date: string;
+  height?: number;
+  isInnerCard?: boolean;
+}
 
-export { Field, Variant };
+enum specificHeaders {
+  "Interaction",
+  "Comments",
+  "Likes",
+  "Comments/Int.",
+  "Likes/Int.",
+}
+
+export interface SpecificCustomCard extends CustomCardProps {
+  specificHeader: specificHeaders;
+}
+
+export { Field, Variant, specificHeaders };

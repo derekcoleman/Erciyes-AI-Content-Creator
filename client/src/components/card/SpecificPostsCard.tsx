@@ -5,63 +5,39 @@ import {
   CardContent,
   CardHeader,
   SelectChangeEvent,
-  useTheme,
 } from "@mui/material";
 import { useState } from "react";
 import CardFilter from "../filter/CardFilter";
 import { BarChart } from "@mui/x-charts";
 import CustomCard from "./CustomCard";
+import { SpecificCustomCard, specificHeaders } from "@/lib/types";
+import { spesificPostCardFilters } from "@/lib/conts";
 
-const DUMMYDATAS = [
-  "Interaction",
-  "Comment",
-  "Like",
-  "Comments Compared to Interaction",
-  "Like compared to Interaction",
-];
+interface SpecificPostsCardProps {
+  customCardsDetails: SpecificCustomCard[];
+  dataSeries: { color: string; label: string; data: number[] }[];
+  avg: { color: string; label: string; data: number[] };
+}
 
-const avg = { label: "Average", data: [3, 4, 2, 1, 3] };
-const ALL_SERIES = [
-  {
-    color: "#DA00FF",
-    label: "Interaction",
-    data: [10, 5, 8, 4, 3],
-  },
-
-  {
-    color: "#DA00FF",
-    label: "Comment",
-    data: [2, 6, 2, 4, 1],
-  },
-
-  {
-    color: "#DA00FF",
-    label: "Like",
-    data: [8, 5, 9, 4, 3],
-  },
-
-  {
-    color: "#DA00FF",
-    label: "Comments Compared to Interaction",
-    data: [3, 3, 5, 2, 1],
-  },
-
-  {
-    color: "#DA00FF",
-    label: "Like compared to Interaction",
-    data: [3, 4, 5, 2, 5],
-  },
-];
-
-const SpecificPostsCard = () => {
-  const [filter, setFilter] = useState(DUMMYDATAS[0]);
+const SpecificPostsCard: React.FC<SpecificPostsCardProps> = ({
+  customCardsDetails,
+  dataSeries,
+  avg,
+}) => {
+  const [filter, setFilter] = useState(spesificPostCardFilters[0]);
   const handleChange = (event: SelectChangeEvent) => {
     setFilter(event.target.value as string);
   };
 
-  const filterSeries = (filter: string, series: typeof ALL_SERIES) => {
+  const filterSeries = (filter: string, series: typeof dataSeries) => {
     return series.filter((item) => item.label === filter);
   };
+
+  const filteredCards = customCardsDetails.filter(
+    (card) =>
+      card.specificHeader ===
+      specificHeaders[filter as keyof typeof specificHeaders]
+  );
 
   return (
     <Card component="form" sx={{ margin: 2, width: "96.5%" }}>
@@ -77,7 +53,7 @@ const SpecificPostsCard = () => {
         <CardFilter
           filterState={filter}
           handleChange={handleChange}
-          filters={DUMMYDATAS}
+          filters={spesificPostCardFilters}
         />
       </Box>
       <CardContent
@@ -85,29 +61,33 @@ const SpecificPostsCard = () => {
       >
         <Box
           sx={{
-            width: "90%",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-evenly",
           }}
         >
-          <CustomCard
-            isInnerCard={true}
-            platform="instagram"
-            postImage="/Gradient.png"
-            title={"postDatas[0].post.title"}
-            content={
-              "postDatas [0].post.bod ypost Datas[0].post. bo dypostDa tas[ 0].post.bodypostD atas[0].post.bod ypostDatas[0].p ost. bodypostDatas[0].post.bod ypostDatas[ 0].post.bodypostDatas[0].post.bodypost Datas[0].post.bodypostDat as[0].post.b odypostDatas[0 ].post.bodypost Datas[0].post.bodypos tDatas[0 ].post.bodypostDatas[0].post.bodypostDatas[0].p ost.body"
-            }
-            hashtags={["tag3", "tag4"]}
-            likes={20}
-            comments={8}
-            date="2024-10-28T15:00:00Z"
-          />
-          <BarChart
-            yAxis={[{ scaleType: "band", data: DUMMYDATAS }]}
-            series={[...filterSeries(filter, ALL_SERIES), avg]}
-            height={500}
-            layout="horizontal"
-            margin={{ top: 50, right: 200, left: 210 }}
-          />
+          {filteredCards.map((card, index) => (
+            <CustomCard
+              key={index}
+              platform={card.platform}
+              postImage={card.postImage}
+              title={card.title}
+              content={card.content}
+              hashtags={card.hashtags}
+              likes={card.likes}
+              comments={card.comments}
+              date={card.date}
+              isInnerCard={true}
+            />
+          ))}
+          <Box sx={{ width: "40%" }}>
+            <BarChart
+              xAxis={[{ scaleType: "band", data: spesificPostCardFilters }]}
+              series={[...filterSeries(filter, dataSeries), avg]}
+              height={300}
+            />
+          </Box>
         </Box>
       </CardContent>
     </Card>

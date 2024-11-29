@@ -15,19 +15,7 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import { textLimiter } from "@/lib/utils";
 import ExpandedCard from "./ExpandedCard";
-
-interface CustomCardProps {
-  platform: string;
-  postImage: string;
-  title: string;
-  content: string;
-  hashtags: string[];
-  likes: number;
-  comments: number;
-  date: string;
-  height?: number;
-  isInnerCard?: boolean;
-}
+import { CustomCardProps } from "@/lib/types";
 
 const CustomCard: React.FC<CustomCardProps> = ({
   platform,
@@ -78,6 +66,7 @@ const CustomCard: React.FC<CustomCardProps> = ({
               ? "1px solid" + theme.palette.customColors.inncerCardBorder
               : ""
           }`,
+          width: "100%",
           maxWidth: "38vw",
           display: "flex",
           justifyContent: "center",
