@@ -236,8 +236,8 @@ export const ALL_SERIES_PERFORMANCE = [
 ];
 
 export const PERORMANCESUM_DUMMY_DATA = [
-  { count: 123, title: "My Posts" },
-  { count: 34215, title: "Likes" },
+  { count: 1233, title: "My Posts" },
+  { count: 24215, title: "Likes" },
   { count: 3234, title: "Comments" },
   { count: 15234, title: "Followers" },
 ];

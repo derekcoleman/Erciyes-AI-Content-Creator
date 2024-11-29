@@ -8,6 +8,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { PieChart } from "@mui/x-charts";
 
 interface PerformanceSumCardProps {
   performacesumDatas: { count: number; title: string }[];
@@ -16,6 +17,29 @@ interface PerformanceSumCardProps {
 const PerformanceSumCard: React.FC<PerformanceSumCardProps> = ({
   performacesumDatas,
 }) => {
+  const data = [
+    {
+      id: 0,
+      value: performacesumDatas[0].count,
+      label: performacesumDatas[0].title,
+    },
+    {
+      id: 1,
+      value: performacesumDatas[1].count,
+      label: performacesumDatas[1].title,
+    },
+    {
+      id: 2,
+      value: performacesumDatas[2].count,
+      label: performacesumDatas[2].title,
+    },
+    {
+      id: 3,
+      value: performacesumDatas[3].count,
+      label: performacesumDatas[3].title,
+    },
+  ];
+
   return (
     <Card sx={{ margin: 2, width: "96.5%" }}>
       <CardHeader
@@ -31,6 +55,22 @@ const PerformanceSumCard: React.FC<PerformanceSumCardProps> = ({
             justifyContent: "space-around",
           }}
         >
+          <Box sx={{ width: "25%" }}>
+            <PieChart
+              series={[
+                {
+                  data,
+                  highlightScope: { fade: "global", highlight: "item" },
+                  faded: {
+                    innerRadius: 30,
+                    additionalRadius: -30,
+                    color: "gray",
+                  },
+                },
+              ]}
+              height={200}
+            />
+          </Box>
           {performacesumDatas.map((data) => (
             <Box
               key={data.title}
