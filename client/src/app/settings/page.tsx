@@ -5,11 +5,8 @@ import { useState, useEffect } from "react";
 import { Settings } from "@/lib/types";
 import { getSettings } from "@/lib/utils";
 import NewSettingsForm from "@/components/forms/NewSettingsForm";
-import { useAtom } from "jotai";
-import { themeAtom } from "@/store";
 
 export default function SettingsPage() {
-  const [theme, setTheme] = useAtom(themeAtom);
   const [settingsData, setSettingsData] = useState<Settings>({
     topic: "Osmanlı Tarihi",
     language: "Türkçe",
@@ -41,7 +38,7 @@ export default function SettingsPage() {
         languageData={settingsData.language}
         statusData={settingsData.status || loading}
       />
-      <NewSettingsForm themeData={theme} notificationsData="Enabled" />
+      <NewSettingsForm notificationsData="Enabled" />
     </MiniDrawer>
   );
 }
