@@ -1,4 +1,3 @@
-import React from "react";
 import { FormControl, OutlinedInput, Typography } from "@mui/material";
 
 interface TextInputProps {
