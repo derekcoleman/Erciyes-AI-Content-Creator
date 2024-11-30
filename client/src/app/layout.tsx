@@ -1,5 +1,4 @@
 "use client";
-import React, { useState } from "react";
 import { ThemeProvider } from "@mui/material";
 import { lightTheme, darkTheme } from "./styles/theme";
 import { useAtom } from "jotai";

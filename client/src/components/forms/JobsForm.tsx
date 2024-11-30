@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -13,7 +13,7 @@ import {
 import { daysOfWeek, platforms } from "@/lib/conts";
 import CustomTimePicker from "../inputs/CustomTimePicker";
 import { addJobs, getHourFromDate, jobDataParser } from "@/lib/utils";
-import { Job, JobsFormData } from "@/lib/types";
+import { JobsFormData } from "@/lib/types";
 
 const JobForm = () => {
   const [platform, setPlatform] = useState("");
