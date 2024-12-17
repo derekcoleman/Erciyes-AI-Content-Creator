@@ -135,6 +135,16 @@ const analysis = (posts, language) => {
             return acc;
         }, {});
 
+    const result = {
+        sortedWordCounts,
+        mostLikedPost,
+        mostCommentedPost,
+        mostViewedPost,
+        highestLikeEngagementPost,
+        highestCommentEngagementPost,
+        mostEngagedPost
+    }
+
 
     console.log("Kelime Sıklığı:", sortedWordCounts);
     console.log("En çok kullanılan kelimeler:", Object.keys(sortedWordCounts).slice(0, 5));
@@ -144,6 +154,8 @@ const analysis = (posts, language) => {
     console.log("Görüntülenmeye göre en çok beğeni alan post:", highestLikeEngagementPost);
     console.log("Görüntülenmeye göre en çok yorum alan post:", highestCommentEngagementPost);
     console.log("En çok etkileşim alan post:", mostEngagedPost);
+
+    return result;
 
 };
 module.exports = { analysis };
