@@ -20,6 +20,12 @@ export const daysOfWeek = [
   { label: "Cumartesi", value: 6 },
   { label: "Pazar", value: 7 },
 ];
+export const INTERACTIONLIST = [
+  "Beğeni",
+  "Yorum",
+  "Etkileşim",
+  "Sık Kelimeler",
+];
 
 const DUMMY_BODY =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum odio ex, elementum nec sagittis quis, aliquam vel risus. Duis cursus viverra ante sit amet molestie. Morbi risus libero, elementum sed dapibus sit amet, hendrerit non quam. Duis nec dui tempus, vehicula odio et, posuere metus. Proin venenatis dolor ac odio posuere congue. Ut scelerisque massa non dui eleifend, ut pellentesque lectus posuere. Mauris pulvinar metus in odio ornare, eget tempor ex ultricies. Phasellus lobortis purus at lacus iaculis, sit amet tempor velit hendrerit. Donec volutpat mauris semper ipsum euismod faucibus in a leo. Sed a sem hendrerit, efficitur nunc quis, condimentum justo. Donec vel est mattis, elementum ex nec, porta arcu. Nam elementum tincidunt neque sed pharetra. Mauris at euismod.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum odio ex, elementum nec sagittis quis, aliquam vel risus. Duis cursus viverra ante sit amet molestie. Morbi risus libero, elementum sed dapibus sit amet, hendrerit non quam. Duis nec dui tempus, vehicula odio et, posuere metus. Proin venenatis dolor ac odio posuere congue. Ut scelerisque massa non dui eleifend, ut pellentesque lectus posuere. Mauris pulvinar metus in odio ornare, eget tempor ex ultricies. Phasellus lobortis purus at lacus iaculis, sit amet tempor velit hendrerit. Donec volutpat mauris semper ipsum euismod faucibus in a leo. Sed a sem hendrerit, efficitur nunc quis, condimentum justo. Donec vel est mattis, elementum ex nec, porta arcu. Nam elementum tincidunt neque sed pharetra. Mauris at euismod.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum odio ex, elementum nec sagittis quis, aliquam vel risus. Duis cursus viverra ante sit amet molestie. Morbi risus libero, elementum sed dapibus sit amet, hendrerit non quam. Duis nec dui tempus, vehicula odio et, posuere metus. Proin venenatis dolor ac odio posuere congue. Ut scelerisque massa non dui eleifend, ut pellentesque lectus posuere. Mauris pulvinar metus in odio ornare, eget tempor ex ultricies. Phasellus lobortis purus at lacus iaculis, sit amet tempor velit hendrerit. Donec volutpat mauris semper ipsum euismod faucibus in a leo. Sed a sem hendrerit, efficitur nunc quis, condimentum justo. Donec vel est mattis, elementum ex nec, porta arcu. Nam elementum tincidunt neque sed pharetra. Mauris at euismod.";
@@ -240,4 +246,12 @@ export const PERORMANCESUM_DUMMY_DATA = [
   { count: 24215, title: "Likes" },
   { count: 3234, title: "Comments" },
   { count: 15234, title: "Followers" },
+];
+export const moods = [
+  "",
+  "Eğlenceli",
+  "Hüzünlü",
+  "Duygusal",
+  "Gerçekçi",
+  "Gergin",
 ];

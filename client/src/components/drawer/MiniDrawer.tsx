@@ -6,7 +6,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useState } from "react";
-import { Button } from "@mui/material";
+import { Button, FormControlLabel } from "@mui/material";
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -27,7 +27,8 @@ import ListItemText from "@mui/material/ListItemText";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { ReactNode } from "react";
 import { useAtom } from "jotai";
-import { tokenAtom, userInfoAtom } from "@/store";
+import { themeAtom, tokenAtom, userInfoAtom } from "@/store";
+import MaterialUISwitch from "../buttons/MaterialUISwitch";
 const iconList = [
   { label: "Görevler", title: "Jobs", icon: <StarIcon />, path: "/jobs" },
   {
@@ -108,7 +109,8 @@ interface MiniDrawerProps {
   children: ReactNode;
 }
 export default function MiniDrawer({ children }: MiniDrawerProps) {
-  const theme = useTheme();
+  const [theme, setTheme] = useAtom(themeAtom);
+  const styleTheme = useTheme();
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const [user, setUser] = useAtom(userInfoAtom);
@@ -132,7 +134,16 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar
+        position="fixed"
+        open={open}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Toolbar>
           <IconButton
             color="inherit"
@@ -147,6 +158,18 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
             AI Content Creator
           </Typography>
         </Toolbar>
+        <FormControlLabel
+          control={
+            <MaterialUISwitch
+              sx={{ m: 1 }}
+              checked={theme === "Dark"}
+              onClick={() => {
+                setTheme((prev) => (prev === "Dark" ? "Light" : "Dark"));
+              }}
+            />
+          }
+          label=""
+        />
       </AppBar>
       <Drawer
         sx={{
@@ -163,7 +186,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
             <HomeIcon fontSize="large" /> Ana Sayfa
           </IconButton>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
+            {styleTheme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
               <ChevronRightIcon />
@@ -193,6 +216,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
           </Button>
         </Box>
       </Drawer>
+
       <Main
         sx={{
           background:

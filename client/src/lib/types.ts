@@ -8,6 +8,14 @@ enum Variant {
   outlined,
 }
 
+enum specificHeaders {
+  "Interaction",
+  "Comments",
+  "Likes",
+  "Comments/Int.",
+  "Likes/Int.",
+}
+
 export interface LoginFormData {
   username: string;
   password: string;
@@ -72,6 +80,7 @@ export interface Settings {
   language: string;
   topic: string;
 }
+
 export interface CustomCardProps {
   platform: string;
   postImage: string;
@@ -85,16 +94,23 @@ export interface CustomCardProps {
   isInnerCard?: boolean;
 }
 
-enum specificHeaders {
-  "Interaction",
-  "Comments",
-  "Likes",
-  "Comments/Int.",
-  "Likes/Int.",
-}
-
 export interface SpecificCustomCard extends CustomCardProps {
   specificHeader: specificHeaders;
 }
 
+export interface wordSettingsInfo {
+  code: number;
+  message: string;
+  status: boolean;
+  wantedWords: string[];
+  bannedWords: string[];
+}
+export interface promptSettingsInfo {
+  code: number;
+  message: string;
+  status: boolean;
+  customTopic: string;
+  mood: string;
+  selectedInteractions: string[];
+}
 export { Field, Variant, specificHeaders };

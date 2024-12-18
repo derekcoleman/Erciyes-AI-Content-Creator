@@ -6,11 +6,13 @@ import {
   LoginFormData,
   LoginInfo,
   Post,
+  promptSettingsInfo,
   RegisterFormData,
   RegisterInfo,
   Settings,
   SettingsFormData,
   SettingsInfo,
+  wordSettingsInfo,
 } from "./types";
 
 const loginUser = async (formData: LoginFormData): Promise<LoginInfo> => {
@@ -87,6 +89,62 @@ const addSettings = async (
   return data;
 };
 
+const addPromptSettings = async (formData: {
+  customTopic: string;
+  mood: string;
+  selectedInteractions: string[];
+}): Promise<promptSettingsInfo> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  const response = await fetch(API_ENDPOINTS.SETTNGS, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      token: token,
+    },
+    body: JSON.stringify(formData),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to save settings");
+  }
+
+  const data: promptSettingsInfo = await response.json();
+  return data;
+};
+
+const addWordSettings = async (formData: {
+  wantedWords: string[];
+  bannedWords: string[];
+}): Promise<wordSettingsInfo> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  const response = await fetch(API_ENDPOINTS.SETTNGS, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      token: token,
+    },
+    body: JSON.stringify(formData),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to save settings");
+  }
+
+  const data: wordSettingsInfo = await response.json();
+  return data;
+};
 const addJobs = async (job: Job): Promise<JobsInfo> => {
   const token = getCookie("token");
 
@@ -238,4 +296,6 @@ export {
   getSettings,
   getTheme,
   abbreviateNumber,
+  addWordSettings,
+  addPromptSettings,
 };

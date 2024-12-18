@@ -4,7 +4,9 @@ import MiniDrawer from "../../components/drawer/MiniDrawer";
 import { useState, useEffect } from "react";
 import { Settings } from "@/lib/types";
 import { getSettings } from "@/lib/utils";
-import NewSettingsForm from "@/components/forms/NewSettingsForm";
+import InteractionSettingsForm from "@/components/forms/InteractionSettingsForm";
+import PromptSettingsFrom from "@/components/forms/PromptSettingsFrom";
+import WordSettingsForm from "@/components/forms/WordSettingsForm";
 
 export default function SettingsPage() {
   const [settingsData, setSettingsData] = useState<Settings>({
@@ -38,7 +40,8 @@ export default function SettingsPage() {
         languageData={settingsData.language}
         statusData={settingsData.status || loading}
       />
-      <NewSettingsForm notificationsData="Enabled" />
+      <PromptSettingsFrom customInteractionData="" moodData="" />
+      <WordSettingsForm />
     </MiniDrawer>
   );
 }
