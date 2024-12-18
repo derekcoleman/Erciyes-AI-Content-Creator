@@ -205,14 +205,6 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
           ))}
         </List>
         <Divider />
-        <Box
-          sx={{
-            padding: 2,
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        ></Box>
         <Box sx={{ marginTop: "auto", padding: 2, width: "100%" }}>
           <Button
             variant="outlined"
