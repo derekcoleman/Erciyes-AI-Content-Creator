@@ -11,26 +11,33 @@ import {
   TableContainer,
   TableRow,
   Paper,
+  styled,
 } from "@mui/material";
+import { textLimiter } from "@/lib/utils";
+import { useAtom } from "jotai";
+import { profileInfoAtom } from "@/store";
 
 const ProfilePage = () => {
+  const [profile, setProfile] = useAtom(profileInfoAtom);
+
   const [profileData, setProfileData] = useState({
-    name: "Kadir Levent Kabadayı",
+    username: "Kadir Levent Kabadayı",
     email: "KLK@example.com",
-    phone: "123-456-7890",
-    address: "Talas/KAYSERİ",
+    topixAPI: "ASDASFGSAG:DSADSA212SAD.dasd1sa@da-dsa0",
+    linkedinAPI: "ASDASFGSAG:DSADSA212SAD.dasd1sa@da-dsa0",
+    instagramAPI: "ASDASFGSAG:DSADSA212SAD.dasd1sa@da-dsa0",
   });
 
-  const [editableData, setEditableData] = useState({
-    username: "KLK",
-    bio: "Software Developer at XYZ",
-    API: "ASDASFGSAG:DSADSA212SAD.dasd1sa@da-dsa0",
-  });
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    width: "65%",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+  }));
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEditableData({
-      ...editableData,
+    setProfileData({
+      ...profileData,
       [name]: value,
     });
   };
@@ -50,27 +57,43 @@ const ProfilePage = () => {
           <TableBody>
             <TableRow>
               <TableCell>
-                <strong>Ad Soyad</strong>
+                <strong>Kullanıcı Adı</strong>
               </TableCell>
-              <TableCell>{profileData.name}</TableCell>
+              <StyledTableCell>
+                {textLimiter(profileData.username, 65)}
+              </StyledTableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <strong>Email</strong>
               </TableCell>
-              <TableCell>{profileData.email}</TableCell>
+              <StyledTableCell>
+                {textLimiter(profileData.email, 65)}
+              </StyledTableCell>
             </TableRow>
             <TableRow>
               <TableCell>
-                <strong>Telefon</strong>
+                <strong>Topix API Anahtarı</strong>
               </TableCell>
-              <TableCell>{profileData.phone}</TableCell>
+              <StyledTableCell>
+                {textLimiter(profileData.topixAPI, 65)}
+              </StyledTableCell>
             </TableRow>
             <TableRow>
               <TableCell>
-                <strong>Adres</strong>
+                <strong>Linkedin API Anahtarı</strong>
               </TableCell>
-              <TableCell>{profileData.address}</TableCell>
+              <StyledTableCell>
+                {textLimiter(profileData.linkedinAPI, 65)}
+              </StyledTableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <strong>Instagram API Anahtarı</strong>
+              </TableCell>
+              <StyledTableCell>
+                {textLimiter(profileData.instagramAPI, 65)}
+              </StyledTableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -84,29 +107,37 @@ const ProfilePage = () => {
           label="Kullanıcı Adı"
           variant="outlined"
           fullWidth
-          value={editableData.username}
+          value={profileData.username}
           name="username"
           onChange={handleChange}
           sx={{ marginBottom: 2 }}
         />
         <TextField
-          label="API Anahtarı"
+          label="Topix API Anahtarı"
           variant="outlined"
           fullWidth
-          value={editableData.API}
-          name="API"
+          value={profileData.topixAPI}
+          name="topixAPI"
           onChange={handleChange}
           sx={{ marginBottom: 2 }}
         />
         <TextField
-          label="Biyografi"
+          label="Linkedin API Anahtarı"
           variant="outlined"
           fullWidth
-          value={editableData.bio}
-          name="bio"
+          value={profileData.linkedinAPI}
+          name="linkedinAP"
           onChange={handleChange}
-          multiline
-          rows={4}
+          sx={{ marginBottom: 2 }}
+        />
+        <TextField
+          label="Instagram API Anahtarı"
+          variant="outlined"
+          fullWidth
+          value={profileData.instagramAPI}
+          name="instagramAPI"
+          onChange={handleChange}
+          sx={{ marginBottom: 2 }}
         />
 
         <Button

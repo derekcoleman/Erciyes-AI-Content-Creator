@@ -6,13 +6,13 @@ import {
   LoginFormData,
   LoginInfo,
   Post,
-  promptSettingsInfo,
+  PromptSettingsInfo,
   RegisterFormData,
   RegisterInfo,
   Settings,
   SettingsFormData,
   SettingsInfo,
-  wordSettingsInfo,
+  WordSettingsInfo,
 } from "./types";
 
 const loginUser = async (formData: LoginFormData): Promise<LoginInfo> => {
@@ -93,7 +93,7 @@ const addPromptSettings = async (formData: {
   customTopic: string;
   mood: string;
   selectedInteractions: string[];
-}): Promise<promptSettingsInfo> => {
+}): Promise<PromptSettingsInfo> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -114,14 +114,14 @@ const addPromptSettings = async (formData: {
     throw new Error(errorData.message || "Failed to save settings");
   }
 
-  const data: promptSettingsInfo = await response.json();
+  const data: PromptSettingsInfo = await response.json();
   return data;
 };
 
 const addWordSettings = async (formData: {
   wantedWords: string[];
   bannedWords: string[];
-}): Promise<wordSettingsInfo> => {
+}): Promise<WordSettingsInfo> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -142,7 +142,7 @@ const addWordSettings = async (formData: {
     throw new Error(errorData.message || "Failed to save settings");
   }
 
-  const data: wordSettingsInfo = await response.json();
+  const data: WordSettingsInfo = await response.json();
   return data;
 };
 const addJobs = async (job: Job): Promise<JobsInfo> => {
@@ -178,8 +178,8 @@ const getCookie = (name: string): string | null => {
   return null;
 };
 
-const textLimiter = (text: string): string => {
-  return text.length > 150 ? text.substring(0, 150) + "..." : text;
+const textLimiter = (text: string, length: number): string => {
+  return text.length > length ? text.substring(0, length) + "..." : text;
 };
 const platformMapping: { [key: string]: number } = {
   Instagram: 1,

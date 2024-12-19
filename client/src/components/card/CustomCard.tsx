@@ -90,7 +90,7 @@ const CustomCard: React.FC<CustomCardProps> = ({
             {title}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {textLimiter(content)}
+            {textLimiter(content, 150)}
           </Typography>
           <Typography
             variant="body2"
