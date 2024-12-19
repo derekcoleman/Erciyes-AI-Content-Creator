@@ -1,6 +1,6 @@
 import { Box, Button, Card, Divider, Typography } from "@mui/material";
 import { addWordSettings } from "@/lib/utils";
-import { wordSettingsInfo } from "@/lib/types";
+import { WordSettingsInfo } from "@/lib/types";
 import { useState } from "react";
 import CustomChipBox from "../inputs/CustomChipBox";
 
@@ -30,7 +30,7 @@ const WordSettingsForm: React.FC<WordSettingsFormProps> = ({
 
     if (isFormValid()) {
       try {
-        const settingsInfo: wordSettingsInfo = await addWordSettings({
+        const settingsInfo: WordSettingsInfo = await addWordSettings({
           wantedWords: wantedChips,
           bannedWords: bannedChips,
         });

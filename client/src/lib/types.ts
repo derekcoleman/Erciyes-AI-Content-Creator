@@ -98,14 +98,14 @@ export interface SpecificCustomCard extends CustomCardProps {
   specificHeader: specificHeaders;
 }
 
-export interface wordSettingsInfo {
+export interface WordSettingsInfo {
   code: number;
   message: string;
   status: boolean;
   wantedWords: string[];
   bannedWords: string[];
 }
-export interface promptSettingsInfo {
+export interface PromptSettingsInfo {
   code: number;
   message: string;
   status: boolean;
@@ -113,4 +113,16 @@ export interface promptSettingsInfo {
   mood: string;
   selectedInteractions: string[];
 }
+
+export interface ProfileInfo {
+  code: number;
+  message: string;
+  status: boolean;
+  username: string;
+  email: string;
+  topixAPI: string;
+  linkedinAPI: string;
+  instagramAPI: string;
+}
+
 export { Field, Variant, specificHeaders };

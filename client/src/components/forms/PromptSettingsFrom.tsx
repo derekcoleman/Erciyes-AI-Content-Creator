@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { promptSettingsInfo } from "@/lib/types";
+import { WromptSettingsInfo } from "@/lib/types";
 import { INTERACTIONLIST, moods } from "@/lib/conts";
 import { useState } from "react";
 import { addPromptSettings } from "@/lib/utils";
@@ -48,7 +48,7 @@ const PromptSettingsFrom: React.FC<PromptSettingsFromProps> = ({
 
     if (isFormValid()) {
       try {
-        const settingsInfo: promptSettingsInfo = await addPromptSettings({
+        const settingsInfo: PromptSettingsInfo = await addPromptSettings({
           customTopic,
           mood,
           selectedInteractions,
@@ -68,7 +68,6 @@ const PromptSettingsFrom: React.FC<PromptSettingsFromProps> = ({
   const isFormValid = () => {
     return customTopic || mood || selectedInteractions.length > 0;
   };
-
 
   return (
     <Card
