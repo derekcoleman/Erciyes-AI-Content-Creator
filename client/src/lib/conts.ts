@@ -64,7 +64,7 @@ export const DUMMYPOSTS: Post[] = [
 export const DUMMYJOBS = [
   {
     title: "Test Title 1",
-    platform: "Instagram",
+    platform: "Topix",
     days: ["Pazartesi", "Salı", "Cuma"],
     hour: "14.00",
   },
@@ -84,42 +84,42 @@ export const DUMMYJOBS = [
   },
   {
     title: "Test Title 3",
-    platform: "Facebook",
+    platform: "Topix",
     days: ["Pazar", "Salı"],
     hour: "09.00",
   },
   {
     title: "Test Title 4",
-    platform: "Twitter",
+    platform: "Topix",
     days: ["Çarşamba", "Perşembe"],
     hour: "18.00",
   },
   {
     title: "Test Title 5",
-    platform: "Snapchat",
+    platform: "Topix",
     days: ["Cuma", "Cumartesi"],
     hour: "10.00",
   },
   {
     title: "Test Title 6",
-    platform: "TikTok",
+    platform: "Topix",
     days: ["Salı", "Perşembe"],
     hour: "13.00",
   },
   {
     title: "Test Title 7",
-    platform: "YouTube",
+    platform: "Topix",
     days: ["Çarşamba", "Pazar"],
     hour: "16.00",
   },
   {
     title: "Test Title 8",
-    platform: "Pinterest",
+    platform: "Topix",
     days: ["Pazartesi", "Perşembe"],
     hour: "11.00",
   },
 ];
-export const platforms = ["Instagram", "LinkedIn", "Facebook", "Twitter"];
+export const platforms = ["Topix", "Instagram", "LinkedIn"];
 export const customCardsDetails: SpecificCustomCard[] = [
   {
     platform: "instagram",

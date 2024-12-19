@@ -12,10 +12,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import FacebookIcon from "@mui/icons-material/Facebook";
 import { textLimiter } from "@/lib/utils";
 import ExpandedCard from "./ExpandedCard";
 import { CustomCardProps } from "@/lib/types";
+import TopixIcon from "../icons/TopixIcon ";
 
 const CustomCard: React.FC<CustomCardProps> = ({
   platform,
@@ -43,12 +43,12 @@ const CustomCard: React.FC<CustomCardProps> = ({
 
   const renderPlatformIcon = () => {
     switch (platform) {
+      case "Topix":
+        return <TopixIcon />;
       case "instagram":
         return <InstagramIcon />;
       case "linkedIn":
         return <LinkedInIcon />;
-      case "facebook":
-        return <FacebookIcon />;
       default:
         return null;
     }

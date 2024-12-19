@@ -1,7 +1,7 @@
 "use client";
 import HomeSkeleton from "@/components/skeleton/HomeSkeleton";
 import MiniDrawer from "../components/drawer/MiniDrawer";
-import { Button, Grid } from "@mui/material";
+import { Alert, Button, Grid } from "@mui/material";
 import CustomCard from "@/components/card/CustomCard";
 import React, { useState } from "react";
 import { getPosts } from "@/lib/utils";
@@ -11,6 +11,7 @@ import { DUMMYPOSTS } from "@/lib/conts";
 export default function HomePage() {
   const [postDatas, setPostDatas] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchPosts = async () => {
     try {
@@ -18,6 +19,7 @@ export default function HomePage() {
       setPostDatas((prev) => [...prev, fetchedPost]);
     } catch (error) {
       console.error("Error fetching posts:", error);
+      //setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -41,10 +43,13 @@ export default function HomePage() {
       {loading ? (
         <HomeSkeleton />
       ) : (
+        //  error ? (
+        //   <Alert severity="error">{error}</Alert>
+        // ) :
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={12} md={5} mb={2}>
             <CustomCard
-              platform="instagram"
+              platform="Topix"
               postImage="/Gradient.png"
               title={postDatas[0].post.title}
               content={postDatas[0].post.body}
@@ -59,7 +64,7 @@ export default function HomePage() {
             {postDatas.slice(1).map((post, index) => (
               <Grid item xs={6} sm={4} md={4} key={index}>
                 <CustomCard
-                  platform="instagram"
+                  platform="Topix"
                   postImage="/Gradient.png"
                   title={post.post.title}
                   content={post.post.body}
