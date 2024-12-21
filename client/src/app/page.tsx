@@ -1,17 +1,28 @@
 "use client";
 import HomeSkeleton from "@/components/skeleton/HomeSkeleton";
 import MiniDrawer from "../components/drawer/MiniDrawer";
-import { Alert, Button, Grid } from "@mui/material";
+import { Alert, Box, Button, Grid } from "@mui/material";
 import CustomCard from "@/components/card/CustomCard";
 import React, { useState } from "react";
 import { getPosts } from "@/lib/utils";
 import { Post } from "@/lib/types";
 import { DUMMYPOSTS } from "@/lib/conts";
+import SettingsButton from "@/components/buttons/SettingsButton";
 
 export default function HomePage() {
   const [postDatas, setPostDatas] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickModalButton = () => {
+    setOpen(true);
+  };
+
+  const handleCloseModalButton = () => {
+    setOpen(false);
+  };
 
   const fetchPosts = async () => {
     try {
@@ -32,13 +43,17 @@ export default function HomePage() {
 
   return (
     <MiniDrawer>
-      <Button
-        onClick={handleClick}
-        variant="contained"
-        sx={{ marginBottom: 2 }}
-      >
-        OLUŞTUR
-      </Button>
+      <Box>
+        <SettingsButton
+          onClick={handleClickModalButton}
+          open={open}
+          onClose={handleCloseModalButton}
+          endpoint=""
+        />
+        <Button onClick={handleClick} variant="contained">
+          OLUŞTUR
+        </Button>
+      </Box>
 
       {loading ? (
         <HomeSkeleton />

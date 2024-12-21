@@ -1,4 +1,4 @@
-import { API_ENDPOINTS } from "./conts";
+import { API_BASE_URL, API_ENDPOINTS } from "./conts";
 import {
   Job,
   JobsFormData,
@@ -234,7 +234,7 @@ const getPosts = async (): Promise<Post> => {
   }
 };
 
-const getSettings = async (): Promise<Settings> => {
+const getSettings = async (endpoint: string): Promise<Settings> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -242,7 +242,7 @@ const getSettings = async (): Promise<Settings> => {
   }
 
   try {
-    const response = await fetch("endpoint", {
+    const response = await fetch(API_BASE_URL + "/" + endpoint, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

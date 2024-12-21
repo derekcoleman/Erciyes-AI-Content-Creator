@@ -20,7 +20,7 @@ export default function SettingsPage() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const fetchedSettings = await getSettings();
+        const fetchedSettings = await getSettings("");
         setSettingsData(fetchedSettings);
       } catch (error) {
         console.error("Error fetching settings:", error);
@@ -39,12 +39,6 @@ export default function SettingsPage() {
         languageData={settingsData.language}
         statusData={settingsData.status || loading}
       />
-      <PromptSettingsFrom
-        selectedInteractionsData={[]}
-        moodData=""
-        customTopicData=""
-      />
-      <WordSettingsForm customInteractionData={[""]} />
     </MiniDrawer>
   );
 }

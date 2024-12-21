@@ -1,6 +1,6 @@
 import { Post, SpecificCustomCard, specificHeaders } from "./types";
 
-const API_BASE_URL = "http://192.168.197.116:8080/api";
+export const API_BASE_URL = "http://192.168.197.116:8080/api";
 
 export const API_ENDPOINTS = {
   LOGIN: `${API_BASE_URL}/login`,

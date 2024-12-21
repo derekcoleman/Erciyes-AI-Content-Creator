@@ -14,11 +14,22 @@ import { daysOfWeek, platforms } from "@/lib/conts";
 import CustomTimePicker from "../inputs/CustomTimePicker";
 import { addJobs, getHourFromDate, jobDataParser } from "@/lib/utils";
 import { JobsFormData } from "@/lib/types";
+import SettingsButton from "../buttons/SettingsButton";
 
 const JobForm = () => {
   const [platform, setPlatform] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
   const [hour, setHour] = useState(null);
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickModalButton = () => {
+    setOpen(true);
+  };
+
+  const handleCloseModalButton = () => {
+    setOpen(false);
+  };
 
   const handleDayChange = (event: React.FormEvent) => {
     const { value } = event.target;
@@ -72,6 +83,14 @@ const JobForm = () => {
         Yeni Görev
       </Typography>
       <Box sx={{ display: "flex", gap: 2, justifyContent: "center " }}>
+        <FormControl sx={{ display: "flex", justifyContent: "center" }}>
+          <SettingsButton
+            onClick={handleClickModalButton}
+            open={open}
+            onClose={handleCloseModalButton}
+            endpoint=""
+          />
+        </FormControl>
         <FormControl fullWidth margin="normal" sx={{ width: "20%" }}>
           <Select
             value={platform}
