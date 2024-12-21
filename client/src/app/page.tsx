@@ -19,7 +19,7 @@ export default function HomePage() {
       setPostDatas((prev) => [...prev, fetchedPost]);
     } catch (error) {
       console.error("Error fetching posts:", error);
-      //setError(error.message);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -42,10 +42,9 @@ export default function HomePage() {
 
       {loading ? (
         <HomeSkeleton />
+      ) : error ? (
+        <Alert severity="error">{error}</Alert>
       ) : (
-        //  error ? (
-        //   <Alert severity="error">{error}</Alert>
-        // ) :
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={12} md={5} mb={2}>
             <CustomCard

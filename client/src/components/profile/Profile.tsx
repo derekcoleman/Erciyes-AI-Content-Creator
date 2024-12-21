@@ -104,15 +104,6 @@ const ProfilePage = () => {
           Güncellenebilir Bilgiler
         </Typography>
         <TextField
-          label="Kullanıcı Adı"
-          variant="outlined"
-          fullWidth
-          value={profileData.username}
-          name="username"
-          onChange={handleChange}
-          sx={{ marginBottom: 2 }}
-        />
-        <TextField
           label="Topix API Anahtarı"
           variant="outlined"
           fullWidth
