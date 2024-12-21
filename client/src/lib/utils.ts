@@ -182,10 +182,9 @@ const textLimiter = (text: string, length: number): string => {
   return text.length > length ? text.substring(0, length) + "..." : text;
 };
 const platformMapping: { [key: string]: number } = {
-  Instagram: 1,
-  LinkedIn: 2,
-  Facebook: 3,
-  Twitter: 4,
+  Topix: 1,
+  Instagram: 2,
+  LinkedIn: 3,
 };
 
 const jobDataParser = ({

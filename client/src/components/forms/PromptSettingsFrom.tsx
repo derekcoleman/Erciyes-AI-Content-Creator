@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { WromptSettingsInfo } from "@/lib/types";
+import { PromptSettingsInfo } from "@/lib/types";
 import { INTERACTIONLIST, moods } from "@/lib/conts";
 import { useState } from "react";
 import { addPromptSettings } from "@/lib/utils";
