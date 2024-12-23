@@ -26,6 +26,7 @@ root/
 ├── client/                # Next.js front-end
 │   ├── public/            # Public assets
 │   ├── src/
+│   │   ├── app/           # Pages
 │   │   ├── components/    # React components
 │   │   ├── lib/           # Utility
 │   └── package.json
