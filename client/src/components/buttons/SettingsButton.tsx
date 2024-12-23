@@ -1,19 +1,27 @@
 import SettingsIcon from "@mui/icons-material/Settings";
 import { IconButton } from "@mui/material";
 import SettingsModal from "../card/SettingsModal";
+import { PromptSettingsInfo, WordSettingsInfo } from "@/lib/types";
 
 interface SettingsButtonProps {
   open: boolean;
   onClose: () => void;
   onClick: () => void;
-  endpoint: string;
+  settingsData: {
+    promptSettingsInfo: PromptSettingsInfo;
+    wordSettingsInfo: WordSettingsInfo;
+  };
+  onPromptFormSubmit: (data: PromptSettingsInfo) => void;
+  onWordFormSubmit: (data: WordSettingsInfo) => void;
 }
 
 const SettingsButton: React.FC<SettingsButtonProps> = ({
   onClick,
   open,
   onClose,
-  endpoint,
+  settingsData,
+  onPromptFormSubmit,
+  onWordFormSubmit,
 }) => {
   return (
     <>
@@ -23,7 +31,9 @@ const SettingsButton: React.FC<SettingsButtonProps> = ({
       <SettingsModal
         open={open}
         onClose={onClose}
-        endpoint={endpoint}
+        settingsData={settingsData}
+        onPromptFormSubmit={onPromptFormSubmit}
+        onWordFormSubmit={onWordFormSubmit}
       ></SettingsModal>
     </>
   );

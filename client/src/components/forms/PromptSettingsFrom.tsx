@@ -15,18 +15,19 @@ import {
 import { PromptSettingsInfo } from "@/lib/types";
 import { INTERACTIONLIST, moods } from "@/lib/conts";
 import { useState } from "react";
-import { addPromptSettings } from "@/lib/utils";
 
 interface PromptSettingsFromProps {
   customTopicData: string;
   moodData: string;
   selectedInteractionsData: string[];
+  onFormSubmit?: (data: PromptSettingsInfo) => void;
 }
 
 const PromptSettingsFrom: React.FC<PromptSettingsFromProps> = ({
   customTopicData = "",
   moodData = "",
   selectedInteractionsData = [],
+  onFormSubmit,
 }) => {
   const [mood, setMood] = useState(moodData);
   const [customTopic, setCustomTopicData] = useState(customTopicData);
@@ -48,19 +49,15 @@ const PromptSettingsFrom: React.FC<PromptSettingsFromProps> = ({
 
     if (isFormValid()) {
       try {
-        const settingsInfo: PromptSettingsInfo = await addPromptSettings({
+        const settingsInfo: PromptSettingsInfo = {
           customTopic,
           mood,
           selectedInteractions,
-        });
+        };
 
-        if (settingsInfo.status) {
-          console.log("Settings updated successfully:", settingsInfo);
-        } else {
-          alert("Settings update failed: " + settingsInfo.message);
-        }
+        onFormSubmit(settingsInfo);
       } catch (error) {
-        alert("Settings update failed: " + error.message);
+        console.error("Settings update failed: ", error);
       }
     }
   };

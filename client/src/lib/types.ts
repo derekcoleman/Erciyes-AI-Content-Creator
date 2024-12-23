@@ -28,8 +28,13 @@ export interface RegisterFormData {
 }
 
 export interface SettingsFormData {
-  topic: string;
-  language: string;
+  language?: string;
+  topic?: string;
+  wantedWords?: string[];
+  bannedWords?: string[];
+  customTopic?: string;
+  mood?: string;
+  selectedInteractions?: string[];
 }
 
 export interface JobsFormData {
@@ -49,11 +54,13 @@ export interface RegisterInfo {
   message: string;
   status: boolean;
 }
+
 export interface SettingsInfo {
   code: number;
   message: string;
   status: boolean;
 }
+
 export interface JobsInfo {
   code: number;
   message: string;
@@ -66,19 +73,18 @@ export interface Job {
   day: number;
 }
 
+export interface JobData {
+  platform: string;
+  hour: string;
+  day: string[];
+  title: string;
+}
+
 export interface Post {
   code: number;
   message: string;
   status: boolean;
   post: { user_id: number; title: string; body: string };
-}
-
-export interface Settings {
-  code: number;
-  message: string;
-  status: boolean;
-  language: string;
-  topic: string;
 }
 
 export interface CustomCardProps {
@@ -99,22 +105,34 @@ export interface SpecificCustomCard extends CustomCardProps {
 }
 
 export interface WordSettingsInfo {
-  code: number;
-  message: string;
-  status: boolean;
   wantedWords: string[];
   bannedWords: string[];
 }
 export interface PromptSettingsInfo {
-  code: number;
-  message: string;
-  status: boolean;
   customTopic: string;
   mood: string;
   selectedInteractions: string[];
 }
+export interface SettingsFormInfo {
+  topic: string;
+  language: string;
+}
 
-export interface ProfileInfo {
+export interface Settings {
+  code: number;
+  message: string;
+  status: boolean;
+  language: string;
+  topic: string;
+  wantedWords?: string[];
+  bannedWords?: string[];
+  customTopic?: string;
+  mood?: string;
+  selectedInteractions?: string[];
+  disabled?: boolean;
+}
+
+export interface ProfileInfoData {
   code: number;
   message: string;
   status: boolean;
@@ -123,6 +141,17 @@ export interface ProfileInfo {
   topixAPI: string;
   linkedinAPI: string;
   instagramAPI: string;
+}
+
+export interface ProfileAPIs {
+  topixAPI: string;
+  linkedinAPI: string;
+  instagramAPI: string;
+}
+export interface ProfileInfo {
+  code: number;
+  message: string;
+  status: boolean;
 }
 
 export { Field, Variant, specificHeaders };

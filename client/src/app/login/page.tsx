@@ -68,7 +68,7 @@ function Page() {
           alert("Login failed: " + loginInfo.message);
         }
       } catch (error) {
-        alert("Login failed: " + error.message);
+        console.error("Login failed:", error);
       }
     }
 
@@ -92,7 +92,7 @@ function Page() {
             alert("register failed: " + registerInfo.message);
           }
         } catch (error) {
-          alert("register failed: " + error.message);
+          console.error("register failed: ", error);
         }
       }
     }

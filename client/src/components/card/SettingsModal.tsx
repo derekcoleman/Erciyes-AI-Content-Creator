@@ -1,50 +1,27 @@
 "use client";
-import SettingsForm from "@/components/forms/SettingsForm";
-import { useState, useEffect } from "react";
-import { Settings } from "@/lib/types";
-import { getSettings } from "@/lib/utils";
+import { PromptSettingsInfo, WordSettingsInfo } from "@/lib/types";
 import PromptSettingsFrom from "@/components/forms/PromptSettingsFrom";
 import WordSettingsForm from "@/components/forms/WordSettingsForm";
 import { Modal, Box, Fade, Backdrop } from "@mui/material";
 
 interface SettingsModalProps {
-  endpoint: string;
   open: boolean;
   onClose: () => void;
+  settingsData: {
+    promptSettingsInfo: PromptSettingsInfo;
+    wordSettingsInfo: WordSettingsInfo;
+  };
+  onPromptFormSubmit: (data: PromptSettingsInfo) => void;
+  onWordFormSubmit: (data: WordSettingsInfo) => void;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
   open,
   onClose,
-  endpoint,
+  settingsData,
+  onPromptFormSubmit,
+  onWordFormSubmit,
 }) => {
-  const [settingsData, setSettingsData] = useState<Settings>({
-    topic: "Osmanlı Tarihi",
-    language: "Türkçe",
-    code: 200,
-    status: true,
-    message: "Message",
-  });
-  const [loading, setLoading] = useState<boolean>(true);
-
-  //Get isteği klakacak sayfalara yüklenecek bu görev
-  //post isteği eklenmeli ve gelen statusx code ile üst katmtna bildirip bir ok ise bir daha get atılmalı
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const fetchedSettings = await getSettings(endpoint);
-        setSettingsData(fetchedSettings);
-      } catch (error) {
-        console.error("Error fetching settings:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSettings();
-  }, []);
-
   return (
     <Modal
       open={open}
@@ -67,24 +44,26 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             boxShadow: 24,
             p: 4,
             width: "80%",
-            height: "80%",
+            maxHeight: "80%",
             overflowY: "scroll",
             "&:focus-visible": {
               outline: "none",
             },
           }}
         >
-          <SettingsForm
-            topicData={settingsData.topic}
-            languageData={settingsData.language}
-            statusData={settingsData.status || loading}
-          />
           <PromptSettingsFrom
-            selectedInteractionsData={[]}
-            moodData=""
-            customTopicData=""
+            selectedInteractionsData={
+              settingsData.promptSettingsInfo.selectedInteractions
+            }
+            moodData={settingsData.promptSettingsInfo.mood}
+            customTopicData={settingsData.promptSettingsInfo.customTopic}
+            onFormSubmit={onPromptFormSubmit}
           />
-          <WordSettingsForm customInteractionData={[""]} />
+          <WordSettingsForm
+            bannedWords={settingsData.wordSettingsInfo.bannedWords}
+            wantedWords={settingsData.wordSettingsInfo.wantedWords}
+            onFormSubmit={onWordFormSubmit}
+          />
         </Box>
       </Fade>
     </Modal>

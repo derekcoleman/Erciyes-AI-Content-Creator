@@ -13,14 +13,30 @@ import {
 import { daysOfWeek, platforms } from "@/lib/conts";
 import CustomTimePicker from "../inputs/CustomTimePicker";
 import { addJobs, getHourFromDate, jobDataParser } from "@/lib/utils";
-import { JobsFormData } from "@/lib/types";
+import {
+  JobsFormData,
+  PromptSettingsInfo,
+  WordSettingsInfo,
+} from "@/lib/types";
 import SettingsButton from "../buttons/SettingsButton";
 
-const JobForm = () => {
+interface JobFormProps {
+  settingsData: {
+    promptSettingsInfo: PromptSettingsInfo;
+    wordSettingsInfo: WordSettingsInfo;
+  };
+  onPromptFormSubmit: (data: PromptSettingsInfo) => void;
+  onWordFormSubmit: (data: WordSettingsInfo) => void;
+}
+
+const JobForm: React.FC<JobFormProps> = ({
+  settingsData,
+  onPromptFormSubmit,
+  onWordFormSubmit,
+}) => {
   const [platform, setPlatform] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
   const [hour, setHour] = useState(null);
-
   const [open, setOpen] = useState(false);
 
   const handleClickModalButton = () => {
@@ -39,7 +55,7 @@ const JobForm = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (isFormValid()) {
+    if (isFormValid) {
       try {
         const formData: JobsFormData = {
           platform,
@@ -58,20 +74,16 @@ const JobForm = () => {
               console.error("Failed to add job", jobResponse.message);
             }
           } catch (error) {
-            console.error("Error adding job:", error.message);
+            console.error("Error adding job:", error);
           }
         }
       } catch (error) {
-        alert("Error processing form: " + error.message);
+        alert("Error processing form: " + error);
       }
-    } else {
-      alert("Please fill in all required fields.");
     }
   };
 
-  const isFormValid = () => {
-    return platform && selectedDays.length > 0 && hour !== null;
-  };
+  const isFormValid = platform && selectedDays.length > 0 && hour !== null;
 
   return (
     <Card
@@ -88,7 +100,9 @@ const JobForm = () => {
             onClick={handleClickModalButton}
             open={open}
             onClose={handleCloseModalButton}
-            endpoint=""
+            settingsData={settingsData}
+            onPromptFormSubmit={onPromptFormSubmit}
+            onWordFormSubmit={onWordFormSubmit}
           />
         </FormControl>
         <FormControl fullWidth margin="normal" sx={{ width: "20%" }}>
@@ -145,7 +159,7 @@ const JobForm = () => {
           variant="contained"
           color="primary"
           sx={{ width: "10%", height: "56px", marginTop: "14px" }}
-          disabled={!isFormValid()}
+          disabled={!isFormValid}
         >
           Kaydet
         </Button>

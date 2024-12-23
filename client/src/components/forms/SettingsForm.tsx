@@ -10,48 +10,49 @@ import {
   Typography,
 } from "@mui/material";
 import { addSettings } from "@/lib/utils";
-import { SettingsInfo } from "@/lib/types";
+import { Settings, SettingsInfo } from "@/lib/types";
 
 const languages = ["English", "Turkish", "Spanish", "French", "German"];
 
 interface SettingsFormProps {
-  topicData: string;
-  statusData: boolean;
-  languageData: string;
+  stateData: Settings;
+  onSettingsSubmit: (updatedSettings: Settings) => void;
+  isDisabled: boolean;
 }
 
 const SettingsForm: React.FC<SettingsFormProps> = ({
-  topicData = "",
-  statusData = false,
-  languageData = "",
+  stateData,
+  onSettingsSubmit,
+  isDisabled,
 }) => {
-  const [topic, setTopic] = useState(topicData);
-  const [language, setLanguage] = useState(languageData);
+  const [settingsData, setSettingsData] = useState(stateData);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (isFormValid) {
       try {
-        const settingsInfo: SettingsInfo = await addSettings({
-          topic,
-          language,
+        const fetchInfo: SettingsInfo = await addSettings({
+          topic: settingsData.topic,
+          language: settingsData.language,
+          wantedWords: settingsData.wantedWords,
+          bannedWords: settingsData.bannedWords,
+          customTopic: settingsData.customTopic,
+          mood: settingsData.mood,
+          selectedInteractions: settingsData.selectedInteractions,
         });
-        if (settingsInfo.status) {
-          console.log(settingsInfo);
-        } else {
-          alert("settings failed: " + settingsInfo.message);
+        if (fetchInfo.status) {
+          setSettingsData((prev) => ({ ...prev, disabled: true }));
+          onSettingsSubmit(settingsData);
         }
       } catch (error) {
-        alert("settings failed: " + error.message);
+        console.error("settings failed: ", error);
       }
     }
     return;
   };
 
-  const isFormValid = () => {
-    return topic && language;
-  };
+  const isFormValid = settingsData.topic && settingsData.language;
 
   return (
     <Card
@@ -70,19 +71,23 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
       <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
         <FormControl fullWidth margin="normal" sx={{ width: "30%" }}>
           <TextField
-            onChange={(e) => setTopic(e.target.value)}
+            onChange={(e) =>
+              setSettingsData((prev) => ({ ...prev, topic: e.target.value }))
+            }
             id="outlined-basic"
             placeholder="Genel Başlık"
             variant="outlined"
-            disabled={statusData}
-            value={topic}
+            disabled={isDisabled || settingsData.disabled}
+            value={settingsData.topic}
           />
         </FormControl>
         <FormControl fullWidth margin="normal" sx={{ width: "30%" }}>
           <Select
-            disabled={statusData}
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
+            disabled={isDisabled || settingsData.disabled}
+            value={settingsData.language}
+            onChange={(e) =>
+              setSettingsData((prev) => ({ ...prev, language: e.target.value }))
+            }
             displayEmpty
             renderValue={(selected) => {
               if (!selected) {
@@ -107,7 +112,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           variant="contained"
           color="primary"
           sx={{ width: "10%", height: "56px", marginTop: "14px" }}
-          disabled={!isFormValid() || statusData}
+          disabled={!isFormValid || isDisabled || settingsData.disabled}
         >
           Kaydet
         </Button>
