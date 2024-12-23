@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   TextField,
@@ -12,20 +12,19 @@ import {
   TableRow,
   Paper,
   styled,
+  Alert,
 } from "@mui/material";
-import { textLimiter } from "@/lib/utils";
-import { useAtom } from "jotai";
-import { profileInfoAtom } from "@/store";
+import { getProfile, textLimiter, updateProfile } from "@/lib/utils";
+import { ProfileInfo } from "@/lib/types";
 
 const ProfilePage = () => {
-  const [profile, setProfile] = useAtom(profileInfoAtom);
-
+  const [error, setError] = useState<string | null>(null);
   const [profileData, setProfileData] = useState({
-    username: "Kadir Levent Kabadayı",
-    email: "KLK@example.com",
-    topixAPI: "ASDASFGSAG:DSADSA212SAD.dasd1sa@da-dsa0",
-    linkedinAPI: "ASDASFGSAG:DSADSA212SAD.dasd1sa@da-dsa0",
-    instagramAPI: "ASDASFGSAG:DSADSA212SAD.dasd1sa@da-dsa0",
+    username: "",
+    email: "",
+    topixAPI: "",
+    linkedinAPI: "",
+    instagramAPI: "",
   });
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -33,6 +32,30 @@ const ProfilePage = () => {
     whiteSpace: "nowrap",
     overflow: "hidden",
   }));
+
+  const fetchProfile = async () => {
+    try {
+      const fetchedProfile = await getProfile();
+      if (fetchedProfile.status) {
+        setProfileData(fetchedProfile);
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      setError((error as Error).message);
+    }
+  };
+  const fetchUpdateProfile = async () => {
+    try {
+      const fetchedProfileInfo: ProfileInfo = await updateProfile({
+        topixAPI: profileData.topixAPI,
+        linkedinAPI: profileData.linkedinAPI,
+        instagramAPI: profileData.instagramAPI,
+      });
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      setError((error as Error).message);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,7 +67,17 @@ const ProfilePage = () => {
 
   const handleSave = () => {
     alert("Bilgiler kaydedildi");
+    fetchUpdateProfile();
   };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  //Test gerekli
+  // if (error) {
+  //   return <Alert severity="error">{error}</Alert>;
+  // }
 
   return (
     <Box sx={{ width: "80%", margin: "0 auto", paddingTop: 4 }}>
@@ -117,7 +150,7 @@ const ProfilePage = () => {
           variant="outlined"
           fullWidth
           value={profileData.linkedinAPI}
-          name="linkedinAP"
+          name="linkedinAPI"
           onChange={handleChange}
           sx={{ marginBottom: 2 }}
         />

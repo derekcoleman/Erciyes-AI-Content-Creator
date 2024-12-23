@@ -1,18 +1,20 @@
-import { API_ENDPOINTS } from "./conts";
+import { API_ENDPOINTS, daysOfWeek } from "./conts";
 import {
   Job,
+  JobData,
   JobsFormData,
   JobsInfo,
   LoginFormData,
   LoginInfo,
   Post,
-  PromptSettingsInfo,
+  ProfileAPIs,
+  ProfileInfo,
+  ProfileInfoData,
   RegisterFormData,
   RegisterInfo,
   Settings,
   SettingsFormData,
   SettingsInfo,
-  WordSettingsInfo,
 } from "./types";
 
 const loginUser = async (formData: LoginFormData): Promise<LoginInfo> => {
@@ -54,13 +56,6 @@ const registerUser = async (
   return data;
 };
 
-const getHourFromDate = (date: Date) => {
-  if (!(date instanceof Date)) {
-    return null;
-  }
-  return date.getHours();
-};
-
 const addSettings = async (
   formData: SettingsFormData
 ): Promise<SettingsInfo> => {
@@ -70,7 +65,7 @@ const addSettings = async (
     throw new Error("No token found, please login.");
   }
 
-  const response = await fetch(API_ENDPOINTS.SETTNGS, {
+  const response = await fetch(API_ENDPOINTS.SETTINGS, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -89,62 +84,6 @@ const addSettings = async (
   return data;
 };
 
-const addPromptSettings = async (formData: {
-  customTopic: string;
-  mood: string;
-  selectedInteractions: string[];
-}): Promise<PromptSettingsInfo> => {
-  const token = getCookie("token");
-
-  if (!token) {
-    throw new Error("No token found, please login.");
-  }
-
-  const response = await fetch(API_ENDPOINTS.SETTNGS, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      token: token,
-    },
-    body: JSON.stringify(formData),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to save settings");
-  }
-
-  const data: PromptSettingsInfo = await response.json();
-  return data;
-};
-
-const addWordSettings = async (formData: {
-  wantedWords: string[];
-  bannedWords: string[];
-}): Promise<WordSettingsInfo> => {
-  const token = getCookie("token");
-
-  if (!token) {
-    throw new Error("No token found, please login.");
-  }
-
-  const response = await fetch(API_ENDPOINTS.SETTNGS, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      token: token,
-    },
-    body: JSON.stringify(formData),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to save settings");
-  }
-
-  const data: WordSettingsInfo = await response.json();
-  return data;
-};
 const addJobs = async (job: Job): Promise<JobsInfo> => {
   const token = getCookie("token");
 
@@ -176,29 +115,6 @@ const getCookie = (name: string): string | null => {
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
   return null;
-};
-
-const textLimiter = (text: string, length: number): string => {
-  return text.length > length ? text.substring(0, length) + "..." : text;
-};
-const platformMapping: { [key: string]: number } = {
-  Topix: 1,
-  Instagram: 2,
-  LinkedIn: 3,
-};
-
-const jobDataParser = ({
-  platform,
-  selectedDays,
-  hour,
-}: JobsFormData): Job[] => {
-  const platform_id = platformMapping[platform] || -1;
-
-  return selectedDays.map((day) => ({
-    platform_id,
-    hour,
-    day,
-  }));
 };
 
 const getPosts = async (): Promise<Post> => {
@@ -234,7 +150,7 @@ const getPosts = async (): Promise<Post> => {
   }
 };
 
-const getSettings = async (): Promise<Settings> => {
+const getHome = async (): Promise<Post[]> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -242,7 +158,7 @@ const getSettings = async (): Promise<Settings> => {
   }
 
   try {
-    const response = await fetch("endpoint", {
+    const response = await fetch(API_ENDPOINTS.HOME, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -252,7 +168,73 @@ const getSettings = async (): Promise<Settings> => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to fetch post");
+      throw new Error(errorData.message || "Failed to fetch posts");
+    }
+
+    const data: Post[] = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(
+        error.message || "Unknown error occurred while fetching posts."
+      );
+    }
+    throw new Error("Unknown error occurred while fetching posts.");
+  }
+};
+
+const getJobs = async (): Promise<Job[]> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  try {
+    const response = await fetch(API_ENDPOINTS.ALL_JOBS, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to fetch jobs");
+    }
+
+    const data: Job[] = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(
+        error.message || "Unknown error occurred while fetching jobs."
+      );
+    }
+    throw new Error("Unknown error occurred while fetching jobs.");
+  }
+};
+
+const getSettings = async (): Promise<Settings> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  try {
+    const response = await fetch(API_ENDPOINTS.JOBS, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to fetch settings");
     }
 
     const data: Settings = await response.json();
@@ -260,10 +242,79 @@ const getSettings = async (): Promise<Settings> => {
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(
-        error.message || "Unknown error occurred while fetching post."
+        error.message || "Unknown error occurred while fetching settings."
       );
     }
-    throw new Error("Unknown error occurred while fetching post.");
+    throw new Error("Unknown error occurred while fetching settings.");
+  }
+};
+
+const getProfile = async (): Promise<ProfileInfoData> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  try {
+    const response = await fetch(API_ENDPOINTS.PROFILE, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to fetch profile");
+    }
+
+    const data: ProfileInfoData = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(
+        error.message || "Unknown error occurred while fetching profile."
+      );
+    }
+    throw new Error("Unknown error occurred while fetching profile.");
+  }
+};
+
+const updateProfile = async (
+  profileData: ProfileAPIs
+): Promise<ProfileInfo> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  try {
+    const response = await fetch(API_ENDPOINTS.PROFILE, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+      body: JSON.stringify(profileData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to fetch profile");
+    }
+
+    const data: ProfileInfo = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(
+        error.message || "Unknown error occurred while fetching profile."
+      );
+    }
+    throw new Error("Unknown error occurred while fetching profile.");
   }
 };
 
@@ -283,18 +334,80 @@ const abbreviateNumber = (num: number): string => {
   }
 };
 
+const jobDataParser = ({
+  platform,
+  selectedDays,
+  hour,
+}: JobsFormData): Job[] => {
+  const platform_id = platformMapping[platform] || -1;
+
+  return selectedDays.map((day) => ({
+    platform_id,
+    hour,
+    day,
+  }));
+};
+
+const textLimiter = (text: string, length: number): string => {
+  return text.length > length ? text.substring(0, length) + "..." : text;
+};
+
+const platformMapping: { [key: string]: number } = {
+  Topix: 1,
+  Instagram: 2,
+  LinkedIn: 3,
+};
+
+const getHourFromDate = (date: Date) => {
+  if (!(date instanceof Date)) {
+    return null;
+  }
+  return date.getHours();
+};
+
+//günler kısmı sıkınıtlı array gelemsi gerekli
+const jobToJobData = (jobs: Job[]): JobData[] => {
+  return jobs.map((job) => {
+    const platform_id = job.platform_id;
+    const hour = job.hour;
+    const day = job.day;
+
+    const platform =
+      Object.keys(platformMapping).find(
+        (key) => platformMapping[key] === platform_id
+      ) || "Unknown";
+
+    const formattedHour = hour < 10 ? `0${hour}:00` : `${hour}:00`;
+
+    const dayLabel =
+      daysOfWeek.find((d) => d.value === day)?.label || "Unknown";
+
+    const title = `Job at ${platform}`;
+
+    return {
+      platform,
+      hour: formattedHour,
+      day: [dayLabel],
+      title,
+    };
+  });
+};
+
 export {
-  registerUser,
   loginUser,
-  getHourFromDate,
-  textLimiter,
-  addSettings,
-  jobDataParser,
-  addJobs,
+  registerUser,
+  getHome,
+  getJobs,
   getPosts,
   getSettings,
-  getTheme,
+  getProfile,
+  addJobs,
+  addSettings,
+  updateProfile,
+  jobDataParser,
+  textLimiter,
   abbreviateNumber,
-  addWordSettings,
-  addPromptSettings,
+  getHourFromDate,
+  getTheme,
+  jobToJobData,
 };

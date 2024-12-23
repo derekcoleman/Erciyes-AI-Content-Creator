@@ -5,15 +5,17 @@ interface CustomChipBoxProps {
   onChipsChange: (chips: string[]) => void;
   title: string;
   isWanted: boolean;
+  chipData: string[];
 }
 
 const CustomChipBox: React.FC<CustomChipBoxProps> = ({
   onChipsChange,
   title,
   isWanted,
+  chipData,
 }) => {
   const [inputValue, setInputValue] = useState<string>("");
-  const [chips, setChips] = useState<string[]>([]);
+  const [chips, setChips] = useState<string[]>(chipData);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);

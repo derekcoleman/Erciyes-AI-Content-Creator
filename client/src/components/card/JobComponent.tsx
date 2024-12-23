@@ -14,7 +14,7 @@ interface JobProps {
   hour: string;
 }
 
-const Job: React.FC<JobProps> = ({ title, platform, days, hour }) => {
+const JobComponent: React.FC<JobProps> = ({ title, platform, days, hour }) => {
   return (
     <Card sx={{ margin: 2, width: "96.5%" }}>
       <CardHeader title={title} subheader={`Platform: ${platform}`} />
@@ -35,4 +35,4 @@ const Job: React.FC<JobProps> = ({ title, platform, days, hour }) => {
   );
 };
 
-export default Job;
+export default JobComponent;

@@ -1,21 +1,22 @@
 import { Box, Button, Card, Divider, Typography } from "@mui/material";
-import { addWordSettings } from "@/lib/utils";
 import { WordSettingsInfo } from "@/lib/types";
 import { useState } from "react";
 import CustomChipBox from "../inputs/CustomChipBox";
 
 interface WordSettingsFormProps {
-  customInteractionData: string[];
+  bannedWords: string[];
+  wantedWords: string[];
+
+  onFormSubmit?: (data: WordSettingsInfo) => void;
 }
 
 const WordSettingsForm: React.FC<WordSettingsFormProps> = ({
-  customInteractionData = [""],
+  bannedWords,
+  wantedWords,
+  onFormSubmit,
 }) => {
-  const [wantedChips, setWantedChips] = useState<string[]>([]);
-  const [bannedChips, setBannedChips] = useState<string[]>([]);
-  const [customInteraction, setCustomInteraction] = useState(
-    customInteractionData
-  );
+  const [wantedChips, setWantedChips] = useState<string[]>(wantedWords);
+  const [bannedChips, setBannedChips] = useState<string[]>(bannedWords);
 
   const handleWantedChipsChange = (newChips: string[]) => {
     setWantedChips(newChips);
@@ -30,17 +31,13 @@ const WordSettingsForm: React.FC<WordSettingsFormProps> = ({
 
     if (isFormValid()) {
       try {
-        const settingsInfo: WordSettingsInfo = await addWordSettings({
+        const settingsInfo: WordSettingsInfo = {
           wantedWords: wantedChips,
           bannedWords: bannedChips,
-        });
-        if (settingsInfo.status) {
-          console.log("Settings successfully updated:", settingsInfo);
-        } else {
-          alert("Settings update failed: " + settingsInfo.message);
-        }
+        };
+        onFormSubmit(settingsInfo);
       } catch (error) {
-        alert("Settings update failed: " + error.message);
+        console.error("Settings update failed: ", error);
       }
     }
   };
@@ -71,15 +68,17 @@ const WordSettingsForm: React.FC<WordSettingsFormProps> = ({
         }}
       >
         <CustomChipBox
-          onChipsChange={handleBannedChipsChange}
+          onChipsChange={handleWantedChipsChange}
           title="Yasaklı Kelime"
           isWanted={true}
+          chipData={wantedChips}
         />
         <Divider orientation="vertical" variant="middle" flexItem />
         <CustomChipBox
-          onChipsChange={handleWantedChipsChange}
+          onChipsChange={handleBannedChipsChange}
           title="İstenilen Kelime"
           isWanted={false}
+          chipData={bannedChips}
         />
         <Button
           type="submit"
