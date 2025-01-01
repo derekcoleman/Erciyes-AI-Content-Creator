@@ -5,19 +5,36 @@ import {
   Typography,
   Chip,
   Box,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface JobProps {
   title: string;
   platform: string;
   days: string[];
   hour: string;
+  onDelete: () => void;
 }
 
-const JobComponent: React.FC<JobProps> = ({ title, platform, days, hour }) => {
+const JobComponent: React.FC<JobProps> = ({
+  title,
+  platform,
+  days,
+  hour,
+  onDelete,
+}) => {
   return (
     <Card sx={{ margin: 2, width: "96.5%" }}>
-      <CardHeader title={title} subheader={`Platform: ${platform}`} />
+      <CardHeader
+        title={title}
+        subheader={`Platform: ${platform}`}
+        action={
+          <IconButton onClick={() => onDelete()}>
+            <DeleteIcon />
+          </IconButton>
+        }
+      />
       <CardContent>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography variant="body2" color="text.secondary">

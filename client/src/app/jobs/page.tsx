@@ -135,6 +135,19 @@ export default function JobPage() {
     fetchJobs();
   }, []);
 
+  const deleteJob = async () => {
+    // try {
+    //   if (!response.ok) {
+    //     const errorData = await response.json();
+    //     throw new Error(errorData.message || "Failed to delete job");
+    //   }
+    //   setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
+    // } catch (error) {
+    //   console.error("Error deleting job:", error);
+    //   alert("Error deleting job: " + (error as Error).message);
+    // }
+  };
+
   return (
     <MiniDrawer>
       <JobForm
@@ -169,6 +182,7 @@ export default function JobPage() {
                 platform={job.platform}
                 days={job.day}
                 hour={job.hour}
+                onDelete={deleteJob}
               />
             </Grid>
           ))}
