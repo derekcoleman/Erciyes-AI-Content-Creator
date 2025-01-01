@@ -7,17 +7,21 @@ import {
   Box,
   IconButton,
   useTheme,
+  Button,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import { formatDate, textLimiter } from "@/lib/utils";
+import { addPostManuel, formatDate, textLimiter } from "@/lib/utils";
 import ExpandedCard from "./ExpandedCard";
 import { CustomCardProps } from "@/lib/types";
 import TopixIcon from "../icons/TopixIcon ";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
+import CircularProgress from "@mui/material/CircularProgress";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import ShareIcon from "@mui/icons-material/Share";
 
 const CustomCard: React.FC<CustomCardProps> = ({
   platform,
@@ -37,8 +41,10 @@ const CustomCard: React.FC<CustomCardProps> = ({
 }) => {
   const theme = useTheme();
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   const [shareStatus, setShareStatus] = useState<number>(isShared);
+  const [error, setError] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -61,10 +67,6 @@ const CustomCard: React.FC<CustomCardProps> = ({
     }
   };
 
-  const handleShareStatusChange = (status: boolean) => {
-    setShareStatus(status ? 1 : 0);
-  };
-
   const handleTitleEdit = (newTitle: string) => {
     onTitleChange(id, newTitle);
   };
@@ -73,8 +75,27 @@ const CustomCard: React.FC<CustomCardProps> = ({
     onContentChange(id, newContent);
   };
 
+  const handleShare = async () => {
+    setLoading(true);
+    try {
+      const response = await addPostManuel(id);
+
+      if (response.status) {
+        setShareStatus(1);
+      } else {
+        setShareStatus(0);
+      }
+    } catch (error) {
+      console.error("Failed to share post: ", error);
+      setShareStatus(0);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <>
+    <Box>
       <Card
         sx={{
           backgroundColor: `${isInnerCard ? "customColors.innerCard" : ""}`,
@@ -88,6 +109,8 @@ const CustomCard: React.FC<CustomCardProps> = ({
           display: "flex",
           justifyContent: "center",
           height,
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
         }}
         onClick={handleClick}
       >
@@ -157,6 +180,39 @@ const CustomCard: React.FC<CustomCardProps> = ({
           </Typography>
         </CardContent>
       </Card>
+      <Box>
+        {loading && (
+          <CircularProgress
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+            }}
+          />
+        )}
+        {error && (
+          <ErrorOutlineIcon
+            fontSize="large"
+            color="error"
+            sx={{ position: "absolute", zIndex: 1 }}
+          />
+        )}
+        <Button
+          variant="contained"
+          color={error ? "warning" : "primary"}
+          disabled={shareStatus === 1}
+          startIcon={<ShareIcon />}
+          onClick={handleShare}
+          sx={{
+            width: "100%",
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
+          }}
+        >
+          Paylaş
+        </Button>
+      </Box>
+
       <ExpandedCard
         id={id}
         open={open}
@@ -169,12 +225,11 @@ const CustomCard: React.FC<CustomCardProps> = ({
         comments={comments}
         date={date}
         platformIcon={renderPlatformIcon()}
-        onShareStatusChange={handleShareStatusChange}
         isShared={shareStatus === 1 ? true : false}
         onTitleChange={handleTitleEdit}
         onContentChange={handleContentEdit}
       />
-    </>
+    </Box>
   );
 };
 

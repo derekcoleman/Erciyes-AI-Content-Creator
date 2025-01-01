@@ -11,11 +11,10 @@ import {
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
-import ShareIcon from "@mui/icons-material/Share";
+import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { ReactNode, useState } from "react";
-import { addPostManuel, formatDate } from "@/lib/utils";
+import { formatDate, updatePost } from "@/lib/utils";
 import CircularProgress from "@mui/material/CircularProgress";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 interface ExpandedCardProps {
@@ -30,7 +29,6 @@ interface ExpandedCardProps {
   date: string;
   platformIcon: ReactNode;
   id: number;
-  onShareStatusChange: (status: boolean) => void;
   isShared?: boolean;
   onTitleChange: (title: string) => void;
   onContentChange: (content: string) => void;
@@ -48,7 +46,6 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
   date,
   platformIcon,
   id,
-  onShareStatusChange,
   isShared = false,
   onTitleChange,
   onContentChange,
@@ -57,24 +54,22 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [editableTitle, setEditableTitle] = useState<string>(title);
   const [editableContent, setEditableContent] = useState<string>(content);
+  const [error, setError] = useState(false);
 
-  //veri tabanında postu güncellememiz gerekli
-  const handleShare = async () => {
+  const handleUpdatePost = async () => {
     setLoading(true);
     try {
-      const response = await addPostManuel(id);
+      const response = await updatePost(id, editableContent, editableTitle);
 
       if (response.status) {
         setShareStatus(true);
-        onShareStatusChange(true);
       } else {
         setShareStatus(false);
-        onShareStatusChange(false);
       }
     } catch (error) {
-      console.error("Failed to share post: ", error);
+      console.error("Failed to update post: ", error);
       setShareStatus(false);
-      onShareStatusChange(false);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -141,28 +136,23 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
               sx={{
                 display: "flex",
                 textAlign: "center",
-                justifyContent: "center",
+                justifyContent: "end",
                 alignItems: "center",
-                gap: 2,
+                gap: 1,
                 marginBottom: 2,
+                width: "20%",
               }}
             >
               {loading && <CircularProgress />}
-              {shareStatus ? (
-                <CheckCircleOutlineIcon fontSize="large" color="success" />
-              ) : loading ? (
-                <ErrorOutlineIcon fontSize="large" color="error" />
-              ) : (
-                <></>
-              )}
+              {error && <ErrorOutlineIcon fontSize="large" color="error" />}
               <Button
                 variant="contained"
                 color="primary"
                 disabled={shareStatus}
-                startIcon={<ShareIcon />}
-                onClick={handleShare}
+                startIcon={<SaveAsIcon />}
+                onClick={handleUpdatePost}
               >
-                Paylaş
+                Kaydet
               </Button>
               {platformIcon}
             </Box>

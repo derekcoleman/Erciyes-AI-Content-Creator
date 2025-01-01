@@ -72,7 +72,7 @@ export default function HomePage() {
         title: fetchedPost.post.title,
         body: fetchedPost.post.body,
         status: 0,
-        created_at: Date.now().toString(),
+        created_at: new Date().toISOString(),
       };
 
       setPostDatas((prev) => {
@@ -244,7 +244,6 @@ export default function HomePage() {
           <Grid item xs={12} md={5} mb={2}>
             {newPostLoading && (
               <CircularProgress
-                size={40}
                 sx={{
                   position: "absolute",
                   top: "50%",

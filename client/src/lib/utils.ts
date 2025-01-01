@@ -498,11 +498,46 @@ const addPostManuel = async (post_id: number): Promise<FetchInfo> => {
 };
 
 const formatDate = (dateString: string) => {
-  const date = new Date(dateString); // ISO string'i Date nesnesine dönüştür
-  const day = date.getDate().toString().padStart(2, "0"); // Gün
-  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Ay, 1'den başlar, +1 ekliyoruz
-  const year = date.getFullYear(); // Yıl
-  return `${day}/${month}/${year}`; // Format: "gg/aa/yyyy"
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
+const updatePost = async (
+  id: number,
+  content: string,
+  title: string
+): Promise<FetchInfo> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+  try {
+    //endpoint değişecek
+    const response = await fetch(`${API_ENDPOINTS}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+      body: JSON.stringify({ content, title }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to update post");
+    }
+
+    const data: FetchInfo = await response.json();
+    console.log("data: ", data);
+    return data;
+  } catch (error) {
+    console.error("Error updating post:", error);
+    throw error;
+  }
 };
 
 export {
@@ -526,4 +561,5 @@ export {
   transformSettingsToBackend,
   addPostManuel,
   formatDate,
+  updatePost,
 };

@@ -9,84 +9,84 @@ function HomeSkeleton() {
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
         <Grid item xs={6} sm={4} md={4}>
           <Skeleton
             variant="rectangular"
-            height={"230px"}
+            height={"266.5px"}
             sx={{ width: "100%", maxWidth: "38vw" }}
           />
         </Grid>
