@@ -252,24 +252,10 @@ export default function HomePage() {
                 }}
               />
             )}
-            <CustomCard
-              id={postDatas.posts[0].id}
-              platform="Topix"
-              postImage="/NoImgLightNew.jpg"
-              title={postDatas.posts[0].title}
-              content={postDatas.posts[0].body}
-              hashtags={["tag3", "tag4"]}
-              likes={20}
-              comments={8}
-              date={postDatas.posts[0].created_at}
-              isShared={postDatas.posts[0].status || 0}
-              onTitleChange={handleTitleChange}
-              onContentChange={handleBodyChange}
-            />
           </Grid>
 
           <Grid container spacing={2}>
-            {postDatas.posts.slice(1).map((post) => (
+            {postDatas.posts.map((post) => (
               <Grid item xs={6} sm={4} md={4} key={post.id}>
                 <CustomCard
                   id={post.id}
