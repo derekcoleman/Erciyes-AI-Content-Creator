@@ -10,14 +10,16 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 
 interface JobProps {
+  id: number;
   title: string;
   platform: string;
   days: string[];
   hour: string;
-  onDelete: () => void;
+  onDelete: (jobId: number) => void;
 }
 
 const JobComponent: React.FC<JobProps> = ({
+  id,
   title,
   platform,
   days,
@@ -30,7 +32,7 @@ const JobComponent: React.FC<JobProps> = ({
         title={title}
         subheader={`Platform: ${platform}`}
         action={
-          <IconButton onClick={() => onDelete()}>
+          <IconButton onClick={() => onDelete(id)}>
             <DeleteIcon />
           </IconButton>
         }

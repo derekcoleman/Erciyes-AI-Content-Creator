@@ -15,6 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import {
   addSettings,
+  deleteJob,
   getJobs,
   getSettings,
   jobToJobData,
@@ -116,11 +117,11 @@ export default function JobPage() {
         console.log("Settings updated successfully:", settingsInfo);
         return true;
       } else {
-        alert("Settings failed: " + settingsInfo.message);
+        console.error("Settings failed: " + settingsInfo.message);
         return false;
       }
     } catch (error) {
-      alert("Settings failed: " + (error as Error).message);
+      console.error("Settings failed: " + (error as Error).message);
       return false;
     }
   };
@@ -135,17 +136,14 @@ export default function JobPage() {
     fetchJobs();
   }, []);
 
-  const deleteJob = async () => {
-    // try {
-    //   if (!response.ok) {
-    //     const errorData = await response.json();
-    //     throw new Error(errorData.message || "Failed to delete job");
-    //   }
-    //   setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
-    // } catch (error) {
-    //   console.error("Error deleting job:", error);
-    //   alert("Error deleting job: " + (error as Error).message);
-    // }
+  const handleDeleteJob = async (jobId: number) => {
+    try {
+      throw new Error("Not implemented yet");
+      await deleteJob(jobId);
+      setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
+    } catch (error) {
+      console.error("Error deleting job:", error);
+    }
   };
 
   return (
@@ -178,11 +176,13 @@ export default function JobPage() {
           {jobs.map((job, index) => (
             <Grid item xs={6} key={index}>
               <JobComponent
+                // id={job.id}
+                id={0}
                 title={job.title}
                 platform={job.platform}
                 days={job.day}
                 hour={job.hour}
-                onDelete={deleteJob}
+                onDelete={handleDeleteJob}
               />
             </Grid>
           ))}

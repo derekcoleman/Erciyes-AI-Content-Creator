@@ -540,6 +540,34 @@ const updatePost = async (
   }
 };
 
+const deleteJob = async (id: number): Promise<void> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  try {
+    const response = await fetch(`${API_ENDPOINTS.JOBS}/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to delete job");
+    }
+
+    console.log(`Job with ID ${id} deleted successfully.`);
+  } catch (error) {
+    console.error("Error deleting job:", error);
+    throw error;
+  }
+};
+
 export {
   loginUser,
   registerUser,
@@ -562,4 +590,5 @@ export {
   addPostManuel,
   formatDate,
   updatePost,
+  deleteJob,
 };
