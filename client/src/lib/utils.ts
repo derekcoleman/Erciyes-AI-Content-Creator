@@ -497,6 +497,14 @@ const addPostManuel = async (post_id: number): Promise<FetchInfo> => {
   return data;
 };
 
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString); // ISO string'i Date nesnesine dönüştür
+  const day = date.getDate().toString().padStart(2, "0"); // Gün
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Ay, 1'den başlar, +1 ekliyoruz
+  const year = date.getFullYear(); // Yıl
+  return `${day}/${month}/${year}`; // Format: "gg/aa/yyyy"
+};
+
 export {
   loginUser,
   registerUser,
@@ -517,4 +525,5 @@ export {
   transformSettingsFromBackend,
   transformSettingsToBackend,
   addPostManuel,
+  formatDate,
 };

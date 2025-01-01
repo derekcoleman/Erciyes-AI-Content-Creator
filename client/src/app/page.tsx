@@ -24,6 +24,7 @@ import { settingsAtom } from "@/store";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import CircularProgress from "@mui/material/CircularProgress";
+import { create } from "domain";
 
 export default function HomePage() {
   const [postDatas, setPostDatas] = useState<Post_Backend>();
@@ -71,6 +72,7 @@ export default function HomePage() {
         title: fetchedPost.post.title,
         body: fetchedPost.post.body,
         status: 0,
+        created_at: Date.now().toString(),
       };
 
       setPostDatas((prev) => {
@@ -235,7 +237,7 @@ export default function HomePage() {
               hashtags={["tag3", "tag4"]}
               likes={20}
               comments={8}
-              date="2024-10-28T15:00:00Z"
+              date={postDatas.posts[0].created_at}
               isShared={postDatas.posts[0].status || 0}
             />
           </Grid>
@@ -252,7 +254,7 @@ export default function HomePage() {
                   hashtags={["tag3", "tag4"]}
                   likes={20}
                   comments={8}
-                  date="2024-10-28T15:00:00Z"
+                  date={post.created_at}
                   isShared={post.status || 0}
                 />
               </Grid>

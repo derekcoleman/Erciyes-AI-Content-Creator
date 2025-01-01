@@ -7,15 +7,16 @@ import {
   Fade,
   Backdrop,
   Button,
-  Alert,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import ShareIcon from "@mui/icons-material/Share"; // Paylaşım simgesi
 import { ReactNode, useState } from "react";
-import { addPostManuel } from "@/lib/utils";
+import { addPostManuel, formatDate } from "@/lib/utils";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
-// Fonksiyon tipi
 interface ExpandedCardProps {
   open: boolean;
   onClose: () => void;
@@ -48,8 +49,10 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
   isShared = false,
 }) => {
   const [shareStatus, setShareStatus] = useState<boolean>(isShared);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleShare = async () => {
+    setLoading(true);
     try {
       const response = await addPostManuel(id);
 
@@ -64,6 +67,8 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
       console.error("Failed to share post: ", error);
       setShareStatus(false);
       onShareStatusChange(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -80,6 +85,8 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
       <Fade in={open}>
         <Box
           sx={{
+            display: "flex",
+            flexDirection: "column",
             position: "absolute",
             top: "50%",
             left: "50%",
@@ -111,6 +118,14 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
                 marginBottom: 2,
               }}
             >
+              {loading && <CircularProgress />}
+              {shareStatus ? (
+                <CheckCircleOutlineIcon fontSize="large" color="success" />
+              ) : loading ? (
+                <ErrorOutlineIcon fontSize="large" color="error" />
+              ) : (
+                <></>
+              )}
               <Button
                 variant="contained"
                 color="primary"
@@ -132,45 +147,40 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
           <Typography variant="body1" sx={{ marginTop: 2 }}>
             {content}
           </Typography>
-          {shareStatus && (
-            <Box sx={{ marginTop: 2 }}>
-              <Alert severity={shareStatus ? "success" : "error"}>
-                {shareStatus}
-              </Alert>
-            </Box>
-          )}
-          {!shareStatus && <Box sx={{ marginTop: 2, height: "48px" }}></Box>}
-          <Typography variant="body2" sx={{ marginTop: 2 }}>
-            {hashtags.map((tag, index) => (
-              <span
-                key={index}
-                style={{ marginRight: "5px", color: "#007bff" }}
-              >
-                #{tag}
-              </span>
-            ))}
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginTop: 2,
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <IconButton size="small">
-                <FavoriteIcon fontSize="small" />
-              </IconButton>
-              <Typography variant="body2">{likes}</Typography>
-              <IconButton size="small" sx={{ marginLeft: 1 }}>
-                <CommentIcon fontSize="small" />
-              </IconButton>
-              <Typography variant="body2">{comments}</Typography>
-            </Box>
-            <Typography fontSize="small" color="text.secondary">
-              {new Date(date).toLocaleString()}
+
+          <Box sx={{ marginTop: "auto" }}>
+            <Typography variant="body2" sx={{ marginTop: 2 }}>
+              {hashtags.map((tag, index) => (
+                <span
+                  key={index}
+                  style={{ marginRight: "5px", color: "#007bff" }}
+                >
+                  #{tag}
+                </span>
+              ))}
             </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginTop: 2,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <IconButton size="small">
+                  <FavoriteIcon fontSize="small" />
+                </IconButton>
+                <Typography variant="body2">{likes}</Typography>
+                <IconButton size="small" sx={{ marginLeft: 1 }}>
+                  <CommentIcon fontSize="small" />
+                </IconButton>
+                <Typography variant="body2">{comments}</Typography>
+              </Box>
+              <Typography fontSize="small" color="text.secondary">
+                {formatDate(date)}
+              </Typography>
+            </Box>
           </Box>
         </Box>
       </Fade>

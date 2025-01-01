@@ -94,6 +94,7 @@ export interface Post {
   status: boolean;
   post: { user_id: number; title: string; body: string };
   post_id: number;
+  created_at?: string;
 }
 export interface Post_Backend {
   code: number;
@@ -106,6 +107,7 @@ export interface Post_Backend {
     body: string;
     photos?: object;
     status?: number;
+    created_at: string;
   }[];
 }
 
