@@ -8,7 +8,7 @@ import LogoDevIcon from "@mui/icons-material/LogoDev";
 import { Box, Card, Divider, Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Field, LoginInfo, RegisterInfo } from "@/lib/types";
+import { Field, LoginInfo, FetchInfo } from "@/lib/types";
 import { emailMatcher, passwordMatcher } from "@/lib/validators";
 import { loginUser, registerUser } from "@/lib/utils";
 import { useAtom } from "jotai";
@@ -81,15 +81,15 @@ function Page() {
         setFormError({ isError: true, message });
       } else {
         try {
-          const registerInfo: RegisterInfo = await registerUser({
+          const FetchInfo: FetchInfo = await registerUser({
             username,
             email,
             password,
           });
-          if (registerInfo.code) {
+          if (FetchInfo.code) {
             alert("register successful!");
           } else {
-            alert("register failed: " + registerInfo.message);
+            alert("register failed: " + FetchInfo.message);
           }
         } catch (error) {
           console.error("register failed: ", error);

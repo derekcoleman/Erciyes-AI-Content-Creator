@@ -32,9 +32,21 @@ export interface SettingsFormData {
   topic?: string;
   wantedWords?: string[];
   bannedWords?: string[];
-  customTopic?: string;
+  sub_topic?: string;
   mood?: string;
   selectedInteractions?: string[];
+}
+export interface SettingsFormData_Backend {
+  language?: string;
+  topic?: string;
+  wantedWords?: string[];
+  bannedWords?: string[];
+  sub_topic?: string;
+  mood?: string;
+  like?: number;
+  comment?: number;
+  interaction?: number;
+  frequency?: number;
 }
 
 export interface JobsFormData {
@@ -49,19 +61,8 @@ export interface LoginInfo {
   status: boolean;
   token: string;
 }
-export interface RegisterInfo {
-  code: number;
-  message: string;
-  status: boolean;
-}
 
-export interface SettingsInfo {
-  code: number;
-  message: string;
-  status: boolean;
-}
-
-export interface JobsInfo {
+export interface FetchInfo {
   code: number;
   message: string;
   status: boolean;
@@ -71,6 +72,13 @@ export interface Job {
   platform_id: number;
   hour: number;
   day: number;
+}
+
+export interface Job_Backend {
+  data: Job[];
+  code: number;
+  message: string;
+  status: boolean;
 }
 
 export interface JobData {
@@ -85,6 +93,20 @@ export interface Post {
   message: string;
   status: boolean;
   post: { user_id: number; title: string; body: string };
+  post_id: number;
+}
+export interface Post_Backend {
+  code: number;
+  message: string;
+  status: boolean;
+  posts: {
+    id: number;
+    user_id: number;
+    title: string;
+    body: string;
+    photos?: object;
+    status?: number;
+  }[];
 }
 
 export interface CustomCardProps {
@@ -98,6 +120,8 @@ export interface CustomCardProps {
   date: string;
   height?: number;
   isInnerCard?: boolean;
+  id: number;
+  isShared: number;
 }
 
 export interface SpecificCustomCard extends CustomCardProps {
@@ -109,7 +133,7 @@ export interface WordSettingsInfo {
   bannedWords: string[];
 }
 export interface PromptSettingsInfo {
-  customTopic: string;
+  sub_topic: string;
   mood: string;
   selectedInteractions: string[];
 }
@@ -126,9 +150,26 @@ export interface Settings {
   topic: string;
   wantedWords?: string[];
   bannedWords?: string[];
-  customTopic?: string;
+  sub_topic?: string;
   mood?: string;
   selectedInteractions?: string[];
+  disabled?: boolean;
+}
+
+export interface Settings_Backend {
+  code: number;
+  message: string;
+  status: boolean;
+  language: string;
+  topic: string;
+  wantedWords?: string[];
+  bannedWords?: string[];
+  sub_topic?: string;
+  mood?: string;
+  like?: number;
+  comment?: number;
+  interaction?: number;
+  frequency?: number;
   disabled?: boolean;
 }
 
@@ -148,10 +189,27 @@ export interface ProfileAPIs {
   linkedinAPI: string;
   instagramAPI: string;
 }
+
+export interface ProfileAPIs_Backend {
+  topix_api_key: string;
+  linkedin_api_key: string;
+  instagram_api_key: string;
+}
 export interface ProfileInfo {
   code: number;
   message: string;
   status: boolean;
+}
+
+export interface ProfileInfoData_Backend {
+  code: number;
+  message: string;
+  status: boolean;
+  username: string;
+  email: string;
+  instagram_api_key: string;
+  linkedin_api_key: string;
+  topix_api_key: string;
 }
 
 export { Field, Variant, specificHeaders };

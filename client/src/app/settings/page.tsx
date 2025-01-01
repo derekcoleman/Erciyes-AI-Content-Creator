@@ -1,8 +1,13 @@
 "use client";
 import SettingsForm from "@/components/forms/SettingsForm";
 import MiniDrawer from "../../components/drawer/MiniDrawer";
-import { useEffect } from "react";
-import { addSettings, getSettings } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import {
+  addSettings,
+  getSettings,
+  transformSettingsFromBackend,
+  transformSettingsToBackend,
+} from "@/lib/utils";
 import PromptSettingsFrom from "@/components/forms/PromptSettingsFrom";
 import WordSettingsForm from "@/components/forms/WordSettingsForm";
 import { settingsAtom } from "@/store";
@@ -13,22 +18,31 @@ import {
   SettingsFormData,
   WordSettingsInfo,
 } from "@/lib/types";
+import { Alert } from "@mui/material";
+import SettingsSkeleton from "@/components/skeleton/SettingsSkeleton";
 
 export default function SettingsPage() {
   const [settingsData, setSettingsData] = useAtom(settingsAtom);
+  const [isNoSettings, setIsNoSettings] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchSettings = async () => {
+    try {
+      const fetchedSettings = await getSettings();
+      if (fetchedSettings.status) {
+        const transformedSettings =
+          transformSettingsFromBackend(fetchedSettings);
+        setSettingsData(transformedSettings);
+        setIsNoSettings(transformedSettings.topic === undefined);
+      }
+    } catch (error) {
+      console.error("Error fetching settings:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const fetchedSettings = await getSettings();
-        if (fetchedSettings.status) {
-          setSettingsData(fetchedSettings);
-        }
-      } catch (error) {
-        console.error("Error fetching settings:", error);
-      }
-    };
-
     fetchSettings();
   }, []);
 
@@ -39,53 +53,61 @@ export default function SettingsPage() {
   const handlePromptFormSubmit = async (
     updatedPromptData: PromptSettingsInfo
   ) => {
-    updateSettingsData({
-      ...settingsData,
-      customTopic: updatedPromptData.customTopic,
+    const formData: SettingsFormData = {
+      language: settingsData.language,
+      topic: settingsData.topic,
+      wantedWords: settingsData.wantedWords,
+      bannedWords: settingsData.bannedWords,
+      sub_topic: updatedPromptData.sub_topic,
       mood: updatedPromptData.mood,
       selectedInteractions: updatedPromptData.selectedInteractions,
-    });
-    await handleSubmit();
+    };
+
+    const success = await handleSubmit(formData);
+
+    if (success) {
+      updateSettingsData({
+        ...settingsData,
+        sub_topic: updatedPromptData.sub_topic,
+        mood: updatedPromptData.mood,
+        selectedInteractions: updatedPromptData.selectedInteractions,
+      });
+    }
   };
 
   const handleWordFormSubmit = async (updatedWordData: WordSettingsInfo) => {
-    updateSettingsData({
-      ...settingsData,
-      bannedWords: updatedWordData.bannedWords,
+    const formData: SettingsFormData = {
+      language: settingsData.language,
+      topic: settingsData.topic,
       wantedWords: updatedWordData.wantedWords,
-    });
-    await handleSubmit();
+      bannedWords: updatedWordData.bannedWords,
+      sub_topic: settingsData.sub_topic,
+      mood: settingsData.mood,
+      selectedInteractions: settingsData.selectedInteractions,
+    };
+
+    const success = await handleSubmit(formData);
+    if (success) {
+      updateSettingsData({
+        ...settingsData,
+        bannedWords: updatedWordData.bannedWords,
+        wantedWords: updatedWordData.wantedWords,
+      });
+    }
   };
-  const handleSubmit = async (): Promise<boolean> => {
+  const handleSubmit = async (formData: SettingsFormData): Promise<boolean> => {
     try {
-      const {
-        language,
-        topic,
-        wantedWords,
-        bannedWords,
-        customTopic,
-        mood,
-        selectedInteractions,
-      } = settingsData;
-
-      const formData: SettingsFormData = {
-        language,
-        topic,
-        wantedWords,
-        bannedWords,
-        customTopic,
-        mood,
-        selectedInteractions,
-      };
-
-      const settingsInfo = await addSettings(formData);
+      console.log("Form data:", formData);
+      const settingsInfo = await addSettings(
+        transformSettingsToBackend(formData)
+      );
 
       if (settingsInfo.status) {
         console.log("Settings updated successfully:", settingsInfo);
-        return settingsInfo.status;
+        return true;
       } else {
         alert("Settings failed: " + settingsInfo.message);
-        return settingsInfo.status;
+        return false;
       }
     } catch (error) {
       alert("Settings failed: " + (error as Error).message);
@@ -95,26 +117,38 @@ export default function SettingsPage() {
 
   return (
     <MiniDrawer>
-      <SettingsForm
-        stateData={settingsData}
-        onSettingsSubmit={updateSettingsData}
-        isDisabled={
-          (settingsData.language.length > 0 && settingsData.topic.length > 0) ||
-          settingsData.disabled ||
-          false
-        }
-      />
-      <PromptSettingsFrom
-        selectedInteractionsData={settingsData.selectedInteractions || []}
-        moodData={settingsData.mood || ""}
-        customTopicData={settingsData.customTopic || ""}
-        onFormSubmit={handlePromptFormSubmit}
-      />
-      <WordSettingsForm
-        bannedWords={settingsData.bannedWords || []}
-        wantedWords={settingsData.wantedWords || []}
-        onFormSubmit={handleWordFormSubmit}
-      />
+      {isNoSettings && (
+        <Alert sx={{ marginTop: 5 }} severity="warning">
+          You must set your settings before you can use the app.
+        </Alert>
+      )}
+      {loading ? (
+        <SettingsSkeleton />
+      ) : (
+        <>
+          <SettingsForm
+            stateData={settingsData}
+            onSettingsSubmit={updateSettingsData}
+            isDisabled={
+              settingsData.language !== undefined ||
+              settingsData.topic !== undefined ||
+              settingsData.disabled ||
+              false
+            }
+          />
+          <PromptSettingsFrom
+            selectedInteractionsData={settingsData.selectedInteractions || []}
+            moodData={settingsData.mood || ""}
+            sub_topic={settingsData.sub_topic || ""}
+            onFormSubmit={handlePromptFormSubmit}
+          />
+          <WordSettingsForm
+            bannedWords={settingsData.bannedWords || []}
+            wantedWords={settingsData.wantedWords || []}
+            onFormSubmit={handleWordFormSubmit}
+          />
+        </>
+      )}
     </MiniDrawer>
   );
 }
