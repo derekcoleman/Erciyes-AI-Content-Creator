@@ -24,6 +24,7 @@ import { settingsAtom } from "@/store";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import CircularProgress from "@mui/material/CircularProgress";
+import { create } from "domain";
 
 export default function HomePage() {
   const [postDatas, setPostDatas] = useState<Post_Backend>();
@@ -71,6 +72,7 @@ export default function HomePage() {
         title: fetchedPost.post.title,
         body: fetchedPost.post.body,
         status: 0,
+        created_at: new Date().toISOString(),
       };
 
       setPostDatas((prev) => {
@@ -182,6 +184,30 @@ export default function HomePage() {
     setOpen(false);
   };
 
+  const handleTitleChange = (id: number, newTitle: string) => {
+    setPostDatas((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        posts: prev.posts.map((post) =>
+          post.id === id ? { ...post, title: newTitle } : post
+        ),
+      };
+    });
+  };
+
+  const handleBodyChange = (id: number, newBody: string) => {
+    setPostDatas((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        posts: prev.posts.map((post) =>
+          post.id === id ? { ...post, body: newBody } : post
+        ),
+      };
+    });
+  };
+
   return (
     <MiniDrawer>
       <Box>
@@ -218,7 +244,6 @@ export default function HomePage() {
           <Grid item xs={12} md={5} mb={2}>
             {newPostLoading && (
               <CircularProgress
-                size={40}
                 sx={{
                   position: "absolute",
                   top: "50%",
@@ -226,22 +251,10 @@ export default function HomePage() {
                 }}
               />
             )}
-            <CustomCard
-              id={postDatas.posts[0].id}
-              platform="Topix"
-              postImage="/NoImgLightNew.jpg"
-              title={postDatas.posts[0].title}
-              content={postDatas.posts[0].body}
-              hashtags={["tag3", "tag4"]}
-              likes={20}
-              comments={8}
-              date="2024-10-28T15:00:00Z"
-              isShared={postDatas.posts[0].status || 0}
-            />
           </Grid>
 
           <Grid container spacing={2}>
-            {postDatas.posts.slice(1).map((post) => (
+            {postDatas.posts.map((post) => (
               <Grid item xs={6} sm={4} md={4} key={post.id}>
                 <CustomCard
                   id={post.id}
@@ -252,8 +265,10 @@ export default function HomePage() {
                   hashtags={["tag3", "tag4"]}
                   likes={20}
                   comments={8}
-                  date="2024-10-28T15:00:00Z"
+                  date={post.created_at}
                   isShared={post.status || 0}
+                  onTitleChange={handleTitleChange}
+                  onContentChange={handleBodyChange}
                 />
               </Grid>
             ))}

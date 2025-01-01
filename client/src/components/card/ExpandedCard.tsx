@@ -7,15 +7,16 @@ import {
   Fade,
   Backdrop,
   Button,
-  Alert,
+  TextField,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
-import ShareIcon from "@mui/icons-material/Share"; // Paylaşım simgesi
+import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { ReactNode, useState } from "react";
-import { addPostManuel } from "@/lib/utils";
+import { formatDate, updatePost } from "@/lib/utils";
+import CircularProgress from "@mui/material/CircularProgress";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
-// Fonksiyon tipi
 interface ExpandedCardProps {
   open: boolean;
   onClose: () => void;
@@ -28,8 +29,9 @@ interface ExpandedCardProps {
   date: string;
   platformIcon: ReactNode;
   id: number;
-  onShareStatusChange: (status: boolean) => void;
   isShared?: boolean;
+  onTitleChange: (title: string) => void;
+  onContentChange: (content: string) => void;
 }
 
 const ExpandedCard: React.FC<ExpandedCardProps> = ({
@@ -44,29 +46,46 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
   date,
   platformIcon,
   id,
-  onShareStatusChange,
   isShared = false,
+  onTitleChange,
+  onContentChange,
 }) => {
   const [shareStatus, setShareStatus] = useState<boolean>(isShared);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [editableTitle, setEditableTitle] = useState<string>(title);
+  const [editableContent, setEditableContent] = useState<string>(content);
+  const [error, setError] = useState(false);
 
-  const handleShare = async () => {
+  const handleUpdatePost = async () => {
+    setLoading(true);
     try {
-      const response = await addPostManuel(id);
+      const response = await updatePost(id, editableContent, editableTitle);
 
       if (response.status) {
         setShareStatus(true);
-        onShareStatusChange(true);
       } else {
         setShareStatus(false);
-        onShareStatusChange(false);
       }
     } catch (error) {
-      console.error("Failed to share post: ", error);
+      console.error("Failed to update post: ", error);
       setShareStatus(false);
-      onShareStatusChange(false);
+      setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = event.target.value;
+    setEditableTitle(newTitle);
+    onTitleChange(newTitle);
+  };
+
+  const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newContent = event.target.value;
+    setEditableContent(newContent);
+    onContentChange(newContent);
+  };
   return (
     <Modal
       open={open}
@@ -80,6 +99,8 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
       <Fade in={open}>
         <Box
           sx={{
+            display: "flex",
+            flexDirection: "column",
             position: "absolute",
             top: "50%",
             left: "50%",
@@ -97,28 +118,41 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
           }}
         >
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h4" component="div" gutterBottom>
-              {title}
-            </Typography>
+            {isShared ? (
+              <Typography variant="h4" component="div" gutterBottom>
+                {title}
+              </Typography>
+            ) : (
+              <TextField
+                fullWidth
+                variant="outlined"
+                value={editableTitle}
+                onChange={handleTitleChange}
+                sx={{ mb: 2 }}
+              />
+            )}
 
             <Box
               sx={{
                 display: "flex",
                 textAlign: "center",
-                justifyContent: "center",
+                justifyContent: "end",
                 alignItems: "center",
-                gap: 2,
+                gap: 1,
                 marginBottom: 2,
+                width: "20%",
               }}
             >
+              {loading && <CircularProgress />}
+              {error && <ErrorOutlineIcon fontSize="large" color="error" />}
               <Button
                 variant="contained"
                 color="primary"
                 disabled={shareStatus}
-                startIcon={<ShareIcon />}
-                onClick={handleShare}
+                startIcon={<SaveAsIcon />}
+                onClick={handleUpdatePost}
               >
-                Paylaş
+                Kaydet
               </Button>
               {platformIcon}
             </Box>
@@ -129,48 +163,55 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
             image={postImage}
             title="Expanded Post Image"
           />
-          <Typography variant="body1" sx={{ marginTop: 2 }}>
-            {content}
-          </Typography>
-          {shareStatus && (
-            <Box sx={{ marginTop: 2 }}>
-              <Alert severity={shareStatus ? "success" : "error"}>
-                {shareStatus}
-              </Alert>
-            </Box>
-          )}
-          {!shareStatus && <Box sx={{ marginTop: 2, height: "48px" }}></Box>}
-          <Typography variant="body2" sx={{ marginTop: 2 }}>
-            {hashtags.map((tag, index) => (
-              <span
-                key={index}
-                style={{ marginRight: "5px", color: "#007bff" }}
-              >
-                #{tag}
-              </span>
-            ))}
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginTop: 2,
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <IconButton size="small">
-                <FavoriteIcon fontSize="small" />
-              </IconButton>
-              <Typography variant="body2">{likes}</Typography>
-              <IconButton size="small" sx={{ marginLeft: 1 }}>
-                <CommentIcon fontSize="small" />
-              </IconButton>
-              <Typography variant="body2">{comments}</Typography>
-            </Box>
-            <Typography fontSize="small" color="text.secondary">
-              {new Date(date).toLocaleString()}
+          {isShared ? (
+            <Typography variant="body1" sx={{ marginTop: 2 }}>
+              {content}
             </Typography>
+          ) : (
+            <TextField
+              fullWidth
+              variant="outlined"
+              value={editableContent}
+              onChange={handleContentChange}
+              multiline
+              rows={6}
+              sx={{ mt: 2 }}
+            />
+          )}
+
+          <Box sx={{ marginTop: "auto" }}>
+            <Typography variant="body2" sx={{ marginTop: 2 }}>
+              {hashtags.map((tag, index) => (
+                <span
+                  key={index}
+                  style={{ marginRight: "5px", color: "#007bff" }}
+                >
+                  #{tag}
+                </span>
+              ))}
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginTop: 2,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <IconButton size="small">
+                  <FavoriteIcon fontSize="small" />
+                </IconButton>
+                <Typography variant="body2">{likes}</Typography>
+                <IconButton size="small" sx={{ marginLeft: 1 }}>
+                  <CommentIcon fontSize="small" />
+                </IconButton>
+                <Typography variant="body2">{comments}</Typography>
+              </Box>
+              <Typography fontSize="small" color="text.secondary">
+                {formatDate(date)}
+              </Typography>
+            </Box>
           </Box>
         </Box>
       </Fade>
