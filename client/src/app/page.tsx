@@ -184,6 +184,30 @@ export default function HomePage() {
     setOpen(false);
   };
 
+  const handleTitleChange = (id: number, newTitle: string) => {
+    setPostDatas((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        posts: prev.posts.map((post) =>
+          post.id === id ? { ...post, title: newTitle } : post
+        ),
+      };
+    });
+  };
+
+  const handleBodyChange = (id: number, newBody: string) => {
+    setPostDatas((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        posts: prev.posts.map((post) =>
+          post.id === id ? { ...post, body: newBody } : post
+        ),
+      };
+    });
+  };
+
   return (
     <MiniDrawer>
       <Box>
@@ -239,6 +263,8 @@ export default function HomePage() {
               comments={8}
               date={postDatas.posts[0].created_at}
               isShared={postDatas.posts[0].status || 0}
+              onTitleChange={handleTitleChange}
+              onContentChange={handleBodyChange}
             />
           </Grid>
 
@@ -256,6 +282,8 @@ export default function HomePage() {
                   comments={8}
                   date={post.created_at}
                   isShared={post.status || 0}
+                  onTitleChange={handleTitleChange}
+                  onContentChange={handleBodyChange}
                 />
               </Grid>
             ))}

@@ -7,10 +7,11 @@ import {
   Fade,
   Backdrop,
   Button,
+  TextField,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
-import ShareIcon from "@mui/icons-material/Share"; // Paylaşım simgesi
+import ShareIcon from "@mui/icons-material/Share";
 import { ReactNode, useState } from "react";
 import { addPostManuel, formatDate } from "@/lib/utils";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -31,6 +32,8 @@ interface ExpandedCardProps {
   id: number;
   onShareStatusChange: (status: boolean) => void;
   isShared?: boolean;
+  onTitleChange: (title: string) => void;
+  onContentChange: (content: string) => void;
 }
 
 const ExpandedCard: React.FC<ExpandedCardProps> = ({
@@ -47,10 +50,15 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
   id,
   onShareStatusChange,
   isShared = false,
+  onTitleChange,
+  onContentChange,
 }) => {
   const [shareStatus, setShareStatus] = useState<boolean>(isShared);
   const [loading, setLoading] = useState<boolean>(false);
+  const [editableTitle, setEditableTitle] = useState<string>(title);
+  const [editableContent, setEditableContent] = useState<string>(content);
 
+  //veri tabanında postu güncellememiz gerekli
   const handleShare = async () => {
     setLoading(true);
     try {
@@ -72,6 +80,17 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
     }
   };
 
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = event.target.value;
+    setEditableTitle(newTitle);
+    onTitleChange(newTitle);
+  };
+
+  const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newContent = event.target.value;
+    setEditableContent(newContent);
+    onContentChange(newContent);
+  };
   return (
     <Modal
       open={open}
@@ -104,9 +123,19 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
           }}
         >
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h4" component="div" gutterBottom>
-              {title}
-            </Typography>
+            {isShared ? (
+              <Typography variant="h4" component="div" gutterBottom>
+                {title}
+              </Typography>
+            ) : (
+              <TextField
+                fullWidth
+                variant="outlined"
+                value={editableTitle}
+                onChange={handleTitleChange}
+                sx={{ mb: 2 }}
+              />
+            )}
 
             <Box
               sx={{
@@ -144,9 +173,21 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
             image={postImage}
             title="Expanded Post Image"
           />
-          <Typography variant="body1" sx={{ marginTop: 2 }}>
-            {content}
-          </Typography>
+          {isShared ? (
+            <Typography variant="body1" sx={{ marginTop: 2 }}>
+              {content}
+            </Typography>
+          ) : (
+            <TextField
+              fullWidth
+              variant="outlined"
+              value={editableContent}
+              onChange={handleContentChange}
+              multiline
+              rows={6}
+              sx={{ mt: 2 }}
+            />
+          )}
 
           <Box sx={{ marginTop: "auto" }}>
             <Typography variant="body2" sx={{ marginTop: 2 }}>

@@ -32,6 +32,8 @@ const CustomCard: React.FC<CustomCardProps> = ({
   isInnerCard,
   id,
   isShared,
+  onTitleChange,
+  onContentChange,
 }) => {
   const theme = useTheme();
 
@@ -61,6 +63,14 @@ const CustomCard: React.FC<CustomCardProps> = ({
 
   const handleShareStatusChange = (status: boolean) => {
     setShareStatus(status ? 1 : 0);
+  };
+
+  const handleTitleEdit = (newTitle: string) => {
+    onTitleChange(id, newTitle);
+  };
+
+  const handleContentEdit = (newContent: string) => {
+    onContentChange(id, newContent);
   };
 
   return (
@@ -161,6 +171,8 @@ const CustomCard: React.FC<CustomCardProps> = ({
         platformIcon={renderPlatformIcon()}
         onShareStatusChange={handleShareStatusChange}
         isShared={shareStatus === 1 ? true : false}
+        onTitleChange={handleTitleEdit}
+        onContentChange={handleContentEdit}
       />
     </>
   );
