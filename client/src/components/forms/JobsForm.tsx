@@ -14,6 +14,7 @@ import { daysOfWeek, platforms } from "@/lib/conts";
 import CustomTimePicker from "../inputs/CustomTimePicker";
 import { addJobs, getHourFromDate, jobDataParser } from "@/lib/utils";
 import {
+  Job,
   JobsFormData,
   PromptSettingsInfo,
   WordSettingsInfo,
@@ -27,12 +28,14 @@ interface JobFormProps {
   };
   onPromptFormSubmit: (data: PromptSettingsInfo) => void;
   onWordFormSubmit: (data: WordSettingsInfo) => void;
+  onJobAdded: (newJob: Job) => void;
 }
 
 const JobForm: React.FC<JobFormProps> = ({
   settingsData,
   onPromptFormSubmit,
   onWordFormSubmit,
+  onJobAdded,
 }) => {
   const [platform, setPlatform] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
@@ -70,6 +73,7 @@ const JobForm: React.FC<JobFormProps> = ({
             const jobResponse = await addJobs(job);
             if (jobResponse.status) {
               console.log("Job added successfully", jobResponse);
+              onJobAdded(job);
             } else {
               console.error("Failed to add job", jobResponse.message);
             }

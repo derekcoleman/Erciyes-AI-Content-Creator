@@ -6,11 +6,16 @@ import {
   IconButton,
   Fade,
   Backdrop,
+  Button,
+  Alert,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
-import { ReactNode } from "react";
+import ShareIcon from "@mui/icons-material/Share"; // Paylaşım simgesi
+import { ReactNode, useState } from "react";
+import { addPostManuel } from "@/lib/utils";
 
+// Fonksiyon tipi
 interface ExpandedCardProps {
   open: boolean;
   onClose: () => void;
@@ -22,6 +27,9 @@ interface ExpandedCardProps {
   comments: number;
   date: string;
   platformIcon: ReactNode;
+  id: number;
+  onShareStatusChange: (status: boolean) => void;
+  isShared?: boolean;
 }
 
 const ExpandedCard: React.FC<ExpandedCardProps> = ({
@@ -35,7 +43,30 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
   comments,
   date,
   platformIcon,
+  id,
+  onShareStatusChange,
+  isShared = false,
 }) => {
+  const [shareStatus, setShareStatus] = useState<boolean>(isShared);
+
+  const handleShare = async () => {
+    try {
+      const response = await addPostManuel(id);
+
+      if (response.status) {
+        setShareStatus(true);
+        onShareStatusChange(true);
+      } else {
+        setShareStatus(false);
+        onShareStatusChange(false);
+      }
+    } catch (error) {
+      console.error("Failed to share post: ", error);
+      setShareStatus(false);
+      onShareStatusChange(false);
+    }
+  };
+
   return (
     <Modal
       open={open}
@@ -69,7 +100,28 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
             <Typography variant="h4" component="div" gutterBottom>
               {title}
             </Typography>
-            {platformIcon}
+
+            <Box
+              sx={{
+                display: "flex",
+                textAlign: "center",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 2,
+                marginBottom: 2,
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={shareStatus}
+                startIcon={<ShareIcon />}
+                onClick={handleShare}
+              >
+                Paylaş
+              </Button>
+              {platformIcon}
+            </Box>
           </Box>
 
           <CardMedia
@@ -80,6 +132,14 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
           <Typography variant="body1" sx={{ marginTop: 2 }}>
             {content}
           </Typography>
+          {shareStatus && (
+            <Box sx={{ marginTop: 2 }}>
+              <Alert severity={shareStatus ? "success" : "error"}>
+                {shareStatus}
+              </Alert>
+            </Box>
+          )}
+          {!shareStatus && <Box sx={{ marginTop: 2, height: "48px" }}></Box>}
           <Typography variant="body2" sx={{ marginTop: 2 }}>
             {hashtags.map((tag, index) => (
               <span

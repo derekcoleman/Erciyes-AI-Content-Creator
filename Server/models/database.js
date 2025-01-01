@@ -8,7 +8,8 @@ const pool =  createPool({
     user:process.env.NAME,
     password:process.env.PASSWORD,
     database:process.env.DBNAME,
-    connectionLimit:20
+    connectionLimit:20,
+    charset: 'utf8mb4'
 })
 const dbhelper = (sql,parametre) =>{
     return new Promise((resolve, reject)=>{

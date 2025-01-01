@@ -15,7 +15,7 @@ import {
   Alert,
 } from "@mui/material";
 import { getProfile, textLimiter, updateProfile } from "@/lib/utils";
-import { ProfileInfo } from "@/lib/types";
+import { FetchInfo } from "@/lib/types";
 
 const ProfilePage = () => {
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +37,13 @@ const ProfilePage = () => {
     try {
       const fetchedProfile = await getProfile();
       if (fetchedProfile.status) {
-        setProfileData(fetchedProfile);
+        setProfileData({
+          username: fetchedProfile.username,
+          email: fetchedProfile.email,
+          topixAPI: fetchedProfile.topix_api_key,
+          linkedinAPI: fetchedProfile.linkedin_api_key,
+          instagramAPI: fetchedProfile.instagram_api_key,
+        });
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -46,10 +52,10 @@ const ProfilePage = () => {
   };
   const fetchUpdateProfile = async () => {
     try {
-      const fetchedProfileInfo: ProfileInfo = await updateProfile({
-        topixAPI: profileData.topixAPI,
-        linkedinAPI: profileData.linkedinAPI,
-        instagramAPI: profileData.instagramAPI,
+      const fetchedProfileInfo: FetchInfo = await updateProfile({
+        topix_api_key: profileData.topixAPI,
+        linkedin_api_key: profileData.linkedinAPI,
+        instagram_api_key: profileData.instagramAPI,
       });
     } catch (error) {
       console.error("Error fetching posts:", error);

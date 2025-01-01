@@ -9,8 +9,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { addSettings } from "@/lib/utils";
-import { Settings, SettingsInfo } from "@/lib/types";
+import { addSettings, transformSettingsToBackend } from "@/lib/utils";
+import { Settings, FetchInfo } from "@/lib/types";
 
 const languages = ["English", "Turkish", "Spanish", "French", "German"];
 
@@ -26,21 +26,22 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   isDisabled,
 }) => {
   const [settingsData, setSettingsData] = useState(stateData);
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (isFormValid) {
       try {
-        const fetchInfo: SettingsInfo = await addSettings({
-          topic: settingsData.topic,
-          language: settingsData.language,
-          wantedWords: settingsData.wantedWords,
-          bannedWords: settingsData.bannedWords,
-          customTopic: settingsData.customTopic,
-          mood: settingsData.mood,
-          selectedInteractions: settingsData.selectedInteractions,
-        });
+        const fetchInfo: FetchInfo = await addSettings(
+          transformSettingsToBackend({
+            topic: settingsData.topic,
+            language: settingsData.language,
+            wantedWords: settingsData.wantedWords,
+            bannedWords: settingsData.bannedWords,
+            sub_topic: settingsData.sub_topic,
+            mood: settingsData.mood,
+            selectedInteractions: settingsData.selectedInteractions,
+          })
+        );
         if (fetchInfo.status) {
           setSettingsData((prev) => ({ ...prev, disabled: true }));
           onSettingsSubmit(settingsData);

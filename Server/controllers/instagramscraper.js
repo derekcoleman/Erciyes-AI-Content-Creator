@@ -1,6 +1,8 @@
 const { failure } = require("../responses/responses")
 const fetch = require('node-fetch');
 const { analysis } = require('../analysis/analysis');
+const  {HttpsProxyAgent} = require ( 'https-proxy-agent' ); 
+const proxyAgent = new HttpsProxyAgent ( 'http://64.137.42.112:5157' );
 
 const instagram = async (req, res, username) => {
     return new Promise(async (resolve, reject) => {
@@ -8,6 +10,7 @@ const instagram = async (req, res, username) => {
             console.log(username)
             //const username = "ibrahim.buruu"
             const response = await fetch(`https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`, {
+                "agent":proxyAgent,
                 "headers": {
                     "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36",
                     "accept": "*/*",
@@ -28,17 +31,19 @@ const instagram = async (req, res, username) => {
                     "x-ig-app-id": "1217981644879628",
                     "x-ig-www-claim": "0",
                     "x-requested-with": "XMLHttpRequest",
-                    "cookie": "datr=13dwZQDbF2n94ZV0xe7LFm1o; ig_nrcb=1; ig_did=C763BBF5-4F56-42D8-AFE3-45422E27AE83; ps_n=1; ps_l=1; mid=ZtL23QALAAEfwpti3Rm7dg79DN-U; csrftoken=cMXrZaGnJHRp5cVWHD7tk0LaAoI5FZSo; wd=618x824; dpr=2",
+                    "cookie": `datr=w1ZPZw2-1yLS1hFIwRK5yFRl; ig_did=E8D7EC05-08B6-4FD2-9F39-EE01D095A530; mid=Z09WwwAEAAFlb7qOnaUoBLd1HYHt; ig_nrcb=1; csrftoken=y1ROspYYEWVuHzCoCIl41aqVlAFh3FUR; ds_user_id=70930930531; sessionid=70930930531%3ANoIg1EcrzOlDmj%3A21%3AAYdNbM0FI-I5xi38mKf0KFywbuNRjrr6xvv0igaMSQ; wd=916x1003; rur="LDC\/05470930930531\/0541764789144:01f7582a787a8f2401e90e7186853cd4980464ff7845ee241fe58b9561aace6da25ad0c4"`,
                     "Referer": `https://www.instagram.com/${username}/`,
                     "Referrer-Policy": "strict-origin-when-cross-origin"
                 },
                 "body": null,
                 "method": "GET"
             });
-            console.log(response.status)
+            console.log(response)
 
             const json = await response.json();
+            const stringfy = JSON.stringify(json);
             const postDatas = (json.data.user.edge_owner_to_timeline_media.edges);
+            console.log(stringfy)
 
             const allDatas = [];
             for (i = 0; i < postDatas.length; i++) {
@@ -50,11 +55,13 @@ const instagram = async (req, res, username) => {
                 })
             }
 
-            //console.log(allDatas[0])
+            //  console.log(allDatas[0])
             const analysisResult = analysis(allDatas, "tr");
             resolve(analysisResult);
 
         } catch (error) {
+            console.log("sdgggggggsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+            console.log(error)
             resolve(failure.server_error);
         }
     })

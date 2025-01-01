@@ -34,9 +34,6 @@ const STOP_WORDS_TR = [
 
 
 const analysis = (posts, language) => {
-
-    console.log("Girdi");
-    console.log("Posts:", posts);
     let stopWords = [];
     let cleanText = "";
 
@@ -146,14 +143,14 @@ const analysis = (posts, language) => {
     }
 
 
-    console.log("Kelime Sıklığı:", sortedWordCounts);
-    console.log("En çok kullanılan kelimeler:", Object.keys(sortedWordCounts).slice(0, 5));
-    console.log("En çok beğeni alan post:", mostLikedPost);
-    console.log("En çok yorum alan post:", mostCommentedPost);
-    console.log("En çok görüntülenen post:", mostViewedPost);
-    console.log("Görüntülenmeye göre en çok beğeni alan post:", highestLikeEngagementPost);
-    console.log("Görüntülenmeye göre en çok yorum alan post:", highestCommentEngagementPost);
-    console.log("En çok etkileşim alan post:", mostEngagedPost);
+    // console.log("Kelime Sıklığı:", sortedWordCounts);
+    // console.log("En çok kullanılan kelimeler:", Object.keys(sortedWordCounts).slice(0, 5));
+    // console.log("En çok beğeni alan post:", mostLikedPost);
+    // console.log("En çok yorum alan post:", mostCommentedPost);
+    // console.log("En çok görüntülenen post:", mostViewedPost);
+    // console.log("Görüntülenmeye göre en çok beğeni alan post:", highestLikeEngagementPost);
+    // console.log("Görüntülenmeye göre en çok yorum alan post:", highestCommentEngagementPost);
+    // console.log("En çok etkileşim alan post:", mostEngagedPost);
 
     return result;
 

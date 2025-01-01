@@ -3,32 +3,48 @@ import HomeSkeleton from "@/components/skeleton/HomeSkeleton";
 import MiniDrawer from "../components/drawer/MiniDrawer";
 import { Alert, Box, Button, Grid } from "@mui/material";
 import CustomCard from "@/components/card/CustomCard";
-import React, { useEffect, useState } from "react";
-import { addSettings, getHome, getPosts, getSettings } from "@/lib/utils";
+import { useEffect, useState } from "react";
 import {
-  Post,
+  addSettings,
+  getHome,
+  getPostWithAI,
+  getSettings,
+  transformSettingsFromBackend,
+  transformSettingsToBackend,
+} from "@/lib/utils";
+import {
+  Post_Backend,
   PromptSettingsInfo,
   Settings,
   SettingsFormData,
   WordSettingsInfo,
 } from "@/lib/types";
-import { DUMMYPOSTS } from "@/lib/conts";
 import SettingsButton from "@/components/buttons/SettingsButton";
 import { settingsAtom } from "@/store";
 import { useAtom } from "jotai";
+import { useRouter } from "next/navigation";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function HomePage() {
-  const [postDatas, setPostDatas] = useState<Post[]>([]);
+  const [postDatas, setPostDatas] = useState<Post_Backend>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [newPostLoading, setNewPostLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [settingsData, setSettingsData] = useAtom(settingsAtom);
+
+  const router = useRouter();
 
   const fetchSettings = async () => {
     try {
       const fetchedSettings = await getSettings();
       if (fetchedSettings.status) {
-        setSettingsData(fetchedSettings);
+        const transformedSettings =
+          transformSettingsFromBackend(fetchedSettings);
+        setSettingsData(transformedSettings);
+        if (!fetchedSettings.topic || !fetchedSettings.language) {
+          router.push("/settings");
+        }
       }
     } catch (error) {
       console.error("Error fetching settings:", error);
@@ -36,44 +52,47 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    fetchSettings();
     fetchHome();
+    fetchSettings();
   }, []);
 
   const updateSettingsData = (newSettings: Settings) => {
     setSettingsData(newSettings);
   };
 
-  const handlePromptFormSubmit = async (
-    updatedPromptData: PromptSettingsInfo
-  ) => {
-    updateSettingsData({
-      ...settingsData,
-      customTopic: updatedPromptData.customTopic,
-      mood: updatedPromptData.mood,
-      selectedInteractions: updatedPromptData.selectedInteractions,
-    });
-    await handleSubmit();
-  };
-
-  const handleWordFormSubmit = async (updatedWordData: WordSettingsInfo) => {
-    updateSettingsData({
-      ...settingsData,
-      bannedWords: updatedWordData.bannedWords,
-      wantedWords: updatedWordData.wantedWords,
-    });
-    await handleSubmit();
-  };
-
   const fetchPosts = async () => {
+    setNewPostLoading(true);
     try {
-      const fetchedPost = await getPosts();
-      setPostDatas((prev) => [...prev, fetchedPost]);
+      const fetchedPost = await getPostWithAI();
+
+      const newPost = {
+        id: fetchedPost.post_id,
+        user_id: fetchedPost.post.user_id,
+        title: fetchedPost.post.title,
+        body: fetchedPost.post.body,
+        status: 0,
+      };
+
+      setPostDatas((prev) => {
+        if (!prev) {
+          return {
+            code: fetchedPost.code,
+            message: fetchedPost.message,
+            status: fetchedPost.status,
+            posts: [newPost],
+          };
+        }
+
+        return {
+          ...prev,
+          posts: [newPost, ...prev.posts],
+        };
+      });
     } catch (error) {
       console.error("Error fetching posts:", error);
       setError((error as Error).message);
     } finally {
-      setLoading(false);
+      setNewPostLoading(false);
     }
   };
 
@@ -84,43 +103,66 @@ export default function HomePage() {
     } catch (error) {
       console.error("Error fetching posts:", error);
       setError((error as Error).message);
+    } finally {
+      setLoading(false);
     }
-    //Backend yokken hata almamak için
-    // finally {
-    //   setLoading(false);
-    // }
+  };
+  const handlePromptFormSubmit = async (
+    updatedPromptData: PromptSettingsInfo
+  ) => {
+    const formData: SettingsFormData = {
+      language: settingsData.language,
+      topic: settingsData.topic,
+      wantedWords: settingsData.wantedWords,
+      bannedWords: settingsData.bannedWords,
+      sub_topic: updatedPromptData.sub_topic,
+      mood: updatedPromptData.mood,
+      selectedInteractions: updatedPromptData.selectedInteractions,
+    };
+
+    const success = await handleSubmit(formData);
+
+    if (success) {
+      updateSettingsData({
+        ...settingsData,
+        sub_topic: updatedPromptData.sub_topic,
+        mood: updatedPromptData.mood,
+        selectedInteractions: updatedPromptData.selectedInteractions,
+      });
+    }
   };
 
-  const handleSubmit = async (): Promise<boolean> => {
+  const handleWordFormSubmit = async (updatedWordData: WordSettingsInfo) => {
+    const formData: SettingsFormData = {
+      language: settingsData.language,
+      topic: settingsData.topic,
+      wantedWords: updatedWordData.wantedWords,
+      bannedWords: updatedWordData.bannedWords,
+      sub_topic: settingsData.sub_topic,
+      mood: settingsData.mood,
+      selectedInteractions: settingsData.selectedInteractions,
+    };
+
+    const success = await handleSubmit(formData);
+    if (success) {
+      updateSettingsData({
+        ...settingsData,
+        bannedWords: updatedWordData.bannedWords,
+        wantedWords: updatedWordData.wantedWords,
+      });
+    }
+  };
+  const handleSubmit = async (formData: SettingsFormData): Promise<boolean> => {
     try {
-      const {
-        language,
-        topic,
-        wantedWords,
-        bannedWords,
-        customTopic,
-        mood,
-        selectedInteractions,
-      } = settingsData;
-
-      const formData: SettingsFormData = {
-        language,
-        topic,
-        wantedWords,
-        bannedWords,
-        customTopic,
-        mood,
-        selectedInteractions,
-      };
-
-      const settingsInfo = await addSettings(formData);
+      const settingsInfo = await addSettings(
+        transformSettingsToBackend(formData)
+      );
 
       if (settingsInfo.status) {
-        console.log("Settings updated successfully:", settingsInfo);
-        return settingsInfo.status;
+        return true;
       } else {
         alert("Settings failed: " + settingsInfo.message);
-        return settingsInfo.status;
+        return false;
       }
     } catch (error) {
       alert("Settings failed: " + (error as Error).message);
@@ -129,7 +171,6 @@ export default function HomePage() {
   };
 
   const handleClick = () => {
-    console.log("click");
     fetchPosts();
   };
 
@@ -150,7 +191,7 @@ export default function HomePage() {
           onClose={handleCloseModalButton}
           settingsData={{
             promptSettingsInfo: {
-              customTopic: settingsData.customTopic || "",
+              sub_topic: settingsData.sub_topic || "",
               mood: settingsData.mood || "",
               selectedInteractions: settingsData.selectedInteractions || [],
             },
@@ -164,7 +205,7 @@ export default function HomePage() {
         />
 
         <Button onClick={handleClick} variant="contained">
-          OLUŞTUR
+          Anında OLUŞTUR
         </Button>
       </Box>
 
@@ -172,38 +213,56 @@ export default function HomePage() {
         <HomeSkeleton />
       ) : error ? (
         <Alert severity="error">{error}</Alert>
-      ) : (
+      ) : postDatas && postDatas.posts.length !== 0 ? (
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={12} md={5} mb={2}>
+            {newPostLoading && (
+              <CircularProgress
+                size={40}
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                }}
+              />
+            )}
             <CustomCard
+              id={postDatas.posts[0].id}
               platform="Topix"
-              postImage="/Gradient.png"
-              title={postDatas[0].post.title}
-              content={postDatas[0].post.body}
+              postImage="/NoImgLightNew.jpg"
+              title={postDatas.posts[0].title}
+              content={postDatas.posts[0].body}
               hashtags={["tag3", "tag4"]}
               likes={20}
               comments={8}
               date="2024-10-28T15:00:00Z"
+              isShared={postDatas.posts[0].status || 0}
             />
           </Grid>
 
           <Grid container spacing={2}>
-            {postDatas.slice(1).map((post, index) => (
-              <Grid item xs={6} sm={4} md={4} key={index}>
+            {postDatas.posts.slice(1).map((post) => (
+              <Grid item xs={6} sm={4} md={4} key={post.id}>
                 <CustomCard
+                  id={post.id}
                   platform="Topix"
-                  postImage="/Gradient.png"
-                  title={post.post.title}
-                  content={post.post.body}
+                  postImage="/NoImgLightNew.jpg"
+                  title={post.title}
+                  content={post.body}
                   hashtags={["tag3", "tag4"]}
                   likes={20}
                   comments={8}
                   date="2024-10-28T15:00:00Z"
+                  isShared={post.status || 0}
                 />
               </Grid>
             ))}
           </Grid>
         </Grid>
+      ) : (
+        <Alert sx={{ marginTop: 5 }} severity="info">
+          No posts available.
+        </Alert>
       )}
     </MiniDrawer>
   );

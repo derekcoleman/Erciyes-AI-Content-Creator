@@ -1,20 +1,21 @@
 import { API_ENDPOINTS, daysOfWeek } from "./conts";
 import {
   Job,
+  Job_Backend,
   JobData,
   JobsFormData,
-  JobsInfo,
+  FetchInfo,
   LoginFormData,
   LoginInfo,
   Post,
-  ProfileAPIs,
-  ProfileInfo,
-  ProfileInfoData,
+  Post_Backend,
+  ProfileAPIs_Backend,
+  ProfileInfoData_Backend,
   RegisterFormData,
-  RegisterInfo,
   Settings,
+  Settings_Backend,
   SettingsFormData,
-  SettingsInfo,
+  SettingsFormData_Backend,
 } from "./types";
 
 const loginUser = async (formData: LoginFormData): Promise<LoginInfo> => {
@@ -35,9 +36,7 @@ const loginUser = async (formData: LoginFormData): Promise<LoginInfo> => {
   return data;
 };
 
-const registerUser = async (
-  formData: RegisterFormData
-): Promise<RegisterInfo> => {
+const registerUser = async (formData: RegisterFormData): Promise<FetchInfo> => {
   console.log(JSON.stringify(formData));
   const response = await fetch(API_ENDPOINTS.REGISTER, {
     method: "POST",
@@ -52,13 +51,13 @@ const registerUser = async (
     throw new Error(errorData.message);
   }
 
-  const data: RegisterInfo = await response.json();
+  const data: FetchInfo = await response.json();
   return data;
 };
 
 const addSettings = async (
-  formData: SettingsFormData
-): Promise<SettingsInfo> => {
+  formData: SettingsFormData_Backend
+): Promise<FetchInfo> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -79,12 +78,12 @@ const addSettings = async (
     throw new Error(errorData.message || "Failed to save settings");
   }
 
-  const data: SettingsInfo = await response.json();
+  const data: FetchInfo = await response.json();
   console.log("data: ", data);
   return data;
 };
 
-const addJobs = async (job: Job): Promise<JobsInfo> => {
+const addJobs = async (job: Job): Promise<FetchInfo> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -105,7 +104,7 @@ const addJobs = async (job: Job): Promise<JobsInfo> => {
     throw new Error(errorData.message || "Failed to save job");
   }
 
-  const data: JobsInfo = await response.json();
+  const data: FetchInfo = await response.json();
   console.log("data: ", data);
   return data;
 };
@@ -117,7 +116,7 @@ const getCookie = (name: string): string | null => {
   return null;
 };
 
-const getPosts = async (): Promise<Post> => {
+const getPostWithAI = async (): Promise<Post> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -150,7 +149,7 @@ const getPosts = async (): Promise<Post> => {
   }
 };
 
-const getHome = async (): Promise<Post[]> => {
+const getHome = async (): Promise<Post_Backend> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -171,7 +170,7 @@ const getHome = async (): Promise<Post[]> => {
       throw new Error(errorData.message || "Failed to fetch posts");
     }
 
-    const data: Post[] = await response.json();
+    const data: Post_Backend = await response.json();
     return data;
   } catch (error) {
     if (error instanceof Error) {
@@ -183,7 +182,7 @@ const getHome = async (): Promise<Post[]> => {
   }
 };
 
-const getJobs = async (): Promise<Job[]> => {
+const getJobs = async (): Promise<Job_Backend> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -204,7 +203,7 @@ const getJobs = async (): Promise<Job[]> => {
       throw new Error(errorData.message || "Failed to fetch jobs");
     }
 
-    const data: Job[] = await response.json();
+    const data: Job_Backend = await response.json();
     return data;
   } catch (error) {
     if (error instanceof Error) {
@@ -216,7 +215,7 @@ const getJobs = async (): Promise<Job[]> => {
   }
 };
 
-const getSettings = async (): Promise<Settings> => {
+const getSettings = async (): Promise<Settings_Backend> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -249,7 +248,7 @@ const getSettings = async (): Promise<Settings> => {
   }
 };
 
-const getProfile = async (): Promise<ProfileInfoData> => {
+const getProfile = async (): Promise<ProfileInfoData_Backend> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -270,7 +269,7 @@ const getProfile = async (): Promise<ProfileInfoData> => {
       throw new Error(errorData.message || "Failed to fetch profile");
     }
 
-    const data: ProfileInfoData = await response.json();
+    const data: ProfileInfoData_Backend = await response.json();
     return data;
   } catch (error) {
     if (error instanceof Error) {
@@ -283,8 +282,8 @@ const getProfile = async (): Promise<ProfileInfoData> => {
 };
 
 const updateProfile = async (
-  profileData: ProfileAPIs
-): Promise<ProfileInfo> => {
+  profileData: ProfileAPIs_Backend
+): Promise<FetchInfo> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -306,7 +305,7 @@ const updateProfile = async (
       throw new Error(errorData.message || "Failed to fetch profile");
     }
 
-    const data: ProfileInfo = await response.json();
+    const data: FetchInfo = await response.json();
     return data;
   } catch (error) {
     if (error instanceof Error) {
@@ -339,7 +338,8 @@ const jobDataParser = ({
   selectedDays,
   hour,
 }: JobsFormData): Job[] => {
-  const platform_id = platformMapping[platform] || -1;
+  const platform_id =
+    platformMapping[platform] !== undefined ? platformMapping[platform] : -1;
 
   return selectedDays.map((day) => ({
     platform_id,
@@ -348,14 +348,15 @@ const jobDataParser = ({
   }));
 };
 
-const textLimiter = (text: string, length: number): string => {
+const textLimiter = (text: string | undefined, length: number): string => {
+  if (!text) return "";
   return text.length > length ? text.substring(0, length) + "..." : text;
 };
 
 const platformMapping: { [key: string]: number } = {
-  Topix: 1,
-  Instagram: 2,
-  LinkedIn: 3,
+  Topix: 0,
+  Instagram: 1,
+  LinkedIn: 2,
 };
 
 const getHourFromDate = (date: Date) => {
@@ -393,12 +394,115 @@ const jobToJobData = (jobs: Job[]): JobData[] => {
   });
 };
 
+const transformSettingsFromBackend = (
+  backendSettings: Settings_Backend
+): Settings => {
+  const interactionMapping: { [key: string]: string } = {
+    like: "Beğeni",
+    comment: "Yorum",
+    interaction: "Etkileşim",
+    frequency: "Sık Kelimeler",
+  };
+
+  const moodMapping: { [key: string]: string } = {
+    funny: "Eğlenceli",
+    sad: "Hüzünlü",
+    romantic: "Duygusal",
+    realistic: "Gerçekçi",
+    nervous: "Gergin",
+  };
+
+  const selectedInteractions = [];
+
+  if (backendSettings.like) selectedInteractions.push(interactionMapping.like);
+  if (backendSettings.comment)
+    selectedInteractions.push(interactionMapping.comment);
+  if (backendSettings.interaction)
+    selectedInteractions.push(interactionMapping.interaction);
+  if (backendSettings.frequency)
+    selectedInteractions.push(interactionMapping.frequency);
+
+  const moodInTurkish =
+    moodMapping[backendSettings.mood || ""] || backendSettings.mood;
+
+  return {
+    code: backendSettings.code,
+    message: backendSettings.message,
+    status: backendSettings.status,
+    language: backendSettings.language,
+    topic: backendSettings.topic,
+    wantedWords: backendSettings.wantedWords,
+    bannedWords: backendSettings.bannedWords,
+    sub_topic: backendSettings.sub_topic,
+    mood: moodInTurkish,
+    selectedInteractions: selectedInteractions,
+    disabled: backendSettings.disabled,
+  };
+};
+
+// Frontend ve Backend arasındaki dönüşümü sağlamak için parser fonksiyonu
+const transformSettingsToBackend = (
+  settingsData: SettingsFormData
+): SettingsFormData_Backend => {
+  const moodMapping: { [key: string]: string } = {
+    Eğlenceli: "funny",
+    Hüzünlü: "sad",
+    Duygusal: "romantic",
+    Gerçekçi: "realistic",
+    Gergin: "nervous",
+  };
+
+  const selectedInteractions = settingsData.selectedInteractions || [];
+
+  const backendData: SettingsFormData_Backend = {
+    language: settingsData.language,
+    topic: settingsData.topic,
+    wantedWords: settingsData.wantedWords,
+    bannedWords: settingsData.bannedWords,
+    sub_topic: settingsData.sub_topic,
+    mood: moodMapping[settingsData.mood || ""] || settingsData.mood,
+
+    like: selectedInteractions.includes("Beğeni") ? 1 : 0,
+    comment: selectedInteractions.includes("Yorum") ? 1 : 0,
+    interaction: selectedInteractions.includes("Etkileşim") ? 1 : 0,
+    frequency: selectedInteractions.includes("Sık Kelimeler") ? 1 : 0,
+  };
+
+  return backendData;
+};
+
+const addPostManuel = async (post_id: number): Promise<FetchInfo> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  const response = await fetch(API_ENDPOINTS.TOPİX, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      token: token,
+    },
+    body: JSON.stringify({ post_id }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to save settings");
+  }
+
+  const data: FetchInfo = await response.json();
+  console.log("data: ", data);
+  return data;
+};
+
 export {
   loginUser,
   registerUser,
   getHome,
   getJobs,
-  getPosts,
+  getPostWithAI,
   getSettings,
   getProfile,
   addJobs,
@@ -410,4 +514,7 @@ export {
   getHourFromDate,
   getTheme,
   jobToJobData,
+  transformSettingsFromBackend,
+  transformSettingsToBackend,
+  addPostManuel,
 };

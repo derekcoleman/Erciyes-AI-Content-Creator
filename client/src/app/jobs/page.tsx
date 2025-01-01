@@ -2,23 +2,30 @@
 import MiniDrawer from "../../components/drawer/MiniDrawer";
 import JobForm from "@/components/forms/JobsForm";
 import JobComponent from "@/components/card/JobComponent";
-import { DUMMYJOBS } from "@/lib/conts";
 import { Alert, Grid } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import {
+  Job,
   JobData,
   PromptSettingsInfo,
   Settings,
   SettingsFormData,
-  SettingsInfo,
   WordSettingsInfo,
 } from "@/lib/types";
 import { useEffect, useState } from "react";
-import { addSettings, getJobs, getSettings, jobToJobData } from "@/lib/utils";
+import {
+  addSettings,
+  getJobs,
+  getSettings,
+  jobToJobData,
+  transformSettingsFromBackend,
+  transformSettingsToBackend,
+} from "@/lib/utils";
 import { settingsAtom } from "@/store";
 import { useAtom } from "jotai";
 
 export default function JobPage() {
+  const [loading, setLoading] = useState<boolean>(true);
   const [settingsData, setSettingsData] = useAtom(settingsAtom);
   const [jobs, setJobs] = useState<JobData[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +34,9 @@ export default function JobPage() {
     try {
       const fetchedSettings = await getSettings();
       if (fetchedSettings.status) {
-        setSettingsData(fetchedSettings);
+        const transformedSettings =
+          transformSettingsFromBackend(fetchedSettings);
+        setSettingsData(transformedSettings);
       }
     } catch (error) {
       console.error("Error fetching settings:", error);
@@ -36,11 +45,14 @@ export default function JobPage() {
 
   const fetchJobs = async () => {
     try {
-      const fetchedJobs = jobToJobData(await getJobs());
+      const jDatas = await getJobs();
+      const fetchedJobs = jobToJobData(jDatas.data);
       setJobs(fetchedJobs);
     } catch (error) {
       console.error("Error fetching posts:", error);
       setError((error as Error).message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,54 +63,61 @@ export default function JobPage() {
   const handlePromptFormSubmit = async (
     updatedPromptData: PromptSettingsInfo
   ) => {
-    updateSettingsData({
-      ...settingsData,
-      customTopic: updatedPromptData.customTopic,
+    const formData: SettingsFormData = {
+      language: settingsData.language,
+      topic: settingsData.topic,
+      wantedWords: settingsData.wantedWords,
+      bannedWords: settingsData.bannedWords,
+      sub_topic: updatedPromptData.sub_topic,
       mood: updatedPromptData.mood,
       selectedInteractions: updatedPromptData.selectedInteractions,
-    });
-    await handleSubmit();
+    };
+
+    const success = await handleSubmit(formData);
+
+    if (success) {
+      updateSettingsData({
+        ...settingsData,
+        sub_topic: updatedPromptData.sub_topic,
+        mood: updatedPromptData.mood,
+        selectedInteractions: updatedPromptData.selectedInteractions,
+      });
+    }
   };
 
   const handleWordFormSubmit = async (updatedWordData: WordSettingsInfo) => {
-    updateSettingsData({
-      ...settingsData,
-      bannedWords: updatedWordData.bannedWords,
+    const formData: SettingsFormData = {
+      language: settingsData.language,
+      topic: settingsData.topic,
       wantedWords: updatedWordData.wantedWords,
-    });
-    await handleSubmit();
+      bannedWords: updatedWordData.bannedWords,
+      sub_topic: settingsData.sub_topic,
+      mood: settingsData.mood,
+      selectedInteractions: settingsData.selectedInteractions,
+    };
+
+    const success = await handleSubmit(formData);
+    if (success) {
+      updateSettingsData({
+        ...settingsData,
+        bannedWords: updatedWordData.bannedWords,
+        wantedWords: updatedWordData.wantedWords,
+      });
+    }
   };
-
-  const handleSubmit = async (): Promise<boolean> => {
+  const handleSubmit = async (formData: SettingsFormData): Promise<boolean> => {
     try {
-      const {
-        language,
-        topic,
-        wantedWords,
-        bannedWords,
-        customTopic,
-        mood,
-        selectedInteractions,
-      } = settingsData;
-
-      const formData: SettingsFormData = {
-        language,
-        topic,
-        wantedWords,
-        bannedWords,
-        customTopic,
-        mood,
-        selectedInteractions,
-      };
-
-      const settingsInfo = await addSettings(formData);
+      console.log("Form data:", formData);
+      const settingsInfo = await addSettings(
+        transformSettingsToBackend(formData)
+      );
 
       if (settingsInfo.status) {
         console.log("Settings updated successfully:", settingsInfo);
-        return settingsInfo.status;
+        return true;
       } else {
         alert("Settings failed: " + settingsInfo.message);
-        return settingsInfo.status;
+        return false;
       }
     } catch (error) {
       alert("Settings failed: " + (error as Error).message);
@@ -106,19 +125,25 @@ export default function JobPage() {
     }
   };
 
+  const handleJobAdded = (newJob: Job) => {
+    const jData = jobToJobData([newJob]);
+    setJobs((prevJobs) => [...prevJobs, jData[0]]);
+  };
+
   useEffect(() => {
     fetchSettings();
     fetchJobs();
-  }, [settingsData, jobs]);
+  }, []);
 
   return (
     <MiniDrawer>
       <JobForm
+        onJobAdded={handleJobAdded}
         settingsData={{
           promptSettingsInfo: {
             selectedInteractions: settingsData.selectedInteractions || [],
             mood: settingsData.mood || "",
-            customTopic: settingsData.customTopic || "",
+            sub_topic: settingsData.sub_topic || "",
           },
           wordSettingsInfo: {
             wantedWords: settingsData.wantedWords || [],
@@ -129,9 +154,13 @@ export default function JobPage() {
         onWordFormSubmit={handleWordFormSubmit}
       />
       <Divider sx={{ fontSize: "20px" }}>Görevler</Divider>
-      {error ? (
-        <Alert severity="error">{error}</Alert>
-      ) : (
+      {loading ? (
+        <Alert sx={{ marginTop: 5 }} severity="info">
+          {"Loading..."}
+        </Alert>
+      ) : error ? (
+        <Alert severity="error">{"Something went wrong"}</Alert>
+      ) : jobs.length !== 0 ? (
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           {jobs.map((job, index) => (
             <Grid item xs={6} key={index}>
@@ -144,6 +173,10 @@ export default function JobPage() {
             </Grid>
           ))}
         </Grid>
+      ) : (
+        <Alert sx={{ marginTop: 5 }} severity="info">
+          {"No jobs found"}
+        </Alert>
       )}
     </MiniDrawer>
   );

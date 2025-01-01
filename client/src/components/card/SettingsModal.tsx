@@ -56,7 +56,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               settingsData.promptSettingsInfo.selectedInteractions
             }
             moodData={settingsData.promptSettingsInfo.mood}
-            customTopicData={settingsData.promptSettingsInfo.customTopic}
+            sub_topic={settingsData.promptSettingsInfo.sub_topic}
             onFormSubmit={onPromptFormSubmit}
           />
           <WordSettingsForm

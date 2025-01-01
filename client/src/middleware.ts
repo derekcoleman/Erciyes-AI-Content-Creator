@@ -13,6 +13,6 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  //matcher: ["/", "/jobs", "/settings", "/profile"],
-  matcher: ["/ASAsASAsaSSADA"],
+  matcher: ["/", "/jobs", "/settings", "/profile"],
+  // matcher: ["/ASAsASAsaSSADA"],
 };

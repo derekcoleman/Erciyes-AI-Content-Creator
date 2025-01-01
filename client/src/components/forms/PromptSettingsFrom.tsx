@@ -17,20 +17,20 @@ import { INTERACTIONLIST, moods } from "@/lib/conts";
 import { useState } from "react";
 
 interface PromptSettingsFromProps {
-  customTopicData: string;
+  sub_topic: string;
   moodData: string;
   selectedInteractionsData: string[];
   onFormSubmit?: (data: PromptSettingsInfo) => void;
 }
 
 const PromptSettingsFrom: React.FC<PromptSettingsFromProps> = ({
-  customTopicData = "",
+  sub_topic = "",
   moodData = "",
   selectedInteractionsData = [],
   onFormSubmit,
 }) => {
   const [mood, setMood] = useState(moodData);
-  const [customTopic, setCustomTopicData] = useState(customTopicData);
+  const [customTopic, setCustomTopicData] = useState(sub_topic);
   const [selectedInteractions, setSelectedInteractions] = useState<string[]>(
     selectedInteractionsData
   );
@@ -50,7 +50,7 @@ const PromptSettingsFrom: React.FC<PromptSettingsFromProps> = ({
     if (isFormValid()) {
       try {
         const settingsInfo: PromptSettingsInfo = {
-          customTopic,
+          sub_topic: customTopic,
           mood,
           selectedInteractions,
         };
