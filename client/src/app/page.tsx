@@ -24,7 +24,6 @@ import { settingsAtom } from "@/store";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import CircularProgress from "@mui/material/CircularProgress";
-import { create } from "domain";
 
 export default function HomePage() {
   const [postDatas, setPostDatas] = useState<Post_Backend>();

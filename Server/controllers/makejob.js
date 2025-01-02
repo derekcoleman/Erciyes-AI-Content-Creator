@@ -32,10 +32,10 @@ const makejob = async (req, res) => {
             let result;
             if (returned_data.message == "email_not_send") {
               result = await gemini2(
-                prompt[0].topic,
-                prompt[0].language,
-                prompt[0].sub_topic,
-                prompt[0].mood
+                makeingjob[0].topic,
+                makeingjob[0].language,
+                makeingjob[0].sub_topic,
+                makeingjob[0].mood
               );
             } else {
               let titles = [];
@@ -49,14 +49,14 @@ const makejob = async (req, res) => {
                 }
               }
               result = await gemini(
-                prompt[0].topic,
-                prompt[0].language,
-                prompt[0].sub_topic,
-                prompt[0].mood,
-                prompt[0].like,
-                prompt[0].comment,
-                prompt[0].frequency,
-                prompt[0].interaction,
+                makeingjob[0].topic,
+                makeingjob[0].language,
+                makeingjob[0].sub_topic,
+                makeingjob[0].mood,
+                makeingjob[0].like,
+                makeingjob[0].comment,
+                makeingjob[0].frequency,
+                makeingjob[0].interaction,
                 titles,
                 returned_data.analysis
               );

@@ -12,7 +12,12 @@ import {
 } from "@mui/material";
 import { daysOfWeek, platforms } from "@/lib/conts";
 import CustomTimePicker from "../inputs/CustomTimePicker";
-import { addJobs, getHourFromDate, jobDataParser } from "@/lib/utils";
+import {
+  addJobs,
+  getHourFromDate,
+  jobDataParser,
+  transformSettingsToBackend,
+} from "@/lib/utils";
 import {
   Job,
   JobsFormData,
@@ -58,22 +63,35 @@ const JobForm: React.FC<JobFormProps> = ({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    const levo = transformSettingsToBackend({
+      wantedWords: settingsData.wordSettingsInfo.wantedWords,
+      bannedWords: settingsData.wordSettingsInfo.bannedWords,
+      sub_topic: settingsData.promptSettingsInfo.sub_topic,
+      mood: settingsData.promptSettingsInfo.mood,
+      selectedInteractions:
+        settingsData.promptSettingsInfo.selectedInteractions,
+    });
+
     if (isFormValid) {
       try {
         const formData: JobsFormData = {
           platform,
           selectedDays,
           hour: getHourFromDate(hour.$d),
+          sub_topic: levo.sub_topic,
+          mood: levo.mood,
+          like: levo.like,
+          comment: levo.comment,
+          interaction: levo.interaction,
+          frequency: levo.frequency,
         };
 
         const jobs = jobDataParser(formData);
-
         for (const job of jobs) {
           try {
             const jobResponse = await addJobs(job);
             if (jobResponse.status) {
-              console.log("Job added successfully", jobResponse);
-              onJobAdded(job);
+              onJobAdded({ id: jobResponse.id, ...job });
             } else {
               console.error("Failed to add job", jobResponse.message);
             }

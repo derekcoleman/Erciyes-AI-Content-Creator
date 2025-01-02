@@ -128,6 +128,7 @@ export default function JobPage() {
 
   const handleJobAdded = (newJob: Job) => {
     const jData = jobToJobData([newJob]);
+    console.log("New job:", jData[0]);
     setJobs((prevJobs) => [...prevJobs, jData[0]]);
   };
 
@@ -176,12 +177,17 @@ export default function JobPage() {
           {jobs.map((job, index) => (
             <Grid item xs={6} key={index}>
               <JobComponent
-                // id={job.id}
-                id={0}
+                id={job.id}
                 title={job.title}
                 platform={job.platform}
                 days={job.day}
                 hour={job.hour}
+                sub_topic={job.sub_topic}
+                mood={job.mood}
+                like={job.like}
+                comment={job.comment}
+                interaction={job.interaction}
+                frequency={job.frequency}
                 onDelete={handleDeleteJob}
               />
             </Grid>
