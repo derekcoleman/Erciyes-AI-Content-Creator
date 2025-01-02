@@ -9,12 +9,12 @@ import {
 import { useState } from "react";
 import CardFilter from "../filter/CardFilter";
 import { BarChart } from "@mui/x-charts";
-import CustomCard from "./CustomCard";
-import { SpecificCustomCard, specificHeaders } from "@/lib/types";
+import { specificHeaders, StatisticsData } from "@/lib/types";
 import { spesificPostCardFilters } from "@/lib/conts";
+import StatisticsDataCard from "./StatisticsDataCard";
 
 interface SpecificPostsCardProps {
-  customCardsDetails: SpecificCustomCard[];
+  customCardsDetails?: StatisticsData;
   dataSeries: { color: string; label: string; data: number[] }[];
   avg: { color: string; label: string; data: number[] };
 }
@@ -33,11 +33,26 @@ const SpecificPostsCard: React.FC<SpecificPostsCardProps> = ({
     return series.filter((item) => item.label === filter);
   };
 
-  const filteredCards = customCardsDetails.filter(
-    (card) =>
-      card.specificHeader ===
-      specificHeaders[filter as keyof typeof specificHeaders]
-  );
+  const filteredCards = (specificHeader: specificHeaders) => {
+    const data = customCardsDetails?.data;
+
+    if (!data) return [];
+
+    switch (specificHeader) {
+      case specificHeaders.Likes:
+        return [data.mostLikedPost];
+      case specificHeaders.Comments:
+        return [data.mostCommentedPost];
+      case specificHeaders.Interaction:
+        return [data.mostEngagedPost];
+      case specificHeaders["Comments/Int."]:
+        return [data.highestCommentEngagementPost];
+      case specificHeaders["Likes/Int."]:
+        return [data.highestLikeEngagementPost];
+      default:
+        return [];
+    }
+  };
 
   return (
     <Card component="form" sx={{ margin: 2, width: "96.5%" }}>
@@ -67,21 +82,18 @@ const SpecificPostsCard: React.FC<SpecificPostsCardProps> = ({
             justifyContent: "space-evenly",
           }}
         >
-          {filteredCards.map((card, index) => (
-            <CustomCard
-              isShared={0}
-              id={card.id}
-              key={index}
-              platform={card.platform}
-              postImage={card.postImage}
-              title={card.title}
-              content={card.content}
-              hashtags={card.hashtags}
-              likes={card.likes}
-              comments={card.comments}
-              date={card.date}
-              isInnerCard={true}
-            />
+          {filteredCards(specificHeaders[filter]).map((card, index) => (
+            <Box key={index} sx={{ width: "40%" }}>
+              <StatisticsDataCard
+                postImage={"/NoImgLightNew.jpg"}
+                title={card.title}
+                content={card.content}
+                hashtags={card.hashtags}
+                likes={card.likeCount}
+                comments={card.commentCount}
+                date={card.date}
+              />
+            </Box>
           ))}
           <Box sx={{ width: "40%" }}>
             <BarChart

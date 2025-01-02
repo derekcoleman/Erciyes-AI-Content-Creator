@@ -16,6 +16,7 @@ import {
   Settings_Backend,
   SettingsFormData,
   SettingsFormData_Backend,
+  StatisticsData,
 } from "./types";
 
 const loginUser = async (formData: LoginFormData): Promise<LoginInfo> => {
@@ -598,6 +599,39 @@ const deleteJob = async (id: number): Promise<void> => {
   }
 };
 
+const getStatistics = async (): Promise<StatisticsData> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  try {
+    const response = await fetch(API_ENDPOINTS.STATISTICS, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to fetch statistics");
+    }
+
+    const data: StatisticsData = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(
+        error.message || "Unknown error occurred while fetching statistics."
+      );
+    }
+    throw new Error("Unknown error occurred while fetching statistics.");
+  }
+};
+
 export {
   loginUser,
   registerUser,
@@ -621,4 +655,5 @@ export {
   formatDate,
   updatePost,
   deleteJob,
+  getStatistics,
 };

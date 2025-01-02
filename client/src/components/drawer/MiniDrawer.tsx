@@ -106,7 +106,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 interface MiniDrawerProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 export default function MiniDrawer({ children }: MiniDrawerProps) {
   const [theme, setTheme] = useAtom(themeAtom);
@@ -132,7 +132,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
     router.push("/login");
   };
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -181,39 +181,44 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
         anchor="left"
         open={open}
       >
-        <DrawerHeader>
-          <IconButton sx={{ mr: "auto" }} onClick={() => handleNavigation("/")}>
-            <HomeIcon fontSize="large" /> Ana Sayfa
-          </IconButton>
-          <IconButton onClick={handleDrawerClose}>
-            {styleTheme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {iconList.map((data) => (
-            <ListItem key={data.title} disablePadding>
-              <ListItemButton onClick={() => handleNavigation(data.path)}>
-                <ListItemIcon>{data.icon}</ListItemIcon>
-                <ListItemText primary={data.label} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <Box sx={{ marginTop: "auto", padding: 2, width: "100%" }}>
-          <Button
-            variant="outlined"
-            endIcon={<LogoutIcon />}
-            sx={{ color: "red", width: "200px", borderColor: "red" }}
-            onClick={handleLogout}
-          >
-            Çıkış Yap
-          </Button>
+        <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+          <DrawerHeader>
+            <IconButton
+              sx={{ mr: "auto" }}
+              onClick={() => handleNavigation("/")}
+            >
+              <HomeIcon fontSize="large" /> Ana Sayfa
+            </IconButton>
+            <IconButton onClick={handleDrawerClose}>
+              {styleTheme.direction === "ltr" ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {iconList.map((data) => (
+              <ListItem key={data.title} disablePadding>
+                <ListItemButton onClick={() => handleNavigation(data.path)}>
+                  <ListItemIcon>{data.icon}</ListItemIcon>
+                  <ListItemText primary={data.label} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <Box sx={{ marginTop: "auto", padding: 2, width: "100%" }}>
+            <Button
+              variant="outlined"
+              endIcon={<LogoutIcon />}
+              sx={{ color: "red", width: "200px", borderColor: "red" }}
+              onClick={handleLogout}
+            >
+              Çıkış Yap
+            </Button>
+          </Box>
         </Box>
       </Drawer>
 
@@ -227,10 +232,23 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
         open={open}
       >
         <DrawerHeader />
-        <Box sx={{ paddingLeft: "2%", paddingRight: "1%", paddingBlock: "1%" }}>
-          {children}
-        </Box>
+        <Box sx={{ p: 0 }}>{children}</Box>
       </Main>
+      {open && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0, 0, 0, 0.5)",
+            zIndex: 999, // Drawer'ın önünde
+          }}
+          onClick={handleDrawerClose}
+          onKeyDown={handleDrawerClose}
+        />
+      )}
     </Box>
   );
 }

@@ -1,5 +1,3 @@
-import React from "react";
-
 const TopixCard: React.FC = () => {
   return (
     <div>
