@@ -15,10 +15,10 @@ interface StatisticsDataCardProps {
   title: string;
   likes: number;
   comments: number;
-  date: string;
+  date?: string;
   postImage: string;
-  content: string;
-  hashtags: string[];
+  content?: string;
+  hashtags?: string[];
 }
 
 const StatisticsDataCard: React.FC<StatisticsDataCardProps> = ({
@@ -56,7 +56,7 @@ const StatisticsDataCard: React.FC<StatisticsDataCardProps> = ({
         >
           <TopixIcon />
           <Typography variant="body2" color="textSecondary">
-            {formatDate(date)}
+            {formatDate("2024-12-30T18:35:31.000Z")}
           </Typography>
         </Box>
       </Box>
@@ -71,7 +71,10 @@ const StatisticsDataCard: React.FC<StatisticsDataCardProps> = ({
           {title}
         </Typography>
         <Typography variant="body1" component="div">
-          {textLimiter(content, 300)}
+          {textLimiter(
+            "dsasa sad as dsad asd asd assa dsa asd d sad sad sad asdasd sasa",
+            300
+          )}
         </Typography>
         <Box
           sx={{
@@ -117,7 +120,7 @@ const StatisticsDataCard: React.FC<StatisticsDataCardProps> = ({
             color="text.secondary"
             sx={{ textAlign: "center" }}
           >
-            {hashtags.map((tag, index) => (
+            {["tag1", "tag2"].map((tag, index) => (
               <span
                 key={index}
                 style={{ marginRight: "5px", color: "#007bff" }}

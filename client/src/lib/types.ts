@@ -240,5 +240,36 @@ export interface ProfileInfoData_Backend {
   linkedin_api_key: string;
   topix_api_key: string;
 }
+export interface SortedWordCounts {
+  [key: string]: number;
+}
+
+export interface PostStatistics {
+  title: string;
+  likeCount: number;
+  commentCount: number;
+  viewCount: number;
+  engagementLike: number;
+  engagementComment: number;
+  totalEngagement: number | null;
+  content?: string;
+  date?: string;
+  hashtags?: string[];
+}
+
+export interface StatisticsData {
+  data: {
+    sortedWordCounts: SortedWordCounts;
+    mostLikedPost: PostStatistics;
+    mostCommentedPost: PostStatistics;
+    mostViewedPost: PostStatistics;
+    highestLikeEngagementPost: PostStatistics;
+    highestCommentEngagementPost: PostStatistics;
+    mostEngagedPost: PostStatistics;
+  };
+  message: string;
+  code: number;
+  status: boolean;
+}
 
 export { Field, Variant, specificHeaders };
