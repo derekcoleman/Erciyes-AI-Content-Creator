@@ -13,7 +13,7 @@ import {
 import { getStatistics } from "@/lib/utils";
 import { StatisticsData } from "@/lib/types";
 import { useEffect, useState } from "react";
-import { Alert, Box, CircularProgress } from "@mui/material";
+import { Alert, CircularProgress } from "@mui/material";
 
 export default function StatisticPage() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,15 +39,7 @@ export default function StatisticPage() {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          background:
-            "linear-gradient(134.49deg, rgba(9, 58, 237, 0.18) -0.83%, rgba(1, 215, 235, 0.15) 54.23%) ",
-          backdropFilter: "blur(80px)",
-          minHeight: "100vh",
-        }}
-      >
-        <MiniDrawer />
+      <MiniDrawer>
         <CircularProgress
           sx={{
             position: "absolute",
@@ -55,23 +47,15 @@ export default function StatisticPage() {
             left: "50%",
           }}
         />
-      </Box>
+      </MiniDrawer>
     );
   }
   return (
-    <Box
-      sx={{
-        background:
-          "linear-gradient(134.49deg, rgba(9, 58, 237, 0.18) -0.83%, rgba(1, 215, 235, 0.15) 54.23%) ",
-        backdropFilter: "blur(80px)",
-        minHeight: "100vh",
-      }}
-    >
-      <MiniDrawer />
+    <MiniDrawer>
       {error ? (
         <Alert severity="error">{error}</Alert>
       ) : (
-        <Box sx={{ padding: 4 }}>
+        <>
           <PerformanceSumCard performacesumDatas={PERORMANCESUM_DUMMY_DATA} />
           <Performance dataSeries={ALL_SERIES_PERFORMANCE} />
           <SpecificPostsCard
@@ -79,8 +63,8 @@ export default function StatisticPage() {
             dataSeries={ALL_SERIES_SPESIFIC}
             avg={avg}
           />
-        </Box>
+        </>
       )}
-    </Box>
+    </MiniDrawer>
   );
 }

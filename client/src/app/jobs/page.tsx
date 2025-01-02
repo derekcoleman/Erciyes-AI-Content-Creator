@@ -2,7 +2,7 @@
 import MiniDrawer from "../../components/drawer/MiniDrawer";
 import JobForm from "@/components/forms/JobsForm";
 import JobComponent from "@/components/card/JobComponent";
-import { Alert, Box, CircularProgress, Grid } from "@mui/material";
+import { Alert, CircularProgress, Grid } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import { Job, JobData } from "@/lib/types";
 import { useEffect, useState } from "react";
@@ -87,65 +87,51 @@ export default function JobPage() {
   }
 
   return (
-    <Box
-      sx={{
-        background:
-          "linear-gradient(134.49deg, rgba(9, 58, 237, 0.18) -0.83%, rgba(1, 215, 235, 0.15) 54.23%)",
-        backdropFilter: "blur(80px)",
-        minHeight: "100vh",
-      }}
-    >
-      <MiniDrawer />
-      <Box sx={{ padding: 4 }}>
-        <JobForm
-          onJobAdded={handleJobAdded}
-          settingsData={{
-            promptSettingsInfo: {
-              selectedInteractions: settingsData.selectedInteractions || [],
-              mood: settingsData.mood || "",
-              sub_topic: settingsData.sub_topic || "",
-            },
-            wordSettingsInfo: {
-              wantedWords: settingsData.wantedWords || [],
-              bannedWords: settingsData.bannedWords || [],
-            },
-          }}
-        />
+    <MiniDrawer>
+      <JobForm
+        onJobAdded={handleJobAdded}
+        settingsData={{
+          promptSettingsInfo: {
+            selectedInteractions: settingsData.selectedInteractions || [],
+            mood: settingsData.mood || "",
+            sub_topic: settingsData.sub_topic || "",
+          },
+          wordSettingsInfo: {
+            wantedWords: settingsData.wantedWords || [],
+            bannedWords: settingsData.bannedWords || [],
+          },
+        }}
+      />
 
-        <Divider sx={{ fontSize: "20px" }}>Görevler</Divider>
-        {error ? (
-          <Alert severity="error">{"Something went wrong"}</Alert>
-        ) : jobs.length !== 0 ? (
-          <Grid
-            container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          >
-            {jobs.map((job, index) => (
-              <Grid item xs={6} key={index}>
-                <JobComponent
-                  id={job.id}
-                  title={job.title}
-                  platform={job.platform}
-                  days={job.day}
-                  hour={job.hour}
-                  sub_topic={job.sub_topic}
-                  mood={job.mood}
-                  like={job.like}
-                  comment={job.comment}
-                  interaction={job.interaction}
-                  frequency={job.frequency}
-                  onDelete={handleDeleteJob}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Alert sx={{ marginTop: 5 }} severity="info">
-            {"No jobs found"}
-          </Alert>
-        )}
-      </Box>
-    </Box>
+      <Divider sx={{ fontSize: "20px" }}>Görevler</Divider>
+      {error ? (
+        <Alert severity="error">{"Something went wrong"}</Alert>
+      ) : jobs.length !== 0 ? (
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          {jobs.map((job, index) => (
+            <Grid item xs={6} key={index}>
+              <JobComponent
+                id={job.id}
+                title={job.title}
+                platform={job.platform}
+                days={job.day}
+                hour={job.hour}
+                sub_topic={job.sub_topic}
+                mood={job.mood}
+                like={job.like}
+                comment={job.comment}
+                interaction={job.interaction}
+                frequency={job.frequency}
+                onDelete={handleDeleteJob}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Alert sx={{ marginTop: 5 }} severity="info">
+          {"No jobs found"}
+        </Alert>
+      )}
+    </MiniDrawer>
   );
 }

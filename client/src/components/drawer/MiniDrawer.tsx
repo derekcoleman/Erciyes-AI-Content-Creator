@@ -51,29 +51,7 @@ const iconList = [
   },
 ];
 const drawerWidth = 240;
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-  open?: boolean;
-}>(({ theme }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  transition: theme.transitions.create("margin", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: `-${drawerWidth}px`,
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        transition: theme.transitions.create("margin", {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
-      },
-    },
-  ],
-}));
+
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
@@ -106,7 +84,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 interface MiniDrawerProps {
-  children?: ReactNode;
+  children: ReactNode;
 }
 export default function MiniDrawer({ children }: MiniDrawerProps) {
   const [theme, setTheme] = useAtom(themeAtom);
@@ -115,6 +93,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
   const router = useRouter();
   const [user, setUser] = useAtom(userInfoAtom);
   const [token, setToken] = useAtom(tokenAtom);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -132,7 +111,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
     router.push("/login");
   };
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -176,64 +155,65 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
           width: drawerWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": { width: drawerWidth, boxSizing: "border-box" },
+          position: "fixed",
+          zIndex: 1000,
         }}
         variant="persistent"
         anchor="left"
         open={open}
       >
-        <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-          <DrawerHeader>
-            <IconButton
-              sx={{ mr: "auto" }}
-              onClick={() => handleNavigation("/")}
-            >
-              <HomeIcon fontSize="large" /> Ana Sayfa
-            </IconButton>
-            <IconButton onClick={handleDrawerClose}>
-              {styleTheme.direction === "ltr" ? (
-                <ChevronLeftIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <List>
-            {iconList.map((data) => (
-              <ListItem key={data.title} disablePadding>
-                <ListItemButton onClick={() => handleNavigation(data.path)}>
-                  <ListItemIcon>{data.icon}</ListItemIcon>
-                  <ListItemText primary={data.label} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <Box sx={{ marginTop: "auto", padding: 2, width: "100%" }}>
-            <Button
-              variant="outlined"
-              endIcon={<LogoutIcon />}
-              sx={{ color: "red", width: "200px", borderColor: "red" }}
-              onClick={handleLogout}
-            >
-              Çıkış Yap
-            </Button>
-          </Box>
+        <DrawerHeader>
+          <IconButton sx={{ mr: "auto" }} onClick={() => handleNavigation("/")}>
+            <HomeIcon fontSize="large" /> Ana Sayfa
+          </IconButton>
+          <IconButton onClick={handleDrawerClose}>
+            {styleTheme.direction === "ltr" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <List>
+          {iconList.map((data) => (
+            <ListItem key={data.title} disablePadding>
+              <ListItemButton onClick={() => handleNavigation(data.path)}>
+                <ListItemIcon>{data.icon}</ListItemIcon>
+                <ListItemText primary={data.label} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <Box sx={{ marginTop: "auto", padding: 2, width: "100%" }}>
+          <Button
+            variant="outlined"
+            endIcon={<LogoutIcon />}
+            sx={{ color: "red", width: "200px", borderColor: "red" }}
+            onClick={handleLogout}
+          >
+            Çıkış Yap
+          </Button>
         </Box>
       </Drawer>
 
-      <Main
+      <Box
         sx={{
           background:
             "linear-gradient(134.49deg, rgba(9, 58, 237, 0.18) -0.83%, rgba(1, 215, 235, 0.15) 54.23%) ",
           backdropFilter: "blur(80px)",
           padding: 0,
+          zIndex: 500,
+          position: "relative",
+          flex: 1,
         }}
-        open={open}
       >
         <DrawerHeader />
-        <Box sx={{ p: 0 }}>{children}</Box>
-      </Main>
+        <Box sx={{ paddingLeft: "2%", paddingRight: "1%", paddingBlock: "1%" }}>
+          {children}
+        </Box>
+      </Box>
       {open && (
         <Box
           sx={{
@@ -243,10 +223,9 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
             width: "100%",
             height: "100%",
             background: "rgba(0, 0, 0, 0.5)",
-            zIndex: 999, // Drawer'ın önünde
+            zIndex: 500,
           }}
           onClick={handleDrawerClose}
-          onKeyDown={handleDrawerClose}
         />
       )}
     </Box>
