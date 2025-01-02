@@ -9,9 +9,9 @@ import {
 import { useState } from "react";
 import CardFilter from "../filter/CardFilter";
 import { BarChart } from "@mui/x-charts";
-import CustomCard from "./CustomCard";
 import { SpecificCustomCard, specificHeaders } from "@/lib/types";
 import { spesificPostCardFilters } from "@/lib/conts";
+import StatisticsDataCard from "./StatisticsDataCard";
 
 interface SpecificPostsCardProps {
   customCardsDetails: SpecificCustomCard[];
@@ -68,20 +68,17 @@ const SpecificPostsCard: React.FC<SpecificPostsCardProps> = ({
           }}
         >
           {filteredCards.map((card, index) => (
-            <CustomCard
-              isShared={0}
-              id={card.id}
-              key={index}
-              platform={card.platform}
-              postImage={card.postImage}
-              title={card.title}
-              content={card.content}
-              hashtags={card.hashtags}
-              likes={card.likes}
-              comments={card.comments}
-              date={card.date}
-              isInnerCard={true}
-            />
+            <Box key={index} sx={{ width: "40%" }}>
+              <StatisticsDataCard
+                postImage={"/NoImgLightNew.jpg"}
+                title={card.title}
+                content={card.content}
+                hashtags={card.hashtags}
+                likes={card.likes}
+                comments={card.comments}
+                date={card.date}
+              />
+            </Box>
           ))}
           <Box sx={{ width: "40%" }}>
             <BarChart
