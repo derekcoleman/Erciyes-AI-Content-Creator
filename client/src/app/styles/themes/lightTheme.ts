@@ -13,6 +13,7 @@ const lightTheme = createTheme({
     customColors: {
       innerCard: "#edf4ff",
       inncerCardBorder: "#72CCFF",
+      settingsModalColor: "#d8dff0",
     },
   },
 });

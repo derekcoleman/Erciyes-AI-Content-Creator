@@ -333,18 +333,24 @@ const abbreviateNumber = (num: number): string => {
   }
 };
 
-const jobDataParser = ({
-  platform,
-  selectedDays,
-  hour,
-}: JobsFormData): Job[] => {
+const jobDataParser = (data: JobsFormData): Job[] => {
   const platform_id =
-    platformMapping[platform] !== undefined ? platformMapping[platform] : -1;
+    platformMapping[data.platform] !== undefined
+      ? platformMapping[data.platform]
+      : -1;
 
-  return selectedDays.map((day) => ({
+  console.log("data: ", data);
+  return data.selectedDays.map((day) => ({
     platform_id,
-    hour,
+    hour: data.hour,
     day,
+    topic: data.topic,
+    sub_topic: data.sub_topic,
+    mood: data.mood,
+    like: data.like || 0,
+    comment: data.comment || 0,
+    interaction: data.interaction || 0,
+    frequency: data.frequency || 0,
   }));
 };
 
@@ -366,12 +372,28 @@ const getHourFromDate = (date: Date) => {
   return date.getHours();
 };
 
-//günler kısmı sıkınıtlı array gelemsi gerekli
 const jobToJobData = (jobs: Job[]): JobData[] => {
+  const moodMapping: { [key: string]: string } = {
+    funny: "Eğlenceli",
+    sad: "Hüzünlü",
+    romantic: "Duygusal",
+    realistic: "Gerçekçi",
+    nervous: "Gergin",
+  };
+
   return jobs.map((job) => {
+    const moodInTurkish = moodMapping[job.mood || ""] || job.mood;
     const platform_id = job.platform_id;
     const hour = job.hour;
     const day = job.day;
+    const topic = job.topic;
+    const sub_topic = job.sub_topic;
+    const mood = moodInTurkish;
+    const like = job.like;
+    const comment = job.comment;
+    const frequency = job.frequency;
+    const interaction = job.interaction;
+    const id = job.id;
 
     const platform =
       Object.keys(platformMapping).find(
@@ -390,6 +412,14 @@ const jobToJobData = (jobs: Job[]): JobData[] => {
       hour: formattedHour,
       day: [dayLabel],
       title,
+      topic,
+      sub_topic,
+      mood,
+      like,
+      comment,
+      frequency,
+      interaction,
+      id,
     };
   });
 };
@@ -540,6 +570,34 @@ const updatePost = async (
   }
 };
 
+const deleteJob = async (id: number): Promise<void> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  try {
+    const response = await fetch(`${API_ENDPOINTS.JOBS}/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to delete job");
+    }
+
+    console.log(`Job with ID ${id} deleted successfully.`);
+  } catch (error) {
+    console.error("Error deleting job:", error);
+    throw error;
+  }
+};
+
 export {
   loginUser,
   registerUser,
@@ -562,4 +620,5 @@ export {
   addPostManuel,
   formatDate,
   updatePost,
+  deleteJob,
 };

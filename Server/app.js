@@ -9,6 +9,8 @@ const aiRouter = require('./routes/aiRouter');
 const profileRouter = require('./routes/profileRouter')
 const homepageRouter = require('./routes/hompageRouter')
 const topixRouter = require('./routes/topixRouter')
+const postRouter = require('./routes/postRouter')
+const statisticsRouter = require('./routes/statisticsRouter');
 
 const {makejob} = require('./controllers/makejob');
 const { topix } = require('./topix/topix');
@@ -26,8 +28,8 @@ app.use('/api/settings',settingsRouter);
 app.use('/api/ai',aiRouter)
 app.use('/api/profile',profileRouter);
 app.use('/api/topix',topixRouter);
-const date_time = new Date();
-
+app.use('/api/post',postRouter);
+app.use('/api/statistics',statisticsRouter);
 
 //makejob();
 const PORT = process.env.PORT || 8088;

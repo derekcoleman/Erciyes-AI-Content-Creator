@@ -11,8 +11,8 @@ interface SettingsModalProps {
     promptSettingsInfo: PromptSettingsInfo;
     wordSettingsInfo: WordSettingsInfo;
   };
-  onPromptFormSubmit: (data: PromptSettingsInfo) => void;
-  onWordFormSubmit: (data: WordSettingsInfo) => void;
+  onPromptFormSubmit?: (data: PromptSettingsInfo) => void;
+  onWordFormSubmit?: (data: WordSettingsInfo) => void;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -39,7 +39,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
+            bgcolor: "customColors.settingsModalColor",
             borderRadius: 1,
             boxShadow: 24,
             p: 4,

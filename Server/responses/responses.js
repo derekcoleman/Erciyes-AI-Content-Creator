@@ -1,4 +1,14 @@
 const failure = {
+    no_topix_api_key:{
+"code":400,
+        "message":"no_tpix_api_key",
+        "status":false
+    },
+    no_topix_data:{
+        "code":400,
+        "message":"no_tpix_data",
+        "status":false
+    },
     already_exist:{
         "code":400,
         "message":"users_already_exists",

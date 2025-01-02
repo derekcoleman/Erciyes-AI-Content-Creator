@@ -129,7 +129,9 @@ const CustomCard: React.FC<CustomCardProps> = ({
             title="No Image"
           />
         </CardContent>
-        <CardContent sx={{ width: "50%" }}>
+        <CardContent
+          sx={{ width: "50%", display: "flex", flexDirection: "column" }}
+        >
           <Typography
             gutterBottom
             variant="h5"
@@ -139,45 +141,47 @@ const CustomCard: React.FC<CustomCardProps> = ({
             {textLimiter(title, 15)}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {textLimiter(content, 150)}
+            {textLimiter(content, 120)}
           </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ textAlign: "center" }}
-          >
-            {hashtags.map((tag, index) => (
-              <span
-                key={index}
-                style={{ marginRight: "5px", color: "#007bff" }}
-              >
-                #{tag}
-              </span>
-            ))}
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <IconButton size="small">
-              <FavoriteIcon fontSize="small" />
-            </IconButton>
-            <Typography variant="body2">{likes}</Typography>
-            <IconButton size="small" sx={{ marginLeft: 1 }}>
-              <CommentIcon fontSize="small" />
-            </IconButton>
-            <Typography variant="body2">{comments}</Typography>
+          <Box sx={{ marginTop: "auto" }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ textAlign: "center" }}
+            >
+              {hashtags.map((tag, index) => (
+                <span
+                  key={index}
+                  style={{ marginRight: "5px", color: "#007bff" }}
+                >
+                  #{tag}
+                </span>
+              ))}
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <IconButton size="small">
+                <FavoriteIcon fontSize="small" />
+              </IconButton>
+              <Typography variant="body2">{likes}</Typography>
+              <IconButton size="small" sx={{ marginLeft: 1 }}>
+                <CommentIcon fontSize="small" />
+              </IconButton>
+              <Typography variant="body2">{comments}</Typography>
+            </Box>
+            <Typography
+              fontSize="small"
+              color="text.secondary"
+              sx={{ textAlign: "center" }}
+            >
+              {formatDate(date)}
+            </Typography>
           </Box>
-          <Typography
-            fontSize="small"
-            color="text.secondary"
-            sx={{ textAlign: "center" }}
-          >
-            {formatDate(date)}
-          </Typography>
         </CardContent>
       </Card>
       <Box>

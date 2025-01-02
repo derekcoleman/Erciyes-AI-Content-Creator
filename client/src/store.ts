@@ -14,7 +14,7 @@ export const settingsAtom = atom<Settings>({
   language: "",
   selectedInteractions: [],
   mood: "",
-  customTopic: "",
+  sub_topic: "",
   bannedWords: [],
   wantedWords: [],
   disabled: false,

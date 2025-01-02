@@ -5,12 +5,14 @@ declare module "@mui/material/styles" {
     customColors: {
       innerCard: string;
       inncerCardBorder: string;
+      settingsModalColor: string;
     };
   }
   interface PaletteOptions {
     customColors?: {
       innerCard: string;
       inncerCardBorder: string;
+      settingsModalColor: string;
     };
   }
 }

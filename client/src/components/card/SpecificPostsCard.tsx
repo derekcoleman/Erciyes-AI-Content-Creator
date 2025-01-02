@@ -69,6 +69,8 @@ const SpecificPostsCard: React.FC<SpecificPostsCardProps> = ({
         >
           {filteredCards.map((card, index) => (
             <CustomCard
+              isShared={0}
+              id={card.id}
               key={index}
               platform={card.platform}
               postImage={card.postImage}

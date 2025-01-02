@@ -53,6 +53,13 @@ export interface JobsFormData {
   platform: string;
   selectedDays: number[];
   hour: number;
+  topic?: string;
+  sub_topic?: string;
+  mood?: string;
+  like?: number;
+  comment?: number;
+  interaction?: number;
+  frequency?: number;
 }
 
 export interface LoginInfo {
@@ -66,12 +73,21 @@ export interface FetchInfo {
   code: number;
   message: string;
   status: boolean;
+  id?: number;
 }
 
 export interface Job {
+  id?: number;
   platform_id: number;
   hour: number;
   day: number;
+  topic?: string;
+  sub_topic?: string;
+  mood?: string;
+  like?: number;
+  comment?: number;
+  interaction?: number;
+  frequency?: number;
 }
 
 export interface Job_Backend {
@@ -82,10 +98,18 @@ export interface Job_Backend {
 }
 
 export interface JobData {
+  id?: number;
   platform: string;
   hour: string;
   day: string[];
   title: string;
+  topic?: string;
+  sub_topic?: string;
+  mood?: string;
+  like?: number;
+  comment?: number;
+  interaction?: number;
+  frequency?: number;
 }
 
 export interface Post {
@@ -125,8 +149,8 @@ export interface CustomCardProps {
   id: number;
   isShared: number;
 
-  onTitleChange: (id: number, title: string) => void;
-  onContentChange: (id: number, content: string) => void;
+  onTitleChange?: (id: number, title: string) => void;
+  onContentChange?: (id: number, content: string) => void;
 }
 
 export interface SpecificCustomCard extends CustomCardProps {
