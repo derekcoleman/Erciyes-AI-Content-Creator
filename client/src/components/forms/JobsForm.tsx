@@ -8,6 +8,7 @@ import {
   ListItemText,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Typography,
 } from "@mui/material";
 import { daysOfWeek, platforms } from "@/lib/conts";
@@ -31,21 +32,34 @@ interface JobFormProps {
     promptSettingsInfo: PromptSettingsInfo;
     wordSettingsInfo: WordSettingsInfo;
   };
-  onPromptFormSubmit: (data: PromptSettingsInfo) => void;
-  onWordFormSubmit: (data: WordSettingsInfo) => void;
+  onPromptFormSubmit?: (data: PromptSettingsInfo) => void;
+  onWordFormSubmit?: (data: WordSettingsInfo) => void;
   onJobAdded: (newJob: Job) => void;
 }
 
-const JobForm: React.FC<JobFormProps> = ({
-  settingsData,
-  onPromptFormSubmit,
-  onWordFormSubmit,
-  onJobAdded,
-}) => {
+const JobForm: React.FC<JobFormProps> = ({ settingsData, onJobAdded }) => {
   const [platform, setPlatform] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
   const [hour, setHour] = useState(null);
   const [open, setOpen] = useState(false);
+  const [jobSettings, setJobSettings] = useState<{
+    promptSettingsInfo: PromptSettingsInfo;
+    wordSettingsInfo: WordSettingsInfo;
+  }>(settingsData);
+
+  const handlePromptFormSubmit = async (
+    updatedPromptData: PromptSettingsInfo
+  ) => {
+    setJobSettings((prev) => {
+      return { ...prev, promptSettingsInfo: updatedPromptData };
+    });
+  };
+
+  const handleWordFormSubmit = async (updatedWordData: WordSettingsInfo) => {
+    setJobSettings((prev) => {
+      return { ...prev, wordSettingsInfo: updatedWordData };
+    });
+  };
 
   const handleClickModalButton = () => {
     setOpen(true);
@@ -55,7 +69,7 @@ const JobForm: React.FC<JobFormProps> = ({
     setOpen(false);
   };
 
-  const handleDayChange = (event: React.FormEvent) => {
+  const handleDayChange = (event: SelectChangeEvent) => {
     const { value } = event.target;
     setSelectedDays(value);
   };
@@ -64,12 +78,11 @@ const JobForm: React.FC<JobFormProps> = ({
     event.preventDefault();
 
     const levo = transformSettingsToBackend({
-      wantedWords: settingsData.wordSettingsInfo.wantedWords,
-      bannedWords: settingsData.wordSettingsInfo.bannedWords,
-      sub_topic: settingsData.promptSettingsInfo.sub_topic,
-      mood: settingsData.promptSettingsInfo.mood,
-      selectedInteractions:
-        settingsData.promptSettingsInfo.selectedInteractions,
+      wantedWords: jobSettings.wordSettingsInfo.wantedWords,
+      bannedWords: jobSettings.wordSettingsInfo.bannedWords,
+      sub_topic: jobSettings.promptSettingsInfo.sub_topic,
+      mood: jobSettings.promptSettingsInfo.mood,
+      selectedInteractions: jobSettings.promptSettingsInfo.selectedInteractions,
     });
 
     if (isFormValid) {
@@ -108,11 +121,7 @@ const JobForm: React.FC<JobFormProps> = ({
   const isFormValid = platform && selectedDays.length > 0 && hour !== null;
 
   return (
-    <Card
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{ paddingBottom: 6, paddingTop: 2, margin: 2 }}
-    >
+    <Card component="form" sx={{ paddingBottom: 6, paddingTop: 2, margin: 2 }}>
       <Typography variant="h6" gutterBottom sx={{ textAlign: "center" }}>
         Yeni Görev
       </Typography>
@@ -122,9 +131,9 @@ const JobForm: React.FC<JobFormProps> = ({
             onClick={handleClickModalButton}
             open={open}
             onClose={handleCloseModalButton}
-            settingsData={settingsData}
-            onPromptFormSubmit={onPromptFormSubmit}
-            onWordFormSubmit={onWordFormSubmit}
+            settingsData={jobSettings}
+            onPromptFormSubmit={handlePromptFormSubmit}
+            onWordFormSubmit={handleWordFormSubmit}
           />
         </FormControl>
         <FormControl fullWidth margin="normal" sx={{ width: "20%" }}>
@@ -143,7 +152,11 @@ const JobForm: React.FC<JobFormProps> = ({
               Seçim yapın
             </MenuItem>
             {platforms.map((pl) => (
-              <MenuItem key={pl} value={pl}>
+              <MenuItem
+                key={pl}
+                value={pl}
+                disabled={pl === "Instagram" || pl === "LinkedIn"}
+              >
                 {pl}
               </MenuItem>
             ))}
@@ -182,8 +195,9 @@ const JobForm: React.FC<JobFormProps> = ({
           color="primary"
           sx={{ width: "10%", height: "56px", marginTop: "14px" }}
           disabled={!isFormValid}
+          onClick={handleSubmit}
         >
-          Kaydet
+          İş Ekle
         </Button>
       </Box>
     </Card>

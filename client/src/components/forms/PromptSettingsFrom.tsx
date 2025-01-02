@@ -88,6 +88,7 @@ const PromptSettingsFrom: React.FC<PromptSettingsFromProps> = ({
             placeholder="Alt Konu"
             variant="outlined"
             value={customTopic}
+            label="Alt Konu"
           />
         </FormControl>
 

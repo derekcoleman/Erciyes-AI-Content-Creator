@@ -149,8 +149,8 @@ export interface CustomCardProps {
   id: number;
   isShared: number;
 
-  onTitleChange: (id: number, title: string) => void;
-  onContentChange: (id: number, content: string) => void;
+  onTitleChange?: (id: number, title: string) => void;
+  onContentChange?: (id: number, content: string) => void;
 }
 
 export interface SpecificCustomCard extends CustomCardProps {

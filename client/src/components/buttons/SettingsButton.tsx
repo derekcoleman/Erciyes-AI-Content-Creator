@@ -11,8 +11,8 @@ interface SettingsButtonProps {
     promptSettingsInfo: PromptSettingsInfo;
     wordSettingsInfo: WordSettingsInfo;
   };
-  onPromptFormSubmit: (data: PromptSettingsInfo) => void;
-  onWordFormSubmit: (data: WordSettingsInfo) => void;
+  onPromptFormSubmit?: (data: PromptSettingsInfo) => void;
+  onWordFormSubmit?: (data: WordSettingsInfo) => void;
 }
 
 const SettingsButton: React.FC<SettingsButtonProps> = ({

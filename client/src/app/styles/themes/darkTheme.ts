@@ -13,6 +13,7 @@ const darkTheme = createTheme({
     customColors: {
       innerCard: "rgba(0, 0, 80, 0.6)",
       inncerCardBorder: "#72CCFF",
+      settingsModalColor: "#333",
     },
   },
 });
