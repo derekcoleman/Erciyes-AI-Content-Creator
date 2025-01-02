@@ -49,6 +49,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             "&:focus-visible": {
               outline: "none",
             },
+            overflow: "hidden",
           }}
         >
           <PromptSettingsFrom

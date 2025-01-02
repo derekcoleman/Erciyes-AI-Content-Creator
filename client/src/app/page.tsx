@@ -208,86 +208,76 @@ export default function HomePage() {
   };
 
   return (
-    <Box
-      sx={{
-        background:
-          "linear-gradient(134.49deg, rgba(9, 58, 237, 0.18) -0.83%, rgba(1, 215, 235, 0.15) 54.23%) ",
-        backdropFilter: "blur(80px)",
-        minHeight: "100vh",
-      }}
-    >
-      <MiniDrawer />
-      <Box sx={{ padding: 4 }}>
-        <Box>
-          <SettingsButton
-            onClick={handleClickModalButton}
-            open={open}
-            onClose={handleCloseModalButton}
-            settingsData={{
-              promptSettingsInfo: {
-                sub_topic: settingsData.sub_topic || "",
-                mood: settingsData.mood || "",
-                selectedInteractions: settingsData.selectedInteractions || [],
-              },
-              wordSettingsInfo: {
-                bannedWords: settingsData.bannedWords || [],
-                wantedWords: settingsData.wantedWords || [],
-              },
-            }}
-            onPromptFormSubmit={handlePromptFormSubmit}
-            onWordFormSubmit={handleWordFormSubmit}
-          />
+    <MiniDrawer>
+      <Box>
+        <SettingsButton
+          onClick={handleClickModalButton}
+          open={open}
+          onClose={handleCloseModalButton}
+          settingsData={{
+            promptSettingsInfo: {
+              sub_topic: settingsData.sub_topic || "",
+              mood: settingsData.mood || "",
+              selectedInteractions: settingsData.selectedInteractions || [],
+            },
+            wordSettingsInfo: {
+              bannedWords: settingsData.bannedWords || [],
+              wantedWords: settingsData.wantedWords || [],
+            },
+          }}
+          onPromptFormSubmit={handlePromptFormSubmit}
+          onWordFormSubmit={handleWordFormSubmit}
+        />
 
-          <Button onClick={handleClick} variant="contained">
-            Anında OLUŞTUR
-          </Button>
-        </Box>
-
-        {loading ? (
-          <HomeSkeleton />
-        ) : error ? (
-          <Alert severity="error">{error}</Alert>
-        ) : postDatas && postDatas.posts.length !== 0 ? (
-          <Grid container spacing={2} justifyContent="center">
-            <Grid item xs={12} md={5} mb={2}>
-              {newPostLoading && (
-                <CircularProgress
-                  sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                  }}
-                />
-              )}
-            </Grid>
-
-            <Grid container spacing={2}>
-              {postDatas.posts.map((post) => (
-                <Grid item xs={6} sm={4} md={4} key={post.id}>
-                  <CustomCard
-                    id={post.id}
-                    platform="Topix"
-                    postImage="/NoImgLightNew.jpg"
-                    title={post.title}
-                    content={post.body}
-                    hashtags={["tag3", "tag4"]}
-                    likes={20}
-                    comments={8}
-                    date={post.created_at}
-                    isShared={post.status || 0}
-                    onTitleChange={handleTitleChange}
-                    onContentChange={handleBodyChange}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          </Grid>
-        ) : (
-          <Alert sx={{ marginTop: 5 }} severity="info">
-            No posts available.
-          </Alert>
-        )}
+        <Button onClick={handleClick} variant="contained">
+          Anında OLUŞTUR
+        </Button>
       </Box>
-    </Box>
+
+      {loading ? (
+        <HomeSkeleton />
+      ) : error ? (
+        <Alert severity="error">{error}</Alert>
+      ) : postDatas && postDatas.posts.length !== 0 ? (
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item xs={12} md={5} mb={2}>
+            {newPostLoading && (
+              <CircularProgress
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                }}
+              />
+            )}
+          </Grid>
+
+          <Grid container spacing={2}>
+            {postDatas.posts.map((post) => (
+              <Grid item xs={6} sm={4} md={4} key={post.id}>
+                <CustomCard
+                  id={post.id}
+                  platform="Topix"
+                  postImage="/NoImgLightNew.jpg"
+                  title={post.title}
+                  content={post.body}
+                  hashtags={["tag3", "tag4"]}
+                  likes={20}
+                  comments={8}
+                  date={post.created_at}
+                  isShared={post.status || 0}
+                  onTitleChange={handleTitleChange}
+                  onContentChange={handleBodyChange}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+      ) : (
+        <Alert sx={{ marginTop: 5 }} severity="info">
+          No posts available.
+        </Alert>
+      )}
+    </MiniDrawer>
   );
 }
