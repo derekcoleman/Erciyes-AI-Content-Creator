@@ -141,7 +141,7 @@ const CustomCard: React.FC<CustomCardProps> = ({
             {textLimiter(title, 15)}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {textLimiter(content, 120)}
+            {textLimiter(content, isShared === 0 ? 200 : 120)}
           </Typography>
           <Box sx={{ marginTop: "auto" }}>
             <Typography
@@ -158,22 +158,25 @@ const CustomCard: React.FC<CustomCardProps> = ({
                 </span>
               ))}
             </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <IconButton size="small">
-                <FavoriteIcon fontSize="small" />
-              </IconButton>
-              <Typography variant="body2">{likes}</Typography>
-              <IconButton size="small" sx={{ marginLeft: 1 }}>
-                <CommentIcon fontSize="small" />
-              </IconButton>
-              <Typography variant="body2">{comments}</Typography>
-            </Box>
+            {shareStatus === 1 && (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <IconButton size="small">
+                  <FavoriteIcon fontSize="small" />
+                </IconButton>
+                <Typography variant="body2">{likes}</Typography>
+                <IconButton size="small" sx={{ marginLeft: 1 }}>
+                  <CommentIcon fontSize="small" />
+                </IconButton>
+                <Typography variant="body2">{comments}</Typography>
+              </Box>
+            )}
+
             <Typography
               fontSize="small"
               color="text.secondary"
