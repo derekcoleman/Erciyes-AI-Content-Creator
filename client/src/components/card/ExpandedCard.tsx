@@ -159,7 +159,11 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
           </Box>
 
           <CardMedia
-            sx={{ height: 300, objectFit: "contain" }}
+            sx={{
+              height: 300,
+              width: 500,
+              alignSelf: "center",
+            }}
             image={postImage}
             title="Expanded Post Image"
           />
@@ -180,7 +184,7 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
           )}
 
           <Box sx={{ marginTop: "auto" }}>
-            <Typography variant="body2" sx={{ marginTop: 2 }}>
+            <Typography variant="body2" sx={{ marginTop: 2, marginLeft: 1 }}>
               {hashtags.map((tag, index) => (
                 <span
                   key={index}
@@ -190,28 +194,34 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
                 </span>
               ))}
             </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginTop: 2,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <IconButton size="small">
-                  <FavoriteIcon fontSize="small" />
-                </IconButton>
-                <Typography variant="body2">{likes}</Typography>
-                <IconButton size="small" sx={{ marginLeft: 1 }}>
-                  <CommentIcon fontSize="small" />
-                </IconButton>
-                <Typography variant="body2">{comments}</Typography>
+            {shareStatus && (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginTop: 1,
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <IconButton size="small">
+                    <FavoriteIcon fontSize="small" />
+                  </IconButton>
+                  <Typography variant="body2">{likes}</Typography>
+                  <IconButton size="small" sx={{ marginLeft: 1 }}>
+                    <CommentIcon fontSize="small" />
+                  </IconButton>
+                  <Typography variant="body2">{comments}</Typography>
+                </Box>
               </Box>
-              <Typography fontSize="small" color="text.secondary">
-                {formatDate(date)}
-              </Typography>
-            </Box>
+            )}
+            <Typography
+              fontSize="small"
+              color="text.secondary"
+              sx={{ textAlign: "end" }}
+            >
+              {formatDate(date)}
+            </Typography>
           </Box>
         </Box>
       </Fade>
