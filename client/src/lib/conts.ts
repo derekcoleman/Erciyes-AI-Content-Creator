@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
   PROFILE: `${API_BASE_URL}/profile`,
   TOPİX: `${API_BASE_URL}/topix`,
   STATISTICS: `${API_BASE_URL}/statistics`,
+  DELETEJOB: `${API_BASE_URL}/settings/delete/job`,
 };
 
 export const daysOfWeek = [

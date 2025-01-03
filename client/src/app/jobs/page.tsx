@@ -53,7 +53,6 @@ export default function JobPage() {
 
   const handleJobAdded = (newJob: Job) => {
     const jData = jobToJobData([newJob]);
-    console.log("New job:", jData[0]);
     setJobs((prevJobs) => [...prevJobs, jData[0]]);
   };
 
@@ -64,11 +63,11 @@ export default function JobPage() {
 
   const handleDeleteJob = async (jobId: number) => {
     try {
-      throw new Error("Not implemented yet");
       await deleteJob(jobId);
       setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
     } catch (error) {
       console.error("Error deleting job:", error);
+      setError((error as Error).message);
     }
   };
 
