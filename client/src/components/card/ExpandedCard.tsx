@@ -105,7 +105,7 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
+            bgcolor: "customColors.settingsModalColor",
             borderRadius: 1,
             boxShadow: 24,
             p: 4,
@@ -128,7 +128,7 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
                 variant="outlined"
                 value={editableTitle}
                 onChange={handleTitleChange}
-                sx={{ mb: 2 }}
+                sx={{ mb: 2, bgcolor: "background.paper" }}
               />
             )}
 
@@ -158,15 +158,22 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
             </Box>
           </Box>
 
-          <CardMedia
+          <Box
             sx={{
-              height: 300,
-              width: 500,
-              alignSelf: "center",
+              display: "flex",
+              justifyContent: "center",
+              bgcolor: "#f7f9fe",
             }}
-            image={postImage}
-            title="Expanded Post Image"
-          />
+          >
+            <CardMedia
+              sx={{
+                height: 300,
+                width: 500,
+              }}
+              image={postImage}
+              title="Expanded Post Image"
+            />
+          </Box>
           {isShared ? (
             <Typography variant="body1" sx={{ marginTop: 2 }}>
               {content}
@@ -179,7 +186,7 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
               onChange={handleContentChange}
               multiline
               rows={6}
-              sx={{ mt: 2 }}
+              sx={{ mt: 2, bgcolor: "background.paper" }}
             />
           )}
 
