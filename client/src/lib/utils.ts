@@ -579,12 +579,13 @@ const deleteJob = async (id: number): Promise<void> => {
   }
 
   try {
-    const response = await fetch(`${API_ENDPOINTS.JOBS}/${id}`, {
+    const response = await fetch(`${API_ENDPOINTS.DELETEJOB}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         token: token,
       },
+      body: JSON.stringify({ job_id: id }),
     });
 
     if (!response.ok) {
