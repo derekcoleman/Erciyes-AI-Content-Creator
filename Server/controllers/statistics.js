@@ -18,31 +18,106 @@ const statistics = async (req, res) => {
         `${process.env.ANON_KEY}`
       );
       const { data, error } = await supabase
-        .from("profile_view")
+        .from("profile_view_interaction")
         .select()
         .eq("id", user[0].topix_api_key);
+      //console.log(data[0].posts);
+
       const allDatas = [];
       if (data == null) {
         resolve(failure.no_topix_data);
         return;
       }
+      const bedi = await supabase
+        .from("user_ibo")
+        .select()
+        .eq("post_owner_id", user[0].topix_api_key);
+      const commentsSupabase = await supabase
+        .from("comment_levo")
+        .select()
+        .eq("post_owner", user[0].topix_api_key);
+      //  const now = new Date();
+      //  const oneDayAgo = new Date();
+      const newlist = [];
+      const commentList = [];
+      const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      };
+
+      // Bugünün tarihini al
+      const now = new Date();
+
+      for (let i = 0; i < 15; i++) {
+        let currentDate = new Date(now);
+
+        currentDate.setDate(now.getDate() - i);
+
+        const filteredData = bedi.data.map((item) => {
+          const createdAt = formatDate(item.created_at);
+          return createdAt === formatDate(currentDate.toISOString())
+            ? createdAt
+            : undefined;
+        });
+        const filteredCommentData = commentsSupabase.data.map((item) => {
+          const createdAt = formatDate(item.created_at);
+          return createdAt === formatDate(currentDate.toISOString())
+            ? createdAt
+            : undefined;
+        });
+        commentList.push({
+          [formatDate(currentDate.toISOString())]: filteredCommentData.filter(
+            (item) => item !== undefined
+          ).length,
+        });
+        newlist.push({
+          [formatDate(currentDate.toISOString())]: filteredData.filter(
+            (item) => item !== undefined
+          ).length,
+        });
+      }
+
       for (i = 0; i < data[0]?.posts.length; i++) {
         allDatas.push({
           title: data[0]?.posts[i].title,
+          body: data[0]?.posts[i].title,
           likeCount: data[0]?.posts[i].reputation,
           commentCount: data[0]?.posts[i].comments,
-          viewCount: data[0]?.posts[i].reputation,
+          viewCount: data[0]?.posts[i].interaction,
         });
       }
-      //TOdo: language settingsden çekilecek
+      const total = [];
+      let totalLikeCount = 0;
+      let totalCommentCount = 0;
+      let totalViewCount = 0;
+      let totalPostCount = 0;
+      for (i = 0; i < data[0]?.posts.length; i++) {
+        totalLikeCount += data[0]?.posts[i].reputation;
+        totalCommentCount += data[0]?.posts[i].comments;
+        totalViewCount += data[0]?.posts[i].interaction;
+        totalPostCount++;
+      }
+      total.push({
+        totalLikeCount: totalLikeCount,
+        totalCommentCount: totalCommentCount,
+        totalViewCount: totalViewCount,
+        totalPostCount: totalPostCount,
+      });
+
       const analysis_result = analysis(allDatas, "tr");
-      console.log(allDatas);
+
       const obje = {
         topix: allDatas,
         analysis: analysis_result,
       };
       const resolve_data = {
+        totalcommentcountbydaylist: commentList,
+        totallikecountbydaylist: newlist,
         data: analysis_result,
+        total: total,
         message: successfuly.avatar_added.message,
         code: successfuly.avatar_added.code,
         status: successfuly.avatar_added.status,
