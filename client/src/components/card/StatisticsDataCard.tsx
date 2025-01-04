@@ -28,7 +28,7 @@ const StatisticsDataCard: React.FC<StatisticsDataCardProps> = ({
   date,
   postImage,
   content,
-  hashtags,
+  hashtags = [],
 }) => {
   const theme = useTheme();
   return (
@@ -117,7 +117,7 @@ const StatisticsDataCard: React.FC<StatisticsDataCardProps> = ({
             color="text.secondary"
             sx={{ textAlign: "center" }}
           >
-            {["tag1", "tag2"].map((tag, index) => (
+            {hashtags.map((tag, index) => (
               <span
                 key={index}
                 style={{ marginRight: "5px", color: "#007bff" }}

@@ -119,7 +119,7 @@ export default function SettingsPage() {
     <MiniDrawer>
       {isNoSettings && (
         <Alert sx={{ marginTop: 5 }} severity="warning">
-          You must set your settings before you can use the app.
+          Uygulamayı kullanmadan önce ayarlarınızı yapmalısınız.
         </Alert>
       )}
       {loading ? (

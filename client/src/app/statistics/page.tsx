@@ -92,20 +92,18 @@ export default function StatisticPage() {
       {
         color: "#02B2AF",
         label: "Comments",
-        data: data.totalcommentcountbydaylist.map(
-          (item) => Object.values(item)[0]
-        ),
+        data: data.totalcommentcountbydaylist
+          .map((item) => Object.values(item)[0])
+          .reverse(),
       },
       {
         color: "#72CCFF",
         label: "Likes",
-        data: data.totallikecountbydaylist.map(
-          (item) => Object.values(item)[0]
-        ),
+        data: data.totallikecountbydaylist
+          .map((item) => Object.values(item)[0])
+          .reverse(),
       },
     ];
-
-    console.log("performance", performance);
 
     setPerformanceData(performance);
   };
@@ -113,17 +111,19 @@ export default function StatisticPage() {
   const getAvg = (
     data: TotalData
   ): { color: string; label: string; data: number[] } => {
+    const avgEngagement =
+      (data.totalLikeCount + data.totalCommentCount) / data.totalPostCount;
+    const avgComment = data.totalCommentCount / data.totalPostCount;
+    const avgLike = data.totalLikeCount / data.totalPostCount;
+    const avgView = data.totalViewCount / data.totalPostCount;
+
     const avgData = [
-      data.totalLikeCount + data.totalCommentCount,
-      data.totalCommentCount / data.totalPostCount,
-      data.totalLikeCount / data.totalPostCount,
-      data.totalViewCount / data.totalPostCount,
-      data.totalCommentCount /
-        data.totalPostCount /
-        (data.totalLikeCount + data.totalCommentCount),
-      data.totalLikeCount /
-        data.totalPostCount /
-        (data.totalLikeCount + data.totalCommentCount),
+      avgEngagement,
+      avgComment,
+      avgLike,
+      avgView,
+      avgComment / avgView || 0,
+      avgLike / avgView || 0,
     ];
 
     return {
@@ -219,7 +219,11 @@ export default function StatisticPage() {
   return (
     <MiniDrawer>
       {error ? (
-        <Alert severity="error">{error}</Alert>
+        <Alert severity={error === "no_tpix_api_key" ? "warning" : "error"}>
+          {error === "no_tpix_api_key"
+            ? "Profil Bilgilerinden API Anahtarı girilmeli"
+            : error}
+        </Alert>
       ) : (
         <>
           <PerformanceSumCard performacesumDatas={performanceSumData} />

@@ -117,7 +117,7 @@ export interface Post {
   code: number;
   message: string;
   status: boolean;
-  post: { user_id: number; title: string; body: string };
+  post: { user_id: number; title: string; body: string; tags?: string[] };
   post_id: number;
   created_at?: string;
 }
@@ -133,6 +133,7 @@ export interface Post_Backend {
     photos?: object;
     status?: number;
     created_at: string;
+    tags?: string[];
   }[];
 }
 

@@ -187,11 +187,13 @@ const ai = async (req, res) => {
       console.log(returned_data);
       let titles = [];
       console.log("ddddddddddddddddddddddddddddddd");
-      console.log(returned_data.topix.length);
+      console.log(returned_data.topix?.length);
 
       let length =
-        returned_data.topix.length - 1 < 5 ? returned_data.topix.length - 1 : 5;
-      if (returned_data.topix.length - 1 > 0) {
+        (returned_data.topix?.length ?? 0) - 1 < 5
+          ? (returned_data.topix?.length ?? 0) - 1
+          : 5;
+      if ((returned_data.topix?.length ?? 0) - 1 > 0) {
         for (let index = 0; index < length; index++) {
           titles[index] = returned_data.topix[index].title;
         }
