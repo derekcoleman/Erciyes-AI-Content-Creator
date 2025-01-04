@@ -84,9 +84,9 @@ const statistics = async (req, res) => {
         allDatas.push({
           title: data[0]?.posts[i].title,
           body: data[0]?.posts[i].title,
-          likeCount: data[0]?.posts[i].reputation,
-          commentCount: data[0]?.posts[i].comments,
-          viewCount: data[0]?.posts[i].interaction,
+          likeCounts: data[0]?.posts[i].reputation,
+          commentCounts: data[0]?.posts[i].comments,
+          viewCounts: data[0]?.posts[i].interaction,
         });
       }
       const total = [];

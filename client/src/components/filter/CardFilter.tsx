@@ -28,7 +28,7 @@ const CardFilter: React.FC<CardFilterProps> = ({
         onChange={handleChange}
       >
         {filters.map((data) => (
-          <MenuItem key={data} value={data}>
+          <MenuItem key={data} value={data} disabled={data === "Followers"}>
             {data}
           </MenuItem>
         ))}

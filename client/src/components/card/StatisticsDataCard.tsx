@@ -71,10 +71,7 @@ const StatisticsDataCard: React.FC<StatisticsDataCardProps> = ({
           {title}
         </Typography>
         <Typography variant="body1" component="div">
-          {textLimiter(
-            "dsasa sad as dsad asd asd assa dsa asd d sad sad sad asdasd sasa",
-            300
-          )}
+          {textLimiter(content, 300)}
         </Typography>
         <Box
           sx={{
