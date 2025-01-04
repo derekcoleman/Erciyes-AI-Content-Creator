@@ -1,13 +1,14 @@
 "use client";
 import HomeSkeleton from "@/components/skeleton/HomeSkeleton";
 import MiniDrawer from "../components/drawer/MiniDrawer";
-import { Alert, Box, Button, Grid } from "@mui/material";
+import { Alert, Box, Button, Grid, Tooltip } from "@mui/material";
 import CustomCard from "@/components/card/CustomCard";
 import { useEffect, useState } from "react";
 import {
   addSettings,
   getHome,
   getPostWithAI,
+  getProfile,
   getSettings,
   transformSettingsFromBackend,
   transformSettingsToBackend,
@@ -32,8 +33,23 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [settingsData, setSettingsData] = useAtom(settingsAtom);
+  const [loadProfile, setLoadProfile] = useState<boolean>(false);
 
   const router = useRouter();
+
+  const fetchProfile = async () => {
+    try {
+      const fetchedProfile = await getProfile();
+      if (fetchedProfile.status) {
+        if (fetchedProfile.topix_api_key) {
+          setLoadProfile(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      setError((error as Error).message);
+    }
+  };
 
   const fetchSettings = async () => {
     try {
@@ -54,6 +70,7 @@ export default function HomePage() {
   useEffect(() => {
     fetchHome();
     fetchSettings();
+    fetchProfile();
   }, []);
 
   const updateSettingsData = (newSettings: Settings) => {
@@ -229,9 +246,22 @@ export default function HomePage() {
           onWordFormSubmit={handleWordFormSubmit}
         />
 
-        <Button onClick={handleClick} variant="contained">
-          Anında OLUŞTUR
-        </Button>
+        <Tooltip
+          title={
+            !loadProfile ? "Profil Bilgilerinden API Anahtarı girilmeli" : ""
+          }
+          arrow
+        >
+          <span>
+            <Button
+              disabled={!loadProfile}
+              onClick={handleClick}
+              variant="contained"
+            >
+              Anında OLUŞTUR
+            </Button>
+          </span>
+        </Tooltip>
       </Box>
 
       {loading ? (
@@ -261,7 +291,7 @@ export default function HomePage() {
                   postImage="/NoImgLightNew.jpg"
                   title={post.title}
                   content={post.body}
-                  hashtags={["tag3", "tag4"]}
+                  hashtags={post.tags || []}
                   likes={20}
                   comments={8}
                   date={post.created_at}

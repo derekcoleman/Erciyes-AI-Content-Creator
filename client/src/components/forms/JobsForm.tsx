@@ -9,6 +9,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { daysOfWeek, platforms } from "@/lib/conts";
@@ -35,9 +36,14 @@ interface JobFormProps {
   onPromptFormSubmit?: (data: PromptSettingsInfo) => void;
   onWordFormSubmit?: (data: WordSettingsInfo) => void;
   onJobAdded: (newJob: Job) => void;
+  isDisabled?: boolean;
 }
 
-const JobForm: React.FC<JobFormProps> = ({ settingsData, onJobAdded }) => {
+const JobForm: React.FC<JobFormProps> = ({
+  settingsData,
+  onJobAdded,
+  isDisabled,
+}) => {
   const [platform, setPlatform] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
   const [hour, setHour] = useState(null);
@@ -189,16 +195,25 @@ const JobForm: React.FC<JobFormProps> = ({ settingsData, onJobAdded }) => {
           </Select>
         </FormControl>
         <CustomTimePicker value={hour} onChange={setHour} />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          sx={{ width: "10%", height: "56px", marginTop: "14px" }}
-          disabled={!isFormValid}
-          onClick={handleSubmit}
+        <Tooltip
+          title={
+            !isDisabled ? "Profil Bilgilerinden API Anahtarı girilmeli" : ""
+          }
+          arrow
         >
-          İş Ekle
-        </Button>
+          <span style={{ width: "10%" }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ width: "100%", height: "56px", marginTop: "14px" }}
+              disabled={!isFormValid || !isDisabled}
+              onClick={handleSubmit}
+            >
+              İş Ekle
+            </Button>
+          </span>
+        </Tooltip>
       </Box>
     </Card>
   );

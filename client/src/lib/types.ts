@@ -12,6 +12,7 @@ enum specificHeaders {
   "Interaction",
   "Comments",
   "Likes",
+  "Views",
   "Comments/Int.",
   "Likes/Int.",
 }
@@ -116,7 +117,7 @@ export interface Post {
   code: number;
   message: string;
   status: boolean;
-  post: { user_id: number; title: string; body: string };
+  post: { user_id: number; title: string; body: string; tags?: string[] };
   post_id: number;
   created_at?: string;
 }
@@ -132,6 +133,7 @@ export interface Post_Backend {
     photos?: object;
     status?: number;
     created_at: string;
+    tags?: string[];
   }[];
 }
 
@@ -240,24 +242,38 @@ export interface ProfileInfoData_Backend {
   linkedin_api_key: string;
   topix_api_key: string;
 }
+
+export interface DayStatistics {
+  [date: string]: number;
+}
+
 export interface SortedWordCounts {
   [key: string]: number;
 }
 
 export interface PostStatistics {
   title: string;
-  likeCount: number;
-  commentCount: number;
-  viewCount: number;
+  body: string;
+  likeCounts: number;
+  commentCounts: number;
+  viewCounts: number;
   engagementLike: number;
   engagementComment: number;
-  totalEngagement: number | null;
-  content?: string;
+  totalEngagement: number;
   date?: string;
   hashtags?: string[];
 }
 
+export interface TotalData {
+  totalLikeCount: number;
+  totalCommentCount: number;
+  totalViewCount: number;
+  totalPostCount: number;
+}
+
 export interface StatisticsData {
+  totalcommentcountbydaylist: DayStatistics[];
+  totallikecountbydaylist: DayStatistics[];
   data: {
     sortedWordCounts: SortedWordCounts;
     mostLikedPost: PostStatistics;
@@ -267,6 +283,7 @@ export interface StatisticsData {
     highestCommentEngagementPost: PostStatistics;
     mostEngagedPost: PostStatistics;
   };
+  total: TotalData[];
   message: string;
   code: number;
   status: boolean;

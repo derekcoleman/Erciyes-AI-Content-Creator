@@ -5,7 +5,15 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
 import AppleIcon from "@mui/icons-material/Apple";
 import LogoDevIcon from "@mui/icons-material/LogoDev";
-import { Box, Card, Divider, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CircularProgress,
+  Divider,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Field, LoginInfo, FetchInfo } from "@/lib/types";
@@ -20,6 +28,7 @@ import { lightTheme } from "../styles/theme";
 
 function Page() {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -49,6 +58,7 @@ function Page() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     setIsEmailValid(true);
     const validationRes = emailMatcher(email);
@@ -60,15 +70,15 @@ function Page() {
         if (loginInfo.status) {
           setUser(loginInfo);
           setToken("userInfo.token");
-          console.log(loginInfo);
           document.cookie = `token=${loginInfo.token}`;
-          alert("Login successful!");
           router.push("/");
         } else {
-          alert("Login failed: " + loginInfo.message);
+          console.error("Login failed: " + loginInfo.message);
         }
       } catch (error) {
         console.error("Login failed:", error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -87,12 +97,26 @@ function Page() {
             password,
           });
           if (FetchInfo.code) {
-            alert("register successful!");
+            const firstLoginInfo: LoginInfo = await loginUser({
+              username,
+              password,
+            });
+            if (firstLoginInfo.status) {
+              setUser(firstLoginInfo);
+              setToken("userInfo.token");
+              console.log(firstLoginInfo);
+              document.cookie = `token=${firstLoginInfo.token}`;
+              router.push("/");
+            } else {
+              console.error("register failed: " + FetchInfo.message);
+            }
           } else {
-            alert("register failed: " + FetchInfo.message);
+            console.error("register failed: " + FetchInfo.message);
           }
         } catch (error) {
           console.error("register failed: ", error);
+        } finally {
+          setLoading(false);
         }
       }
     }
@@ -105,6 +129,18 @@ function Page() {
         username !== "" &&
         password !== "" &&
         confirmPassword !== "";
+
+  if (loading) {
+    return (
+      <CircularProgress
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+        }}
+      />
+    );
+  }
 
   return (
     <ThemeProvider theme={lightTheme}>

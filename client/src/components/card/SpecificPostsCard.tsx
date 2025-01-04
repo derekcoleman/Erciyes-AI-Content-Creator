@@ -45,6 +45,8 @@ const SpecificPostsCard: React.FC<SpecificPostsCardProps> = ({
         return [data.mostCommentedPost];
       case specificHeaders.Interaction:
         return [data.mostEngagedPost];
+      case specificHeaders.Views:
+        return [data.mostViewedPost];
       case specificHeaders["Comments/Int."]:
         return [data.highestCommentEngagementPost];
       case specificHeaders["Likes/Int."]:
@@ -87,10 +89,10 @@ const SpecificPostsCard: React.FC<SpecificPostsCardProps> = ({
               <StatisticsDataCard
                 postImage={"/NoImgLightNew.jpg"}
                 title={card.title}
-                content={card.content}
+                content={card.body}
                 hashtags={card.hashtags}
-                likes={card.likeCount}
-                comments={card.commentCount}
+                likes={card.likeCounts}
+                comments={card.commentCounts}
                 date={card.date}
               />
             </Box>

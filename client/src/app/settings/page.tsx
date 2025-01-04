@@ -33,7 +33,7 @@ export default function SettingsPage() {
         const transformedSettings =
           transformSettingsFromBackend(fetchedSettings);
         setSettingsData(transformedSettings);
-        setIsNoSettings(transformedSettings.topic === undefined);
+        setIsNoSettings(transformedSettings.topic === undefined ? true : false);
       }
     } catch (error) {
       console.error("Error fetching settings:", error);
@@ -119,7 +119,7 @@ export default function SettingsPage() {
     <MiniDrawer>
       {isNoSettings && (
         <Alert sx={{ marginTop: 5 }} severity="warning">
-          You must set your settings before you can use the app.
+          Uygulamayı kullanmadan önce ayarlarınızı yapmalısınız.
         </Alert>
       )}
       {loading ? (

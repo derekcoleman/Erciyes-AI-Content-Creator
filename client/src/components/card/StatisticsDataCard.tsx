@@ -28,7 +28,7 @@ const StatisticsDataCard: React.FC<StatisticsDataCardProps> = ({
   date,
   postImage,
   content,
-  hashtags,
+  hashtags = [],
 }) => {
   const theme = useTheme();
   return (
@@ -71,10 +71,7 @@ const StatisticsDataCard: React.FC<StatisticsDataCardProps> = ({
           {title}
         </Typography>
         <Typography variant="body1" component="div">
-          {textLimiter(
-            "dsasa sad as dsad asd asd assa dsa asd d sad sad sad asdasd sasa",
-            300
-          )}
+          {textLimiter(content, 300)}
         </Typography>
         <Box
           sx={{
@@ -120,7 +117,7 @@ const StatisticsDataCard: React.FC<StatisticsDataCardProps> = ({
             color="text.secondary"
             sx={{ textAlign: "center" }}
           >
-            {["tag1", "tag2"].map((tag, index) => (
+            {hashtags.map((tag, index) => (
               <span
                 key={index}
                 style={{ marginRight: "5px", color: "#007bff" }}

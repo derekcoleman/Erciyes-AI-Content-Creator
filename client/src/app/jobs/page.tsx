@@ -9,19 +9,38 @@ import { useEffect, useState } from "react";
 import {
   deleteJob,
   getJobs,
+  getProfile,
   getSettings,
   jobToJobData,
   transformSettingsFromBackend,
 } from "@/lib/utils";
 import { settingsAtom } from "@/store";
 import { useAtom } from "jotai";
+import { useRouter } from "next/navigation";
 
 export default function JobPage() {
+  const router = useRouter();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingSettings, setLoadingSettings] = useState<boolean>(true);
   const [settingsData, setSettingsData] = useAtom(settingsAtom);
   const [jobs, setJobs] = useState<JobData[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loadProfile, setLoadProfile] = useState<boolean>(false);
+
+  const fetchProfile = async () => {
+    try {
+      const fetchedProfile = await getProfile();
+      if (fetchedProfile.status) {
+        if (fetchedProfile.topix_api_key) {
+          setLoadProfile(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      setError((error as Error).message);
+    }
+  };
 
   const fetchSettings = async () => {
     try {
@@ -30,6 +49,9 @@ export default function JobPage() {
         const transformedSettings =
           transformSettingsFromBackend(fetchedSettings);
         setSettingsData(transformedSettings);
+        if (!fetchedSettings.topic || !fetchedSettings.language) {
+          router.push("/settings");
+        }
       }
     } catch (error) {
       console.error("Error fetching settings:", error);
@@ -57,6 +79,7 @@ export default function JobPage() {
   };
 
   useEffect(() => {
+    fetchProfile();
     fetchSettings();
     fetchJobs();
   }, []);
