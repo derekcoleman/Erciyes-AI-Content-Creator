@@ -13,12 +13,15 @@ import {
   Paper,
   styled,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import { getProfile, textLimiter, updateProfile } from "@/lib/utils";
 import { FetchInfo } from "@/lib/types";
 
 const ProfilePage = () => {
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [loadingSave, setLoadingSave] = useState<boolean>(false);
   const [profileData, setProfileData] = useState({
     username: "",
     email: "",
@@ -48,9 +51,12 @@ const ProfilePage = () => {
     } catch (error) {
       console.error("Error fetching posts:", error);
       setError((error as Error).message);
+    } finally {
+      setLoading(false);
     }
   };
   const fetchUpdateProfile = async () => {
+    setLoadingSave(true);
     try {
       const fetchedProfileInfo: FetchInfo = await updateProfile({
         topix_api_key: profileData.topixAPI,
@@ -60,6 +66,8 @@ const ProfilePage = () => {
     } catch (error) {
       console.error("Error fetching posts:", error);
       setError((error as Error).message);
+    } finally {
+      setLoadingSave(false);
     }
   };
 
@@ -72,7 +80,6 @@ const ProfilePage = () => {
   };
 
   const handleSave = () => {
-    alert("Bilgiler kaydedildi");
     fetchUpdateProfile();
   };
 
@@ -80,10 +87,21 @@ const ProfilePage = () => {
     fetchProfile();
   }, []);
 
-  //Test gerekli
-  // if (error) {
-  //   return <Alert severity="error">{error}</Alert>;
-  // }
+  if (error) {
+    return <Alert severity="error">{error}</Alert>;
+  }
+
+  if (loading) {
+    return (
+      <CircularProgress
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+        }}
+      />
+    );
+  }
 
   return (
     <Box sx={{ width: "80%", margin: "0 auto", paddingTop: 4 }}>
@@ -152,7 +170,8 @@ const ProfilePage = () => {
           sx={{ marginBottom: 2 }}
         />
         <TextField
-          label="Linkedin API Anahtarı"
+          disabled
+          label="Linkedin Yakında Geliyor"
           variant="outlined"
           fullWidth
           value={profileData.linkedinAPI}
@@ -161,7 +180,8 @@ const ProfilePage = () => {
           sx={{ marginBottom: 2 }}
         />
         <TextField
-          label="Instagram API Anahtarı"
+          disabled
+          label="Instagram Yakında Geliyor"
           variant="outlined"
           fullWidth
           value={profileData.instagramAPI}

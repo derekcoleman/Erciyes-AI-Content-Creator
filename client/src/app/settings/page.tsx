@@ -33,7 +33,7 @@ export default function SettingsPage() {
         const transformedSettings =
           transformSettingsFromBackend(fetchedSettings);
         setSettingsData(transformedSettings);
-        setIsNoSettings(transformedSettings.topic === undefined);
+        setIsNoSettings(transformedSettings.topic === undefined ? true : false);
       }
     } catch (error) {
       console.error("Error fetching settings:", error);
