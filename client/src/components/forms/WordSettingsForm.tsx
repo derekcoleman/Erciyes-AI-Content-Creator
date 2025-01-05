@@ -69,14 +69,14 @@ const WordSettingsForm: React.FC<WordSettingsFormProps> = ({
       >
         <CustomChipBox
           onChipsChange={handleWantedChipsChange}
-          title="Yasaklı Kelime"
+          title="İstenilen Kelime"
           isWanted={true}
           chipData={wantedChips}
         />
         <Divider orientation="vertical" variant="middle" flexItem />
         <CustomChipBox
           onChipsChange={handleBannedChipsChange}
-          title="İstenilen Kelime"
+          title="Yasaklı Kelime"
           isWanted={false}
           chipData={bannedChips}
         />

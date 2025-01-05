@@ -35,11 +35,14 @@ async function gemini(
   comment,
   frequency,
   interaction,
+  wanted_words,
+  banned_words,
   lastTitles,
   topix_data
 ) {
   // console.log("---------------------------------------------LASTTITLES", lastTitles);
   let text = `Give me content about "${prompt}". Please response me in this JSON schema: title:'', body:'' and in ${language} language.`;
+  text += "Try to generate content at least 400 characters long.\n";
   let chosies;
   console.log(lastTitles);
   chosies += like ? "mostLikedPost, " : "";
@@ -47,15 +50,17 @@ async function gemini(
   chosies += frequency ? "sortedWordCounts, " : "";
   chosies += interaction ? "mostViewedPost" : "";
 
+  let c = `These are the contents most liked, most commented, most viewed, highest like engagement, highest comment engagement objects:
+  ${JSON.stringify(topix_data)} mostly take into consideration ${chosies}`;
   text +=
     lastTitles != ""
-      ? `These are the content titles you generated before: [${lastTitles}]`
+      ? `These are the content titles you generated before: [${lastTitles}]. ${c}`
       : ``;
-  // These are the contents most liked, most commented, most viewed, highest like engagement, highest comment engagement objects:
-  // ${JSON.stringify(topix_data)} mostly take into consideration ${chosies}
 
   text += mood != null ? `write in ${mood} mood\n` : "";
-  text += sub_topic != null ? `as a subtopic about ${sub_topic}` : "";
+  text += sub_topic != null ? `as a subtopic about ${sub_topic}\n` : "";
+  text += wanted_words != null ? `must use these words ${wanted_words}\n` : "";
+  text += banned_words != null ? `Never use these words ${banned_words}\n` : "";
   console.log(text);
 
   const generationConfig = {
@@ -207,6 +212,8 @@ const ai = async (req, res) => {
         prompt[0].comment,
         prompt[0].frequency,
         prompt[0].interaction,
+        prompt[0].wanted_words,
+        prompt[0].banned_words,
         titles,
         returned_data.analysis
       );

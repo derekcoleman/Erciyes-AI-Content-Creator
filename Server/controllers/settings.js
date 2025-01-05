@@ -53,8 +53,8 @@ const settings = async (req, res) => {
       const sql = `
             INSERT INTO settings (
                 user_id, topic, language, mood, sub_topic, 
-                \`like\`, comment, frequency, interaction
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                \`like\`, comment, frequency, interaction, banned_words, wanted_words
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)
             ON DUPLICATE KEY UPDATE 
                 topic = VALUES(topic),
                 language = VALUES(language),
@@ -63,7 +63,9 @@ const settings = async (req, res) => {
                 \`like\` = VALUES(\`like\`),
                 comment = VALUES(comment),
                 frequency = VALUES(frequency),
-                interaction = VALUES(interaction)
+                interaction = VALUES(interaction),
+                banned_words = VALUES(banned_words),
+                wanted_words = VALUES(wanted_words)
         `;
       //         const topic = {
       //     user_id:req.id,
@@ -86,7 +88,10 @@ const settings = async (req, res) => {
         req.body.comment,
         req.body.frequency,
         req.body.interaction,
+        req.body.banned_words.replaceAll(" ", "").trim(),
+        req.body.wanted_words.replaceAll(" ", "").trim(),
       ];
+
       const createNewSettings = await dbhelper(sql, values);
       if (createNewSettings?.protocol41) {
         resolve(successfuly.avatar_added);
@@ -117,6 +122,8 @@ const get_settings = async (req, res) => {
         message: successfuly.avatar_added.message,
         code: successfuly.avatar_added.code,
         status: successfuly.avatar_added.status,
+        banned_words: data[0]?.banned_words,
+        wanted_words: data[0]?.wanted_words,
       };
       resolve(resolve_data);
     } catch (error) {

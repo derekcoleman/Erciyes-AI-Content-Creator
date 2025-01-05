@@ -61,9 +61,16 @@ const addSettings = async (
 ): Promise<FetchInfo> => {
   const token = getCookie("token");
 
+  const formatedData = {
+    ...formData,
+    wanted_words: formData.wantedWords?.join(","),
+    banned_words: formData.bannedWords?.join(","),
+  };
+
   if (!token) {
     throw new Error("No token found, please login.");
   }
+  console.log("formatedData: ", formatedData);
 
   const response = await fetch(API_ENDPOINTS.SETTINGS, {
     method: "POST",
@@ -71,7 +78,7 @@ const addSettings = async (
       "Content-Type": "application/json",
       token: token,
     },
-    body: JSON.stringify(formData),
+    body: JSON.stringify(formatedData),
   });
 
   if (!response.ok) {
@@ -80,7 +87,6 @@ const addSettings = async (
   }
 
   const data: FetchInfo = await response.json();
-  console.log("data: ", data);
   return data;
 };
 
@@ -237,8 +243,13 @@ const getSettings = async (): Promise<Settings_Backend> => {
       throw new Error(errorData.message || "Failed to fetch settings");
     }
 
-    const data: Settings = await response.json();
-    return data;
+    const data = await response.json();
+    const formatedData: Settings = {
+      ...data,
+      wantedWords: data.wanted_words?.split(","),
+      bannedWords: data.banned_words?.split(","),
+    };
+    return formatedData;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(
@@ -562,7 +573,6 @@ const updatePost = async (
     }
 
     const data: FetchInfo = await response.json();
-    console.log("data: ", data);
     return data;
   } catch (error) {
     console.error("Error updating post:", error);
@@ -570,7 +580,7 @@ const updatePost = async (
   }
 };
 
-const deleteJob = async (id: number): Promise<void> => {
+const deleteJob = async (id: number): Promise<FetchInfo> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -591,8 +601,38 @@ const deleteJob = async (id: number): Promise<void> => {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to delete job");
     }
+    const data: FetchInfo = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error deleting job:", error);
+    throw error;
+  }
+};
 
-    console.log(`Job with ID ${id} deleted successfully.`);
+const deletePost = async (id: number): Promise<FetchInfo> => {
+  const token = getCookie("token");
+
+  if (!token) {
+    throw new Error("No token found, please login.");
+  }
+
+  try {
+    const response = await fetch(`${API_ENDPOINTS.POST}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+      body: JSON.stringify({ id }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to delete post");
+    }
+
+    const data: FetchInfo = await response.json();
+    return data;
   } catch (error) {
     console.error("Error deleting job:", error);
     throw error;
@@ -655,5 +695,6 @@ export {
   formatDate,
   updatePost,
   deleteJob,
+  deletePost,
   getStatistics,
 };

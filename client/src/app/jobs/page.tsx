@@ -86,7 +86,7 @@ export default function JobPage() {
 
   const handleDeleteJob = async (jobId: number) => {
     try {
-      await deleteJob(jobId);
+      const response = await deleteJob(jobId);
       setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
     } catch (error) {
       console.error("Error deleting job:", error);

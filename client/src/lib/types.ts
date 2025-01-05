@@ -150,6 +150,7 @@ export interface CustomCardProps {
   isInnerCard?: boolean;
   id: number;
   isShared: number;
+  onDeletePost?: (id: number) => void;
 
   onTitleChange?: (id: number, title: string) => void;
   onContentChange?: (id: number, content: string) => void;
