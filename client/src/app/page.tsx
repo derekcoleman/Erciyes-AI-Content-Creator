@@ -58,6 +58,7 @@ export default function HomePage() {
         const transformedSettings =
           transformSettingsFromBackend(fetchedSettings);
         setSettingsData(transformedSettings);
+        console.log("asdasd", fetchedSettings.topic, fetchedSettings.language);
         if (!fetchedSettings.topic || !fetchedSettings.language) {
           router.push("/settings");
         }
@@ -73,6 +74,15 @@ export default function HomePage() {
     fetchProfile();
   }, []);
 
+  const updatePostData = (deletedPostID: number) => {
+    setPostDatas((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        posts: prev.posts.filter((post) => post.id !== deletedPostID),
+      };
+    });
+  };
   const updateSettingsData = (newSettings: Settings) => {
     setSettingsData(newSettings);
   };
@@ -298,6 +308,7 @@ export default function HomePage() {
                   isShared={post.status || 0}
                   onTitleChange={handleTitleChange}
                   onContentChange={handleBodyChange}
+                  onDeletePost={updatePostData}
                 />
               </Grid>
             ))}

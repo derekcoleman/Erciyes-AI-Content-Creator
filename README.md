@@ -105,5 +105,5 @@ Make sure you have the following installed:
 
 I would like to express my gratitude to my friends who helped me throughout this project:
 
-- [Kadir](https://github.com/Kadirleventkabadayi): For developing the entire front-end.
+- [Kadir Levent](https://github.com/Kadirleventkabadayi): For developing the entire front-end.
 - [İbrahim](https://github.com/ibrahimburu): For collaborating with me on the back-end development.
