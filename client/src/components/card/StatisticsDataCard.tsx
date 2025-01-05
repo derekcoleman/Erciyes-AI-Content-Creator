@@ -6,6 +6,7 @@ import {
   CardMedia,
   Box,
   useTheme,
+  Divider,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
@@ -70,6 +71,9 @@ const StatisticsDataCard: React.FC<StatisticsDataCardProps> = ({
         <Typography variant="h5" component="div">
           {title}
         </Typography>
+        <Divider
+          sx={{ border: "1px solid", marginBlock: 1, borderRadius: "24px" }}
+        />
         <Typography variant="body1" component="div">
           {textLimiter(content, 300)}
         </Typography>
