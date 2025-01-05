@@ -235,6 +235,7 @@ const CustomCard: React.FC<CustomCardProps> = ({
         isShared={shareStatus === 1 ? true : false}
         onTitleChange={handleTitleEdit}
         onContentChange={handleContentEdit}
+        isCardSaved={handleClose}
       />
     </Box>
   );

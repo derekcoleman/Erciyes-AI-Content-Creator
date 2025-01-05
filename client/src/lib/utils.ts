@@ -547,14 +547,13 @@ const updatePost = async (
     throw new Error("No token found, please login.");
   }
   try {
-    //endpoint değişecek
-    const response = await fetch(`${API_ENDPOINTS}/${id}`, {
-      method: "PUT",
+    const response = await fetch(API_ENDPOINTS.POST, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         token: token,
       },
-      body: JSON.stringify({ content, title }),
+      body: JSON.stringify({ id, body: content, title }),
     });
 
     if (!response.ok) {

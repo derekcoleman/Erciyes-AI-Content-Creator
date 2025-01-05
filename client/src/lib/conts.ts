@@ -13,6 +13,7 @@ export const API_ENDPOINTS = {
   TOPİX: `${API_BASE_URL}/topix`,
   STATISTICS: `${API_BASE_URL}/statistics`,
   DELETEJOB: `${API_BASE_URL}/settings/delete/job`,
+  POST: `${API_BASE_URL}/post`,
 };
 
 export const daysOfWeek = [

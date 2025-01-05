@@ -32,6 +32,7 @@ interface ExpandedCardProps {
   isShared?: boolean;
   onTitleChange: (title: string) => void;
   onContentChange: (content: string) => void;
+  isCardSaved: () => void;
 }
 
 const ExpandedCard: React.FC<ExpandedCardProps> = ({
@@ -49,6 +50,7 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
   isShared = false,
   onTitleChange,
   onContentChange,
+  isCardSaved,
 }) => {
   const [shareStatus, setShareStatus] = useState<boolean>(isShared);
   const [loading, setLoading] = useState<boolean>(false);
@@ -63,6 +65,7 @@ const ExpandedCard: React.FC<ExpandedCardProps> = ({
 
       if (response.status) {
         setShareStatus(true);
+        isCardSaved();
       } else {
         setShareStatus(false);
       }
