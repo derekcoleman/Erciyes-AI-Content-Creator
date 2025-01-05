@@ -61,6 +61,12 @@ const addSettings = async (
 ): Promise<FetchInfo> => {
   const token = getCookie("token");
 
+  const formatedData = {
+    ...formData,
+    wanted_words: formData.wantedWords?.join(","),
+    banned_words: formData.bannedWords?.join(","),
+  };
+
   if (!token) {
     throw new Error("No token found, please login.");
   }
@@ -71,7 +77,7 @@ const addSettings = async (
       "Content-Type": "application/json",
       token: token,
     },
-    body: JSON.stringify(formData),
+    body: JSON.stringify(formatedData),
   });
 
   if (!response.ok) {
@@ -237,8 +243,13 @@ const getSettings = async (): Promise<Settings_Backend> => {
       throw new Error(errorData.message || "Failed to fetch settings");
     }
 
-    const data: Settings = await response.json();
-    return data;
+    const data = await response.json();
+    const formatedData: Settings = {
+      ...data,
+      wantedWords: data.wanted_words?.split(","),
+      bannedWords: data.banned_words?.split(","),
+    };
+    return formatedData;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(

@@ -69,17 +69,21 @@ const CustomChipBox: React.FC<CustomChipBoxProps> = ({
           width: "100%",
         }}
       >
-        {chips.map((chip, index) => (
-          <Chip
-            key={index}
-            label={chip}
-            onDelete={() => handleDelete(chip)}
-            variant={isWanted ? "outlined" : "filled"}
-            sx={{
-              marginBottom: "8px",
-            }}
-          />
-        ))}
+        {chips.map((chip, index) =>
+          chip === "" ? (
+            <></>
+          ) : (
+            <Chip
+              key={index}
+              label={chip}
+              onDelete={() => handleDelete(chip)}
+              variant={isWanted ? "outlined" : "filled"}
+              sx={{
+                marginBottom: "8px",
+              }}
+            />
+          )
+        )}
       </Box>
     </Box>
   );
