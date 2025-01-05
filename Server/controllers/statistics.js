@@ -83,7 +83,7 @@ const statistics = async (req, res) => {
       for (i = 0; i < data[0]?.posts.length; i++) {
         allDatas.push({
           title: data[0]?.posts[i].title,
-          body: data[0]?.posts[i].title,
+          body: data[0]?.posts[i].body,
           likeCounts: data[0]?.posts[i].reputation,
           commentCounts: data[0]?.posts[i].comments,
           viewCounts: data[0]?.posts[i].interaction,

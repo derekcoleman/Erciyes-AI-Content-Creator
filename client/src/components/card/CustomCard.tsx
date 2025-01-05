@@ -68,11 +68,11 @@ const CustomCard: React.FC<CustomCardProps> = ({
   };
 
   const handleTitleEdit = (newTitle: string) => {
-    onTitleChange(id, newTitle);
+    onTitleChange?.(id, newTitle);
   };
 
   const handleContentEdit = (newContent: string) => {
-    onContentChange(id, newContent);
+    onContentChange?.(id, newContent);
   };
 
   const handleShare = async () => {
