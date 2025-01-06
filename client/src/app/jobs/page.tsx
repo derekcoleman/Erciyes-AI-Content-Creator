@@ -32,13 +32,14 @@ export default function JobPage() {
     try {
       const fetchedProfile = await getProfile();
       if (fetchedProfile.status) {
-        if (fetchedProfile.topix_api_key) {
+        if (fetchedProfile.topix_api_key !== "") {
           setLoadProfile(true);
         }
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
       setError((error as Error).message);
+      setLoadProfile(false);
     }
   };
 
@@ -111,6 +112,7 @@ export default function JobPage() {
   return (
     <MiniDrawer>
       <JobForm
+        isDisabled={!loadProfile}
         onJobAdded={handleJobAdded}
         settingsData={{
           promptSettingsInfo: {
@@ -151,7 +153,7 @@ export default function JobPage() {
         </Grid>
       ) : (
         <Alert sx={{ marginTop: 5 }} severity="info">
-          {"No jobs found"}
+          No jobs found 😴
         </Alert>
       )}
     </MiniDrawer>

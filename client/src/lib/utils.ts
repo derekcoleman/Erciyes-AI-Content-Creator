@@ -38,7 +38,6 @@ const loginUser = async (formData: LoginFormData): Promise<LoginInfo> => {
 };
 
 const registerUser = async (formData: RegisterFormData): Promise<FetchInfo> => {
-  console.log(JSON.stringify(formData));
   const response = await fetch(API_ENDPOINTS.REGISTER, {
     method: "POST",
     headers: {
@@ -70,7 +69,6 @@ const addSettings = async (
   if (!token) {
     throw new Error("No token found, please login.");
   }
-  console.log("formatedData: ", formatedData);
 
   const response = await fetch(API_ENDPOINTS.SETTINGS, {
     method: "POST",
@@ -96,6 +94,12 @@ const addJobs = async (job: Job): Promise<FetchInfo> => {
   if (!token) {
     throw new Error("No token found, please login.");
   }
+  const backBody = {
+    ...job,
+    wanted_words: job.wantedWords?.join(","),
+    banned_words: job.bannedWords?.join(","),
+  };
+  console.log("backBody", backBody);
 
   const response = await fetch(API_ENDPOINTS.JOBS, {
     method: "POST",
@@ -103,7 +107,7 @@ const addJobs = async (job: Job): Promise<FetchInfo> => {
       "Content-Type": "application/json",
       token: token,
     },
-    body: JSON.stringify(job),
+    body: JSON.stringify(backBody),
   });
 
   if (!response.ok) {
@@ -112,7 +116,6 @@ const addJobs = async (job: Job): Promise<FetchInfo> => {
   }
 
   const data: FetchInfo = await response.json();
-  console.log("data: ", data);
   return data;
 };
 
@@ -351,7 +354,6 @@ const jobDataParser = (data: JobsFormData): Job[] => {
       ? platformMapping[data.platform]
       : -1;
 
-  console.log("data: ", data);
   return data.selectedDays.map((day) => ({
     platform_id,
     hour: data.hour,
@@ -363,6 +365,8 @@ const jobDataParser = (data: JobsFormData): Job[] => {
     comment: data.comment || 0,
     interaction: data.interaction || 0,
     frequency: data.frequency || 0,
+    bannedWords: data.bannedWords || [],
+    wantedWords: data.wantedWords || [],
   }));
 };
 
@@ -535,7 +539,6 @@ const addPostManuel = async (post_id: number): Promise<FetchInfo> => {
   }
 
   const data: FetchInfo = await response.json();
-  console.log("data: ", data);
   return data;
 };
 
