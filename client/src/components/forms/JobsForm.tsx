@@ -103,6 +103,8 @@ const JobForm: React.FC<JobFormProps> = ({
           comment: levo.comment,
           interaction: levo.interaction,
           frequency: levo.frequency,
+          bannedWords: levo.bannedWords,
+          wantedWords: levo.wantedWords,
         };
 
         const jobs = jobDataParser(formData);
@@ -125,6 +127,8 @@ const JobForm: React.FC<JobFormProps> = ({
   };
 
   const isFormValid = platform && selectedDays.length > 0 && hour !== null;
+
+  console.log("isdiabled", isDisabled);
 
   return (
     <Card component="form" sx={{ paddingBottom: 6, paddingTop: 2, margin: 2 }}>
@@ -197,7 +201,7 @@ const JobForm: React.FC<JobFormProps> = ({
         <CustomTimePicker value={hour} onChange={setHour} />
         <Tooltip
           title={
-            !isDisabled ? "Profil Bilgilerinden API Anahtarı girilmeli" : ""
+            isDisabled ? "Profil Bilgilerinden API Anahtarı girilmeli" : ""
           }
           arrow
         >
@@ -207,7 +211,7 @@ const JobForm: React.FC<JobFormProps> = ({
               variant="contained"
               color="primary"
               sx={{ width: "100%", height: "56px", marginTop: "14px" }}
-              disabled={!isFormValid || !isDisabled}
+              disabled={!isFormValid || isDisabled}
               onClick={handleSubmit}
             >
               İş Ekle

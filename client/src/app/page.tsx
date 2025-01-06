@@ -316,7 +316,7 @@ export default function HomePage() {
         </Grid>
       ) : (
         <Alert sx={{ marginTop: 5 }} severity="info">
-          No posts available.
+          No posts available 😴
         </Alert>
       )}
     </MiniDrawer>

@@ -117,9 +117,9 @@ export default function SettingsPage() {
 
   return (
     <MiniDrawer>
-      {isNoSettings && (
+      {!isNoSettings && (
         <Alert sx={{ marginTop: 5 }} severity="warning">
-          Uygulamayı kullanmadan önce ayarlarınızı yapmalısınız.
+          Uygulamayı kullanmadan önce ayarlarınızı yapmalısınız 🧐
         </Alert>
       )}
       {loading ? (

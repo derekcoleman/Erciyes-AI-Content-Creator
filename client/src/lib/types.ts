@@ -61,6 +61,8 @@ export interface JobsFormData {
   comment?: number;
   interaction?: number;
   frequency?: number;
+  bannedWords?: string[];
+  wantedWords?: string[];
 }
 
 export interface LoginInfo {
@@ -89,6 +91,8 @@ export interface Job {
   comment?: number;
   interaction?: number;
   frequency?: number;
+  bannedWords?: string[];
+  wantedWords?: string[];
 }
 
 export interface Job_Backend {
