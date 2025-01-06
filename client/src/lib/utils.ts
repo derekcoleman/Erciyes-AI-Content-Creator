@@ -99,7 +99,6 @@ const addJobs = async (job: Job): Promise<FetchInfo> => {
     wanted_words: job.wantedWords?.join(","),
     banned_words: job.bannedWords?.join(","),
   };
-  console.log("backBody", backBody);
 
   const response = await fetch(API_ENDPOINTS.JOBS, {
     method: "POST",
