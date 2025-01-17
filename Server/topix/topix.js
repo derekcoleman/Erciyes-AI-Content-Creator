@@ -20,6 +20,7 @@ const topix = async (req, res, id) => {
         resolve(failure.email_not_send);
         return;
       }
+      console.log("topix.js data:", data);
       for (i = 0; i < data[0]?.posts.length; i++) {
         allDatas.push({
           title: data[0]?.posts[i].title,
@@ -28,6 +29,7 @@ const topix = async (req, res, id) => {
           viewCount: data[0]?.posts[i].reputation,
         });
       }
+      console.log("topix.js allDatas:", allDatas);
       //TOdo: language settingsden çekilecek
       const analysis_result = analysis(allDatas, "tr");
       console.log(allDatas);

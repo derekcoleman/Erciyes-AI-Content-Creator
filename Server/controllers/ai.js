@@ -8,16 +8,21 @@ const { dbhelper } = require("../models/database");
 const { instagram } = require("./instagramscraper");
 const { topix } = require("../topix/topix");
 //   const si = `You are a social media content creator. You should create contents about given idea and consider the past contents if it exist. Your return format like Title and body. Return long contents. Do not mark up your texts`;
-const si = `
-    You are a social media content creator. You should create contents about given idea and consider the past contents if it exist.
-    Your response must be a JSON object. Content object has the following schema:
+// const si = `
+//     You are a social media content creator. You should create contents about given idea and consider the past contents if it exist.
+//     Your response must be a JSON object. Content object has the following schema:
 
+// * title: Title of the content
+// * body: body of the contet`;
+const si = `
+You are an experienced social media content creator with expertise in engaging storytelling and viral content creation. You understand audience psychology and know how to craft compelling narratives that resonate with readers. Your response must be a JSON object. Content object has the following schema:
 * title: Title of the content
-* body: body of the contet`;
+* body: body of the content`;
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel(
   {
-    model: "gemini-1.5-flash",
+    model: "gemini-2.0-flash-exp",
+    // model: "gemini-1.5-pro",
     systemInstruction: {
       parts: [{ text: si }],
       role: "model",
@@ -41,26 +46,81 @@ async function gemini(
   topix_data
 ) {
   // console.log("---------------------------------------------LASTTITLES", lastTitles);
-  let text = `Give me content about "${prompt}". Please response me in this JSON schema: title:'', body:'' and in ${language} language.`;
-  text += "Try to generate content at least 400 characters long.\n";
-  let chosies;
-  console.log(lastTitles);
-  chosies += like ? "mostLikedPost, " : "";
-  chosies += comment ? "mostCommentedPost, " : "";
-  chosies += frequency ? "sortedWordCounts, " : "";
-  chosies += interaction ? "mostViewedPost" : "";
+  // let text = `Give me content about "${prompt}". Please response me in this JSON schema: title:'', body:'' and in ${language} language.`;
+  let text = `Create unique, engaging content about "${prompt}" that will captivate readers and encourage sharing. The content should be authentic, relatable, and crafted to spark meaningful discussions and written in ${language} language.`;
+  // text += "Try to generate content at least 400 characters long.\n";
+  text += `Format your response as a JSON object with two keys:
+- title: A compelling, click-worthy headline (max 60 characters)
+- body: Engaging main content (minimum 400 characters) that delivers value while maintaining reader interest
+Content Structure Guidelines:
+- Begin with a clear thesis or main argument
+- Develop your points with specific examples and evidence
+- Build towards a meaningful conclusion that ties everything together
+- Avoid surface-level observations or generic statements
+- Each paragraph should advance the central narrative
+- End with a strong takeaway that resonates with readers
 
-  let c = `These are the contents most liked, most commented, most viewed, highest like engagement, highest comment engagement objects:
-  ${JSON.stringify(topix_data)} mostly take into consideration ${chosies}`;
+The content should follow a clear narrative arc:
+1. Hook the reader with a compelling opening
+2. Present your main insights/arguments
+3. Support with relevant examples
+4. Address potential counterpoints
+5. Conclude with actionable insights or a memorable final thought
+
+Remember: Don't just describe the topic - tell a complete story with a clear beginning, middle, and end. Your conclusion should give readers something valuable to think about or act upon.`;
+  console.log("ai.js topix_data:", topix_data);
+  let chosies = "";
+  console.log(lastTitles);
+  chosies += like
+    ? "Most Liked Post: " + JSON.stringify(topix_data.mostLikedPost) + "\n"
+    : "";
+  chosies += comment
+    ? "Most Commented Post: " +
+      JSON.stringify(topix_data.mostCommentedPost) +
+      "\n"
+    : "";
+  chosies += frequency
+    ? "Most Sorted Word Counts: " +
+      JSON.stringify(topix_data.sortedWordCounts) +
+      "\n"
+    : "";
+  chosies += interaction
+    ? "Most Viewed Post: " + JSON.stringify(topix_data.mostViewedPost) + "\n"
+    : "";
+
+  // let c = `These are the contents by the analysis result. Get inspired by them but you should generate different contents. ${chosies}`;
+  let c = `Below are successful previous posts for reference. While maintaining thematic consistency, create fresh content with a unique angle: ${chosies}`;
   text +=
     lastTitles != ""
       ? `These are the content titles you generated before: [${lastTitles}]. ${c}`
       : ``;
 
-  text += mood != null ? `write in ${mood} mood\n` : "";
-  text += sub_topic != null ? `as a subtopic about ${sub_topic}\n` : "";
-  text += wanted_words != null ? `must use these words ${wanted_words}\n` : "";
-  text += banned_words != null ? `Never use these words ${banned_words}\n` : "";
+  // text += mood != (null || "") ? `write in ${mood} mood\n` : "";
+  text +=
+    mood != (null || "")
+      ? `Craft the content in a ${mood} tone, ensuring it feels natural and authentic rather than forced. The mood should enhance the message while maintaining professionalism.\n`
+      : "";
+  // text += sub_topic != (null || "") ? `as a subtopic about ${sub_topic}\n` : "";
+  text +=
+    sub_topic != (null || "")
+      ? `Focus on the ${sub_topic} aspect, exploring it in depth while maintaining clear connections to the main topic. This angle should provide fresh insights or perspectives.\n`
+      : "";
+  // text +=
+  //   wanted_words != (null || "")
+  //     ? `must use these words ${wanted_words}\n`
+  //     : "";
+  // text +=
+  //   banned_words != (null || "")
+  //     ? `Never use these words ${banned_words}\n`
+  //     : "";
+  text +=
+    wanted_words != (null || "")
+      ? `Required keywords: ${wanted_words} (Integrate these naturally into the content)\n`
+      : "";
+  text +=
+    banned_words != (null || "")
+      ? `Restricted words: ${banned_words} (Avoid these entirely while maintaining flow)\n`
+      : "";
   console.log(text);
 
   const generationConfig = {
@@ -184,6 +244,7 @@ const ai = async (req, res) => {
       const user = await dbhelper(sqlfortopixapikey, req.id);
       const prompt = await dbhelper(sqlforprompt, req.id);
       const returned_data = await topix(null, null, user[0].topix_api_key);
+      console.log("ai.js returned_data:", returned_data);
       if (returned_data.message == "email_not_send") {
         const result = await ai2(req);
         resolve(result);
@@ -193,6 +254,11 @@ const ai = async (req, res) => {
       let titles = [];
       console.log("ddddddddddddddddddddddddddddddd");
       console.log(returned_data.topix?.length);
+      console.log("ai.js returned_data.topix:", returned_data.topix);
+      console.log(
+        "ai.js returned_data.topix.length:",
+        returned_data.topix.length
+      );
 
       let length =
         (returned_data.topix?.length ?? 0) - 1 < 5
@@ -203,6 +269,7 @@ const ai = async (req, res) => {
           titles[index] = returned_data.topix[index].title;
         }
       }
+      console.log("ai.js titles", titles);
       const result = await gemini(
         prompt[0].topic,
         prompt[0].language,
@@ -218,12 +285,23 @@ const ai = async (req, res) => {
         returned_data.analysis
       );
       const data = result.response.candidates[0].content.parts[0].text;
+      console.log("ai.js data:", JSON.stringify(result));
       const dataJson = JSON.parse(data);
-      const { title, body } = dataJson;
+      let title;
+      let body;
+      if ("content" in dataJson) {
+        console.log("ai.js dataJson: Content var");
+        title = dataJson.content.title;
+        body = dataJson.content.body;
+      } else {
+        console.log("ai.js dataJson: Content YOK!!!!");
+        title = dataJson.title;
+        body = dataJson.body;
+      }
+
       console.log(body);
       const removeEmojis = (text) =>
         text.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, "");
-
       const encodedBody = removeEmojis(body);
       const encodedTitle = removeEmojis(title);
 
