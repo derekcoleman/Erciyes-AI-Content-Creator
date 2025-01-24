@@ -48,6 +48,8 @@ export default function SettingsPage() {
 
   const updateSettingsData = (newSettings: Settings) => {
     setSettingsData(newSettings);
+    if (newSettings.topic !== undefined && newSettings.language !== undefined)
+      setIsNoSettings(false);
   };
 
   const handlePromptFormSubmit = async (

@@ -62,8 +62,10 @@ const addSettings = async (
 
   const formatedData = {
     ...formData,
-    wanted_words: formData.wantedWords?.join(","),
-    banned_words: formData.bannedWords?.join(","),
+    wanted_words: formData.wantedWords?.join(",") || "",
+    banned_words: formData.bannedWords?.join(",") || "",
+    mood: formData.mood?.toLowerCase() || "",
+    sub_topic: formData.sub_topic?.toLowerCase() || "",
   };
 
   if (!token) {
