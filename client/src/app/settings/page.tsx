@@ -18,13 +18,14 @@ import {
   SettingsFormData,
   WordSettingsInfo,
 } from "@/lib/types";
-import { Alert } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import SettingsSkeleton from "@/components/skeleton/SettingsSkeleton";
 
 export default function SettingsPage() {
   const [settingsData, setSettingsData] = useAtom(settingsAtom);
   const [isNoSettings, setIsNoSettings] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [anyUpdate, setAnyUpdate] = useState<boolean>(false);
 
   const fetchSettings = async () => {
     try {
@@ -48,6 +49,7 @@ export default function SettingsPage() {
 
   const updateSettingsData = (newSettings: Settings) => {
     setSettingsData(newSettings);
+    setAnyUpdate(true);
     if (newSettings.topic !== undefined && newSettings.language !== undefined)
       setIsNoSettings(false);
   };
@@ -128,6 +130,13 @@ export default function SettingsPage() {
         <SettingsSkeleton />
       ) : (
         <>
+          <Snackbar
+            open={anyUpdate}
+            autoHideDuration={5000}
+            onClose={() => setAnyUpdate(false)}
+            message="Ayarlarınız güncellendi"
+          />
+
           <SettingsForm
             stateData={settingsData}
             onSettingsSubmit={updateSettingsData}

@@ -222,7 +222,7 @@ export default function StatisticPage() {
         <Alert severity={error === "no_tpix_api_key" ? "warning" : "error"}>
           {error === "no_tpix_api_key"
             ? "Profil Bilgilerinden API Anahtarı girilmeli"
-            : error}
+            : "Soysal medya istatistikleri alınamadı"}
         </Alert>
       ) : (
         <>
