@@ -33,7 +33,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
       <OutlinedInput
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        id="outlined-adornment-password"
+        id={`outlined-adornment-password ${title}`}
         type={showPassword ? "text" : "password"}
         endAdornment={
           <InputAdornment position="end">

@@ -14,11 +14,13 @@ import {
   styled,
   Alert,
   CircularProgress,
+  Snackbar,
 } from "@mui/material";
 import { getProfile, textLimiter, updateProfile } from "@/lib/utils";
 import { FetchInfo } from "@/lib/types";
 
 const ProfilePage = () => {
+  const [anyUpdate, setAnyUpdate] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingSave, setLoadingSave] = useState<boolean>(false);
@@ -63,6 +65,9 @@ const ProfilePage = () => {
         linkedin_api_key: profileData.linkedinAPI,
         instagram_api_key: profileData.instagramAPI,
       });
+      if (fetchedProfileInfo.status) {
+        setAnyUpdate(true);
+      }
     } catch (error) {
       console.error("Error fetching posts:", error);
       setError((error as Error).message);
@@ -105,6 +110,12 @@ const ProfilePage = () => {
 
   return (
     <Box sx={{ width: "80%", margin: "0 auto", paddingTop: 4 }}>
+      <Snackbar
+        open={anyUpdate}
+        autoHideDuration={5000}
+        onClose={() => setAnyUpdate(false)}
+        message="Ayarlarınız güncellendi"
+      />
       <Typography variant="h4" gutterBottom>
         Profil Sayfası
       </Typography>

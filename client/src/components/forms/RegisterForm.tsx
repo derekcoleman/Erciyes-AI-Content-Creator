@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, Typography } from "@mui/material";
 import { Field } from "@/lib/types";
 import EmailInput from "../inputs/EmailInput";
 import TextInput from "../inputs/TextInput";
@@ -18,6 +18,7 @@ interface RegisterFormProps {
   handleClickShowPassword: (field: Field) => void;
   isEmailValid: boolean;
   formError: { message: string; isError: boolean };
+  isUsernameValid: boolean;
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({
@@ -34,7 +35,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   handleClickShowPassword,
   isEmailValid,
   formError,
+  isUsernameValid,
 }) => {
+  console.log("isUsernameValid", isUsernameValid);
   return (
     <Box
       sx={{
@@ -49,7 +52,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         setEmail={setEmail}
         isEmailValid={isEmailValid}
       />
+
       <TextInput text={username} setText={setUsername} title="Kullanıcı Adı" />
+      {!isUsernameValid && (
+        <Typography mb={1} sx={{ fontWeight: "400", color: "red" }}>
+          Kullanıcı adı en az 5 karakter olmalıdır.
+        </Typography>
+      )}
       <PasswordInput
         password={password}
         setPassword={setPassword}

@@ -6,6 +6,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import AppleIcon from "@mui/icons-material/Apple";
 import LogoDevIcon from "@mui/icons-material/LogoDev";
 import {
+  Alert,
   Box,
   Card,
   CircularProgress,
@@ -35,6 +36,7 @@ function Page() {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [user, setUser] = useAtom(userInfoAtom);
   const [token, setToken] = useAtom(tokenAtom);
+  const [isUsernameValid, setIsUsernameValid] = useState<boolean>(true);
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showRePassword, setShowRePassword] = useState<boolean>(false);
@@ -43,6 +45,7 @@ function Page() {
     isError: boolean;
   }>({ message: "", isError: false });
   const [value, setValue] = useState<number>(0);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChangeTabs = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -58,8 +61,19 @@ function Page() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
 
+    if (!isFormValid) {
+      setLoading(false);
+      return;
+    }
+    if (username.length > 4) {
+      setIsUsernameValid(true);
+    } else {
+      setIsUsernameValid(false);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
     setIsEmailValid(true);
     const validationRes = emailMatcher(email);
     setFormError({ isError: false, message: "" });
@@ -77,6 +91,7 @@ function Page() {
         }
       } catch (error) {
         console.error("Login failed:", error);
+        setError((error as Error).message);
       } finally {
         setLoading(false);
       }
@@ -84,6 +99,7 @@ function Page() {
 
     if (!validationRes) {
       setIsEmailValid(false);
+      setLoading(false);
       return;
     } else if (value === 1) {
       const { error, message } = passwordMatcher(password, confirmPassword);
@@ -115,6 +131,7 @@ function Page() {
           }
         } catch (error) {
           console.error("register failed: ", error);
+          setError((error as Error).message);
         } finally {
           setLoading(false);
         }
@@ -128,7 +145,8 @@ function Page() {
       : email !== "" &&
         username !== "" &&
         password !== "" &&
-        confirmPassword !== "";
+        confirmPassword !== "" &&
+        password === confirmPassword;
 
   if (loading) {
     return (
@@ -144,6 +162,7 @@ function Page() {
 
   return (
     <ThemeProvider theme={lightTheme}>
+      {error && <Alert severity="error">{error}</Alert>}
       <Box
         sx={{
           height: "100vh",
@@ -258,6 +277,7 @@ function Page() {
                 handleClickShowPassword={handleClickShowPassword}
                 isEmailValid={isEmailValid}
                 formError={formError}
+                isUsernameValid={isUsernameValid}
               />
             )}
 

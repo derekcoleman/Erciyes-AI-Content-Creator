@@ -9,6 +9,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Snackbar,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -44,6 +45,7 @@ const JobForm: React.FC<JobFormProps> = ({
   onJobAdded,
   isDisabled,
 }) => {
+  const [anyUpdate, setAnyUpdate] = useState<boolean>(false);
   const [platform, setPlatform] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
   const [hour, setHour] = useState(null);
@@ -59,12 +61,14 @@ const JobForm: React.FC<JobFormProps> = ({
     setJobSettings((prev) => {
       return { ...prev, promptSettingsInfo: updatedPromptData };
     });
+    setAnyUpdate(true);
   };
 
   const handleWordFormSubmit = async (updatedWordData: WordSettingsInfo) => {
     setJobSettings((prev) => {
       return { ...prev, wordSettingsInfo: updatedWordData };
     });
+    setAnyUpdate(true);
   };
 
   const handleClickModalButton = () => {
@@ -132,6 +136,12 @@ const JobForm: React.FC<JobFormProps> = ({
 
   return (
     <Card component="form" sx={{ paddingBottom: 6, paddingTop: 2, margin: 2 }}>
+      <Snackbar
+        open={anyUpdate}
+        autoHideDuration={5000}
+        onClose={() => setAnyUpdate(false)}
+        message="Ayarlarınız güncellendi"
+      />
       <Typography variant="h6" gutterBottom sx={{ textAlign: "center" }}>
         Yeni Görev
       </Typography>
