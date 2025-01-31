@@ -195,16 +195,7 @@ const CustomCard: React.FC<CustomCardProps> = ({
                     alignItems: "center",
                     justifyContent: "center",
                   }}
-                >
-                  <IconButton size="small">
-                    <FavoriteIcon fontSize="small" />
-                  </IconButton>
-                  <Typography variant="body2">{likes}</Typography>
-                  <IconButton size="small" sx={{ marginLeft: 1 }}>
-                    <CommentIcon fontSize="small" />
-                  </IconButton>
-                  <Typography variant="body2">{comments}</Typography>
-                </Box>
+                ></Box>
               )}
 
               <Typography

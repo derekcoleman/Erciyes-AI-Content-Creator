@@ -4,6 +4,7 @@ import {
   Card,
   Checkbox,
   FormControl,
+  FormControlLabel,
   InputLabel,
   ListItemText,
   MenuItem,
@@ -15,11 +16,14 @@ import {
 import { PromptSettingsInfo } from "@/lib/types";
 import { INTERACTIONLIST, moods } from "@/lib/conts";
 import { useState } from "react";
+import { gundemAtomPersisted } from "@/store";
+import { useAtom } from "jotai";
 
 interface PromptSettingsFromProps {
   sub_topic: string;
   moodData: string;
   selectedInteractionsData: string[];
+  gundem: boolean;
   onFormSubmit?: (data: PromptSettingsInfo) => void;
 }
 
@@ -27,13 +31,16 @@ const PromptSettingsFrom: React.FC<PromptSettingsFromProps> = ({
   sub_topic = "",
   moodData = "",
   selectedInteractionsData = [],
+  gundem = false,
   onFormSubmit,
 }) => {
+  const [gundemAtomData, setGundemAtomData] = useAtom(gundemAtomPersisted);
   const [mood, setMood] = useState(moodData);
   const [customTopic, setCustomTopicData] = useState(sub_topic);
   const [selectedInteractions, setSelectedInteractions] = useState<string[]>(
     selectedInteractionsData
   );
+  const [gundemData, setGundemData] = useState(gundem);
 
   const handleChange = (event: SelectChangeEvent) => {
     setMood(event.target.value as string);
@@ -53,6 +60,7 @@ const PromptSettingsFrom: React.FC<PromptSettingsFromProps> = ({
           sub_topic: customTopic,
           mood,
           selectedInteractions,
+          gundem: gundemData,
         };
 
         onFormSubmit(settingsInfo);
@@ -62,8 +70,18 @@ const PromptSettingsFrom: React.FC<PromptSettingsFromProps> = ({
     }
   };
 
+  const updateGundemAtom = () => {
+    if (gundemAtomData) setGundemAtomData(false);
+    else setGundemAtomData(true);
+  };
+
   const isFormValid = () => {
-    return customTopic || mood || selectedInteractions.length > 0;
+    return (
+      customTopic ||
+      mood ||
+      selectedInteractions.length > 0 ||
+      gundemData !== gundem
+    );
   };
 
   return (
@@ -135,7 +153,24 @@ const PromptSettingsFrom: React.FC<PromptSettingsFromProps> = ({
             ))}
           </Select>
         </FormControl>
-
+        <FormControl
+          fullWidth
+          margin="normal"
+          sx={{ width: "7%", position: "relative", bottom: "15px" }}
+        >
+          <FormControlLabel
+            value="bottom"
+            control={
+              <Checkbox
+                checked={gundemAtomData} // Control checkbox based on the atom's state
+                sx={{ "& .MuiSvgIcon-root": { fontSize: 32 } }}
+                onClick={updateGundemAtom} // Update the atom on click
+              />
+            }
+            label="Gündem"
+            labelPlacement="top"
+          />
+        </FormControl>
         <Button
           type="submit"
           variant="contained"

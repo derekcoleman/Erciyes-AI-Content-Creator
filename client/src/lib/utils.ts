@@ -1,3 +1,4 @@
+import { Language } from "@mui/icons-material";
 import { API_ENDPOINTS, daysOfWeek } from "./conts";
 import {
   Job,
@@ -62,6 +63,7 @@ const addSettings = async (
 
   const formatedData = {
     ...formData,
+    Language: formData.language?.toLocaleLowerCase() || "",
     wanted_words: formData.wantedWords?.join(",") || "",
     banned_words: formData.bannedWords?.join(",") || "",
     mood: formData.mood?.toLowerCase() || "",
@@ -87,6 +89,7 @@ const addSettings = async (
   }
 
   const data: FetchInfo = await response.json();
+
   return data;
 };
 
@@ -127,7 +130,7 @@ const getCookie = (name: string): string | null => {
   return null;
 };
 
-const getPostWithAI = async (): Promise<Post> => {
+const getPostWithAI = async (gundem: boolean): Promise<Post> => {
   const token = getCookie("token");
 
   if (!token) {
@@ -135,7 +138,16 @@ const getPostWithAI = async (): Promise<Post> => {
   }
 
   try {
-    const response = await fetch(API_ENDPOINTS.AI, {
+    let url = API_ENDPOINTS.AI;
+    if (gundem) {
+      url = `${API_ENDPOINTS.AI}?gundem=1`;
+    } else {
+      url = `${API_ENDPOINTS.AI}?gundem=0`;
+    }
+
+    console.log("url", url);
+
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -250,6 +262,7 @@ const getSettings = async (): Promise<Settings_Backend> => {
     const data = await response.json();
     const formatedData: Settings = {
       ...data,
+      gundem: data.gundem === 1,
       wantedWords: data.wanted_words?.split(","),
       bannedWords: data.banned_words?.split(","),
     };
@@ -368,6 +381,7 @@ const jobDataParser = (data: JobsFormData): Job[] => {
     frequency: data.frequency || 0,
     bannedWords: data.bannedWords || [],
     wantedWords: data.wantedWords || [],
+    gundem: data.gundem || false,
   }));
 };
 
@@ -411,6 +425,7 @@ const jobToJobData = (jobs: Job[]): JobData[] => {
     const frequency = job.frequency;
     const interaction = job.interaction;
     const id = job.id;
+    const gundem = job.gundem;
 
     const platform =
       Object.keys(platformMapping).find(
@@ -437,6 +452,7 @@ const jobToJobData = (jobs: Job[]): JobData[] => {
       frequency,
       interaction,
       id,
+      gundem,
     };
   });
 };
@@ -484,6 +500,7 @@ const transformSettingsFromBackend = (
     mood: moodInTurkish,
     selectedInteractions: selectedInteractions,
     disabled: backendSettings.disabled,
+    gundem: backendSettings.gundem,
   };
 };
 
@@ -513,6 +530,7 @@ const transformSettingsToBackend = (
     comment: selectedInteractions.includes("Yorum") ? 1 : 0,
     interaction: selectedInteractions.includes("Etkileşim") ? 1 : 0,
     frequency: selectedInteractions.includes("Sık Kelimeler") ? 1 : 0,
+    gundem: (settingsData.gundem ? 1 : 0) || 0,
   };
 
   return backendData;

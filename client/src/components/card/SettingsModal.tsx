@@ -59,6 +59,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             moodData={settingsData.promptSettingsInfo.mood}
             sub_topic={settingsData.promptSettingsInfo.sub_topic}
             onFormSubmit={onPromptFormSubmit}
+            gundem={settingsData.promptSettingsInfo.gundem}
           />
           <WordSettingsForm
             bannedWords={settingsData.wordSettingsInfo.bannedWords}

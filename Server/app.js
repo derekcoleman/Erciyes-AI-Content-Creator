@@ -11,7 +11,8 @@ const homepageRouter = require('./routes/hompageRouter')
 const topixRouter = require('./routes/topixRouter')
 const postRouter = require('./routes/postRouter')
 const statisticsRouter = require('./routes/statisticsRouter');
-
+// const {latestNews} = require('./controllers/lastestNews')
+// latestNews();
 const {makejob} = require('./controllers/makejob');
 const { topix } = require('./topix/topix');
 //topix(null, null,'atQs')

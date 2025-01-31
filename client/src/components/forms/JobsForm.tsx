@@ -109,6 +109,7 @@ const JobForm: React.FC<JobFormProps> = ({
           frequency: levo.frequency,
           bannedWords: levo.bannedWords,
           wantedWords: levo.wantedWords,
+          gundem: levo.gundem,
         };
 
         const jobs = jobDataParser(formData);

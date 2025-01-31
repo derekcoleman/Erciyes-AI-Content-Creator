@@ -1,3 +1,4 @@
+const { latestNews } = require("../controllers/lastestNews");
 const {
   GoogleGenerativeAI,
   HarmCategory,
@@ -14,10 +15,16 @@ const { topix } = require("../topix/topix");
 
 // * title: Title of the content
 // * body: body of the contet`;
+// const si = `
+// You are an experienced social media content creator with expertise in engaging storytelling and viral content creation. You understand audience psychology and know how to craft compelling narratives that resonate with readers. Your response must be a JSON object. Content object has the following schema:
+// * title: Title of the content
+// * body: body of the content`;
 const si = `
 You are an experienced social media content creator with expertise in engaging storytelling and viral content creation. You understand audience psychology and know how to craft compelling narratives that resonate with readers. Your response must be a JSON object. Content object has the following schema:
-* title: Title of the content
-* body: body of the content`;
+{
+  "title": "Title of the content",
+  "body": "body of the content"
+}`;
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel(
   {
@@ -43,7 +50,8 @@ async function gemini(
   wanted_words,
   banned_words,
   lastTitles,
-  topix_data
+  topix_data,
+  gundem
 ) {
   // console.log("---------------------------------------------LASTTITLES", lastTitles);
   // let text = `Give me content about "${prompt}". Please response me in this JSON schema: title:'', body:'' and in ${language} language.`;
@@ -120,6 +128,10 @@ Remember: Don't just describe the topic - tell a complete story with a clear beg
   text +=
     banned_words != (null || "")
       ? `Restricted words: ${banned_words} (Avoid these entirely while maintaining flow)\n`
+      : "";
+  text +=
+    gundem != (0 || "")
+      ? `Today's news: ${gundem} (Only use news if it neccessary)\n`
       : "";
   console.log(text);
 
@@ -270,6 +282,16 @@ const ai = async (req, res) => {
         }
       }
       console.log("ai.js titles", titles);
+      const isGundem = req.query.gundem;
+      let gundem = 0;
+      if (isGundem == 1) {
+        gundem = await latestNews(null, null, prompt[0].language);
+        gundem = JSON.stringify(gundem);
+        console.log(
+          "xcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        );
+        console.log(gundem);
+      }
       const result = await gemini(
         prompt[0].topic,
         prompt[0].language,
@@ -282,7 +304,8 @@ const ai = async (req, res) => {
         prompt[0].wanted_words,
         prompt[0].banned_words,
         titles,
-        returned_data.analysis
+        returned_data.analysis,
+        gundem
       );
       const data = result.response.candidates[0].content.parts[0].text;
       console.log("ai.js data:", JSON.stringify(result));
@@ -290,20 +313,30 @@ const ai = async (req, res) => {
       let title;
       let body;
       if ("content" in dataJson) {
+        if (Array.isArray(dataJson.content)) {
+          title = dataJson.content[0].title;
+          body = dataJson.content[0].body;
+        }
         console.log("ai.js dataJson: Content var");
         title = dataJson.content.title;
         body = dataJson.content.body;
       } else {
         console.log("ai.js dataJson: Content YOK!!!!");
+        if (Array.isArray(dataJson)) {
+          title = dataJson[0].title;
+          body = dataJson[0].body;
+        }
         title = dataJson.title;
         body = dataJson.body;
       }
 
       console.log(body);
-      const removeEmojis = (text) =>
-        text.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, "");
-      const encodedBody = removeEmojis(body);
-      const encodedTitle = removeEmojis(title);
+      // const removeEmojis = (text) =>
+      //   text.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, "");
+      // const encodedBody = removeEmojis(body);
+      // const encodedTitle = removeEmojis(title);
+      encodedBody = body;
+      encodedTitle = title;
 
       const createdpost = {
         user_id: req.id,

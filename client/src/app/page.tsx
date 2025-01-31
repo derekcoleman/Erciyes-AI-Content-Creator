@@ -21,7 +21,7 @@ import {
   WordSettingsInfo,
 } from "@/lib/types";
 import SettingsButton from "@/components/buttons/SettingsButton";
-import { settingsAtom } from "@/store";
+import { gundemAtomPersisted, settingsAtom } from "@/store";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -34,6 +34,8 @@ export default function HomePage() {
   const [open, setOpen] = useState(false);
   const [settingsData, setSettingsData] = useAtom(settingsAtom);
   const [loadProfile, setLoadProfile] = useState<boolean>(false);
+
+  const [gundemAtomData, setGundemAtomData] = useAtom(gundemAtomPersisted);
 
   const router = useRouter();
 
@@ -90,7 +92,7 @@ export default function HomePage() {
   const fetchPosts = async () => {
     setNewPostLoading(true);
     try {
-      const fetchedPost = await getPostWithAI();
+      const fetchedPost = await getPostWithAI(gundemAtomData);
 
       const newPost = {
         id: fetchedPost.post_id,
@@ -146,6 +148,7 @@ export default function HomePage() {
       sub_topic: updatedPromptData.sub_topic,
       mood: updatedPromptData.mood,
       selectedInteractions: updatedPromptData.selectedInteractions,
+      gundem: updatedPromptData.gundem,
     };
 
     const success = await handleSubmit(formData);
@@ -246,6 +249,7 @@ export default function HomePage() {
               sub_topic: settingsData.sub_topic || "",
               mood: settingsData.mood || "",
               selectedInteractions: settingsData.selectedInteractions || [],
+              gundem: settingsData.gundem || false,
             },
             wordSettingsInfo: {
               bannedWords: settingsData.bannedWords || [],
