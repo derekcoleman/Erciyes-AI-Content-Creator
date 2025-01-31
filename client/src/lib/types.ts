@@ -36,6 +36,7 @@ export interface SettingsFormData {
   sub_topic?: string;
   mood?: string;
   selectedInteractions?: string[];
+  gundem?: boolean;
 }
 export interface SettingsFormData_Backend {
   language?: string;
@@ -48,6 +49,7 @@ export interface SettingsFormData_Backend {
   comment?: number;
   interaction?: number;
   frequency?: number;
+  gundem?: number;
 }
 
 export interface JobsFormData {
@@ -63,6 +65,7 @@ export interface JobsFormData {
   frequency?: number;
   bannedWords?: string[];
   wantedWords?: string[];
+  gundem?: boolean;
 }
 
 export interface LoginInfo {
@@ -93,6 +96,7 @@ export interface Job {
   frequency?: number;
   bannedWords?: string[];
   wantedWords?: string[];
+  gundem?: boolean;
 }
 
 export interface Job_Backend {
@@ -115,6 +119,7 @@ export interface JobData {
   comment?: number;
   interaction?: number;
   frequency?: number;
+  gundem?: boolean;
 }
 
 export interface Post {
@@ -172,6 +177,7 @@ export interface PromptSettingsInfo {
   sub_topic: string;
   mood: string;
   selectedInteractions: string[];
+  gundem: boolean;
 }
 export interface SettingsFormInfo {
   topic: string;
@@ -190,6 +196,7 @@ export interface Settings {
   mood?: string;
   selectedInteractions?: string[];
   disabled?: boolean;
+  gundem?: boolean;
 }
 
 export interface Settings_Backend {
@@ -207,6 +214,7 @@ export interface Settings_Backend {
   interaction?: number;
   frequency?: number;
   disabled?: boolean;
+  gundem?: boolean;
 }
 
 export interface ProfileInfoData {

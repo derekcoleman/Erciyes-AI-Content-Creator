@@ -12,7 +12,7 @@ import {
 import { addSettings, transformSettingsToBackend } from "@/lib/utils";
 import { Settings, FetchInfo } from "@/lib/types";
 
-const languages = ["English", "Turkish", "Spanish", "French", "German"];
+const languages = ["English", "Türkçe"];
 
 interface SettingsFormProps {
   stateData: Settings;

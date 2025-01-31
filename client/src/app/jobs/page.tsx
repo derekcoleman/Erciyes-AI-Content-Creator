@@ -119,6 +119,7 @@ export default function JobPage() {
             selectedInteractions: settingsData.selectedInteractions || [],
             mood: settingsData.mood || "",
             sub_topic: settingsData.sub_topic || "",
+            gundem: settingsData.gundem || false,
           },
           wordSettingsInfo: {
             wantedWords: settingsData.wantedWords || [],

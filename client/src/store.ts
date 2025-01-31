@@ -18,4 +18,17 @@ export const settingsAtom = atom<Settings>({
   bannedWords: [],
   wantedWords: [],
   disabled: false,
+  gundem: false,
 });
+export const gundemAtom = atom<boolean>(
+  JSON.parse(localStorage.getItem("gundemAtom") || "false")
+);
+
+// Use the atom and sync with localStorage on changes
+export const gundemAtomPersisted = atom(
+  (get) => get(gundemAtom),
+  (get, set, update) => {
+    set(gundemAtom, update);
+    localStorage.setItem("gundemAtom", JSON.stringify(update)); // Persist the updated value
+  }
+);

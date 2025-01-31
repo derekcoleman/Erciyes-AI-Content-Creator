@@ -65,6 +65,7 @@ export default function SettingsPage() {
       sub_topic: updatedPromptData.sub_topic,
       mood: updatedPromptData.mood,
       selectedInteractions: updatedPromptData.selectedInteractions,
+      gundem: updatedPromptData.gundem,
     };
 
     const success = await handleSubmit(formData);
@@ -152,6 +153,7 @@ export default function SettingsPage() {
             moodData={settingsData.mood || ""}
             sub_topic={settingsData.sub_topic || ""}
             onFormSubmit={handlePromptFormSubmit}
+            gundem={settingsData.gundem || false}
           />
           <WordSettingsForm
             bannedWords={settingsData.bannedWords || []}
